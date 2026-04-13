@@ -111,10 +111,38 @@
             text-transform: uppercase;
         }
 
-        .icon-box {
-            font-size: 40px;
+        /* Gamifikasi Style */
+        .game-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .token-visualizer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 100px;
+            padding: 15px;
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .token-block {
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: white;
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        .stat-highlight {
+            font-size: 42px;
+            font-weight: 800;
             color: var(--primary);
-            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -135,7 +163,28 @@
     </div>
 </div>
 
-<!-- Slide 2: Definisi AI (Teori) -->
+<!-- Slide 2: Relevansi 2025 -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Mengapa AI Penting Saat Ini?</h2>
+    <div class="grid-2">
+        <div>
+            <p>Berdasarkan <strong>Stack Overflow Developer Survey 2025</strong>:</p>
+            <ul style="margin-top: 20px;">
+                <li><span class="stat-highlight">82%</span> developer aktif menggunakan AI dalam alur kerja mereka.</li>
+                <li><strong>Efisiensi:</strong> Meningkatkan produktivitas hingga 35% dalam penulisan kode dan dokumentasi.</li>
+                <li><strong>Tren:</strong> Integrasi AI bukan lagi pilihan, melainkan standar industri baru.</li>
+            </ul>
+        </div>
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <p style="font-size: 18px; margin-bottom: 10px;">Top AI Tools 2025:</p>
+            <p><strong>1. GitHub Copilot<br>2. ChatGPT<br>3. Gemini<br>4. Claude</strong></p>
+            <p style="font-size: 12px; color: var(--text-light); margin-top: 20px;">Source: survey.stackoverflow.co/2025/</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Definisi AI (Teori) -->
 <div class="slide">
     <div class="watermark">KOALAWAN</div>
     <h2>Apa itu AI?</h2>
@@ -160,7 +209,7 @@
     </div>
 </div>
 
-<!-- Slide 3: Konsep Kunci (Teori) -->
+<!-- Slide 4: Konsep Kunci (Teori) -->
 <div class="slide">
     <div class="watermark">KOALAWAN</div>
     <h2>4 Konsep Kunci AI</h2>
@@ -184,7 +233,7 @@
     </div>
 </div>
 
-<!-- Slide 4: Generative vs Discriminative (Teori) -->
+<!-- Slide 5: Generative vs Discriminative (Teori) -->
 <div class="slide">
     <div class="watermark">KOALAWAN</div>
     <h2>Generatif vs Diskriminatif</h2>
@@ -205,50 +254,76 @@
     </div>
 </div>
 
-<!-- Slide 5: Cara Kerja LLM (Teori) -->
+<!-- Slide 6: Gamifikasi Token (Interaktif) -->
 <div class="slide">
     <div class="watermark">KOALAWAN</div>
-    <h2>Bagaimana LLM Bekerja?</h2>
+    <h2>Gamifikasi: Tantangan Token</h2>
     <div class="grid-2">
         <div>
-            <p>Model bahasa besar seperti ChatGPT menggunakan arsitektur bernama <strong>Transformer</strong>.</p>
-            <ul style="margin-top: 20px; font-size: 20px;">
-                <li><strong>Miliaran Neuron Buatan:</strong> Menghubungkan konteks antar kata.</li>
-                <li><strong>Prediksi Token:</strong> AI memprediksi "apa kata selanjutnya" berdasarkan statistik probabilitas.</li>
-            </ul>
-        </div>
-        <div class="card">
-            <p><strong>Metafora Memori:</strong></p>
-            <p style="font-size: 18px; color: var(--text-light);">"AI tidak benar-benar 'berpikir'. Ia seperti melengkapi kalimat secara super cerdas berdasarkan ribuan buku dan artikel yang telah ia baca."</p>
-        </div>
-    </div>
-</div>
-
-<!-- Slide 6: Tokenisasi (Teknis) -->
-<div class="slide">
-    <div class="watermark">KOALAWAN</div>
-    <h2>Memahami Token</h2>
-    <div class="grid-2">
-        <div>
-            <p>Sebelum diproses, teks dipecah menjadi unit-unit numerik kecil yang disebut <strong>Tokens</strong>.</p>
-            <div class="card" style="margin-top: 20px;">
-                <p style="font-size: 18px; margin-bottom: 10px;">Input: "Saya suka AI"</p>
-                <div style="font-family: monospace; background: #1e293b; color: #10b981; padding: 10px; border-radius: 8px;">
-                    ["Saya", " suka", " AI"]
-                </div>
+            <p>AI memecah teks menjadi unit angka. Coba ketik kalimatmu dan lihat bagaimana AI "melihatnya"!</p>
+            <input type="text" id="gameInput" class="game-input" placeholder="Ketik kalimat di sini (Contoh: Koalawan belajar AI)...">
+            <div class="card" style="padding: 15px;">
+                <p style="font-size: 16px;"><strong>Kenapa ini penting?</strong></p>
+                <ul style="font-size: 16px; margin-top: 5px;">
+                    <li>Bahasa Indonesia sering memecah 1 kata menjadi 2-3 token.</li>
+                    <li>Semakin banyak token = semakin mahal & memori cepat habis.</li>
+                </ul>
             </div>
         </div>
-        <div>
-            <ul style="font-size: 20px;">
-                <li><strong>Biaya:</strong> Harga API dihitung per 1.000 token.</li>
-                <li><strong>Ingatan:</strong> Setiap model punya batas maksimal token (Context Length).</li>
-                <li><strong>Bahasa:</strong> B. Indonesia biasanya memakan lebih banyak token dibanding B. Inggris.</li>
-            </ul>
+        <div class="card">
+            <h3>Visualisasi Token:</h3>
+            <div id="tokenOutput" class="token-visualizer">
+                <p style="color: #64748b; font-size: 14px;">Hasil token akan muncul di sini...</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 18px;">Total Token: <span id="tokenCount" style="color: var(--primary); font-weight: 800;">0</span></p>
         </div>
     </div>
+    <script>
+        const input = document.getElementById('gameInput');
+        const output = document.getElementById('tokenOutput');
+        const count = document.getElementById('tokenCount');
+        const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+
+        input.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if(!val) {
+                output.innerHTML = '<p style="color: #64748b; font-size: 14px;">Hasil token akan muncul di sini...</p>';
+                count.innerText = '0';
+                return;
+            }
+            
+            // Simulasi tokenisasi sederhana (AI asli lebih kompleks)
+            const words = val.split(/(\s+)/);
+            output.innerHTML = '';
+            let total = 0;
+
+            words.forEach((word, index) => {
+                if(word === '') return;
+                
+                // Simulasi pemecahan kata panjang (seperti cara LLM bekerja)
+                let subTokens = [];
+                if(word.length > 5) {
+                    subTokens.push(word.substring(0, Math.ceil(word.length/2)));
+                    subTokens.push(word.substring(Math.ceil(word.length/2)));
+                } else {
+                    subTokens.push(word);
+                }
+
+                subTokens.forEach(sub => {
+                    const span = document.createElement('span');
+                    span.className = 'token-block';
+                    span.style.backgroundColor = colors[total % colors.length];
+                    span.innerText = sub;
+                    output.appendChild(span);
+                    total++;
+                });
+            });
+            count.innerText = total;
+        });
+    </script>
 </div>
 
-<!-- Slide 7: Keterbatasan (Teori & Praktik) -->
+<!-- Slide 7: Keterbatasan -->
 <div class="slide">
     <div class="watermark">KOALAWAN</div>
     <h2>5 Keterbatasan Utama AI</h2>
@@ -285,14 +360,14 @@
             <p>Mari kita lihat bagaimana teori ini bekerja dalam praktik.</p>
             <ul style="margin-top: 20px; font-size: 20px;">
                 <li>Buka <strong>aistudio.google.com</strong>.</li>
-                <li>Pilih Model <strong>Gemini 3 Pro</strong>.</li>
-                <li>Perhatikan <strong>Token Count</strong> di pojok kanan bawah setiap kali Anda mengetik.</li>
+                <li>Pilih Model <strong>Gemini 1.5 Pro</strong>.</li>
+                <li>Bandingkan hasil token visualizer tadi dengan token asli di AI Studio!</li>
             </ul>
             <a href="https://aistudio.google.com/" target="_blank" class="btn">Mulai Praktik <i class="fas fa-rocket"></i></a>
         </div>
         <div class="card" style="background: white;">
             <p><strong>Tugas Sederhana:</strong></p>
-            <p style="font-size: 18px; color: var(--text-light);">Coba tanyakan peristiwa yang terjadi kemarin. Apakah AI bisa menjawab? Ini akan membuktikan konsep <strong>Data Cutoff</strong>.</p>
+            <p style="font-size: 18px; color: var(--text-light);">Tulis 1 paragraf bahasa Indonesia. Berapa jumlah token yang terdeteksi di Google AI Studio? (Lihat pojok kanan bawah).</p>
         </div>
     </div>
 </div>
