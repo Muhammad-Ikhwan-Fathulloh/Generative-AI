@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 - Prompting Techniques & Settings - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #0f172a;
+            --accent: #8b5cf6;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            margin: 0;
+            padding: 60px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: var(--bg-slide);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 80px;
+            color: var(--text-main);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 72px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 44px; color: var(--secondary); margin-bottom: 20px; font-weight: 800; }
+        h3 { font-size: 26px; color: var(--primary); margin-bottom: 10px; font-weight: 700; }
+        p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .card { background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
+        
+        .theory-badge { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+
+        .prompt-box { background: var(--code-bg); color: #e2e8f0; padding: 18px; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 14px; border-left: 5px solid var(--primary); margin: 15px 0; line-height: 1.5; }
+        .footer { position: absolute; bottom: 40px; left: 80px; font-size: 14px; color: var(--text-light); display: flex; gap: 20px; }
+        
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+        .tag-blue { background: rgba(14, 165, 233, 0.1); color: var(--primary); }
+
+        /* GAMIFICATION STYLES */
+        .game-panel { background: var(--secondary); color: white; padding: 20px; border-radius: 15px; margin-top: 10px; border: 2px dashed var(--primary); }
+        .role-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; transition: 0.3s; font-size: 14px; }
+        .role-btn:hover, .role-btn.active { background: var(--primary); border-color: var(--primary); }
+        .slider-ui { width: 100%; margin: 15px 0; cursor: pointer; }
+        
+        .step-num { width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <span class="tag tag-blue">Day 3: Mastery Level</span>
+        <h1 style="margin-top: 20px;">Techniques &<br>LLM Settings</h1>
+        <p style="font-size: 32px; color: var(--text-light); margin-top: 20px;">Memahami Sains di Balik Prompt yang Sempurna</p>
+    </div>
+    <div class="footer">
+        <span><strong>Muhammad Ikhwan Fathulloh</strong></span>
+        <span>|</span>
+        <span>ikhwanfathulloh.netlify.app</span>
+    </div>
+</div>
+
+<!-- Slide 2: Teori Dasar - Bagaimana AI Berpikir? -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Konsep: Prediksi Token</h2>
+    <div class="grid-2">
+        <div>
+            <span class="theory-badge">Dasar</span>
+            <p>LLM tidak "memahami" kata seperti manusia. AI memecah teks menjadi <strong>Token</strong> (potongan kata) dan menghitung probabilitas statistik untuk token berikutnya.</p>
+            
+            <div class="game-panel">
+                <p style="font-size: 16px; margin-bottom: 10px;"><i class="fas fa-gamepad"></i> <strong>Game: Token Predictor</strong></p>
+                <p style="font-size: 18px; color: #cbd5e1;">"Indonesia adalah negara..."</p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="role-btn" onclick="predict('Kepulauan', '88%')">A. Kepulauan</button>
+                    <button class="role-btn" onclick="predict('Kotak', '0.01%')">B. Kotak</button>
+                    <button class="role-btn" onclick="predict('Maju', '11%')">C. Maju</button>
+                </div>
+                <p id="predict-res" style="margin-top: 15px; color: var(--primary); font-weight: bold; min-height: 24px; font-size: 16px;"></p>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Kenapa Prompt Penting?</h3>
+            <p style="font-size: 18px;">Prompt Anda adalah <strong>filter probabilitas</strong>. Tanpa instruksi yang jelas, AI memiliki terlalu banyak pilihan kata. Instruksi yang spesifik memandu AI ke jalur probabilitas yang benar.</p>
+            <ul style="margin-top: 15px; font-size: 16px;">
+                <li><strong>Role:</strong> Mengatur gaya statistik.</li>
+                <li><strong>Context:</strong> Mempersempit topik bahasan.</li>
+                <li><strong>Constraint:</strong> Memberi batasan pada pilihan kata.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        function predict(word, prob) {
+            document.getElementById('predict-res').innerText = `Tepat! AI memilih "${word}" karena probabilitas statistiknya ${prob}.`;
+        }
+    </script>
+</div>
+
+<!-- Slide 3: Perbandingan Teknik (Zero vs Few-Shot) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Perbandingan Teknik</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3 style="color: #64748b;">Zero-Shot (Tanpa Contoh)</h3>
+            <p style="font-size: 16px;">Instruksi langsung tanpa contoh. Bergantung sepenuhnya pada pengetahuan internal model.</p>
+            <div class="prompt-box">
+                "Ubah kalimat ini jadi bahasa gaul: Saya sedang makan."
+            </div>
+            <p style="font-size: 14px; color: var(--text-light);">Hasil: "Gue lagi makan." (Standar)</p>
+        </div>
+        <div class="card" style="border-color: var(--primary);">
+            <h3 style="color: var(--primary);">Few-Shot (Pemberian Contoh)</h3>
+            <p style="font-size: 16px;">Memberikan 2-3 contoh pola sebelum memberikan tugas utama.</p>
+            <div class="prompt-box">
+                "Lari -> Cabut<br>Pergi -> Gas<br>Makan -> ..."
+            </div>
+            <p style="font-size: 14px; color: var(--primary); font-weight: bold;">Hasil: "Mabar/Mekdi/Sikat" (Sesuai Pola)</p>
+        </div>
+    </div>
+    <div class="card" style="margin-top: 30px; background: #e0f2fe;">
+        <p style="font-size: 16px; margin: 0;"><strong>Kesimpulan:</strong> Gunakan <strong>Few-Shot</strong> jika Anda memiliki format output yang sangat spesifik atau gaya bahasa yang unik.</p>
+    </div>
+</div>
+
+<!-- Slide 4: Role Prompting (Gamifikasi: Tone Matcher) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Role Prompting: Tone Matcher</h2>
+    <p>Memberikan "Persona" adalah cara tercepat untuk mengubah ribuan probabilitas kata sekaligus.</p>
+    
+    <div class="game-panel">
+        <p style="margin-bottom: 15px;"><i class="fas fa-magic"></i> <strong>Simulasi: Perubahan Peran</strong> (Topik: Nasi Goreng)</p>
+        <div style="margin-bottom: 20px;">
+            <button class="role-btn" onclick="setRole('Koki Michelin', 'Gaya: Teknikal & Elegan', 'Nasi goreng ini menggunakan teknik Maillard reaction yang sempurna dengan aroma smoky wok hei yang meresap ke setiap butir melati.')">Koki Michelin</button>
+            <button class="role-btn" onclick="setRole('Budayawan', 'Gaya: Filosofis', 'Sebuah piring yang merangkum sejarah asimilasi budaya, di mana setiap bulir nasi bercerita tentang kesederhanaan bangsa.')">Budayawan</button>
+            <button class="role-btn" onclick="setRole('Remaja Jaksel', 'Gaya: Gaul & Mix', 'Literally nasi gorengnya tuh enak banget, overal bumbunya dapet and worth it buat dicoba sih.')">Anak Jaksel</button>
+        </div>
+        <div class="card" id="role-display" style="min-height: 120px; display: flex; flex-direction: column; justify-content: center; background: white; color: var(--secondary);">
+            <p style="text-align: center; color: #94a3b8; font-style: italic;">Pilih peran untuk melihat perubahan output...</p>
+        </div>
+    </div>
+    <script>
+        function setRole(role, style, text) {
+            document.getElementById('role-display').innerHTML = `
+                <div style="font-size: 14px; color: var(--primary); font-weight: bold; margin-bottom: 5px;">ROLE: ${role} (${style})</div>
+                <div style="font-size: 18px; line-height: 1.4;">"${text}"</div>
+            `;
+        }
+    </script>
+</div>
+
+<!-- Slide 5: Pengaturan Parameter (Gamifikasi: Tuning) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>LLM Settings: Creativity Tuning</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Temperature (0.0 - 1.0)</h3>
+            <p style="font-size: 16px;">Mengatur "panas" atau keacakan pemilihan token berikutnya.</p>
+            <div class="game-panel" style="background: #f1f5f9; color: var(--secondary);">
+                <input type="range" class="slider-ui" min="0" max="100" value="50" id="tempSlider" oninput="updateTemp(this.value)">
+                <div id="temp-info" style="text-align: center; padding: 10px; border-radius: 10px; background: var(--secondary); color: white;">
+                    <span style="font-size: 20px; font-weight: bold;">0.5</span><br>
+                    <small>Seimbang & Natural</small>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Top P (Nucleus Sampling)</h3>
+            <p style="font-size: 16px;">Hanya mempertimbangkan "puncak" dari kumpulan probabilitas kata.</p>
+            <ul style="font-size: 15px; margin-top: 15px;">
+                <li><strong>Top P Rendah (0.1):</strong> Sangat fokus, tidak mau ambil risiko (Cocok untuk Fakta).</li>
+                <li><strong>Top P Tinggi (0.9):</strong> Lebih variatif, mengambil kata-kata unik (Cocok untuk Kreatif).</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        function updateTemp(v) {
+            const val = v / 100;
+            let desc = val < 0.3 ? "Faktual & Kaku" : val > 0.7 ? "Sangat Kreatif / Halusinasi" : "Seimbang & Natural";
+            document.getElementById('temp-info').innerHTML = `<span style="font-size: 20px; font-weight: bold;">${val.toFixed(1)}</span><br><small>${desc}</small>`;
+        }
+    </script>
+</div>
+
+<!-- Slide 6: Step-by-Step Mega Prompt -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Konstruksi Mega-Prompt</h2>
+    <p>Gunakan struktur ini untuk hasil yang 99% akurat:</p>
+    <div class="grid-2" style="margin-top: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="card" style="padding: 15px;">
+                <div class="step-num">1</div>
+                <strong>Role:</strong> "Kamu adalah Ahli Gizi..."
+            </div>
+            <div class="card" style="padding: 15px;">
+                <div class="step-num">2</div>
+                <strong>Context:</strong> "Saya ingin diet untuk lari maraton..."
+            </div>
+            <div class="card" style="padding: 15px;">
+                <div class="step-num">3</div>
+                <strong>Task:</strong> "Buat jadwal makan 7 hari..."
+            </div>
+            <div class="card" style="padding: 15px;">
+                <div class="step-num">4</div>
+                <strong>Constraint:</strong> "Tanpa nasi putih, format Tabel."
+            </div>
+        </div>
+        <div class="card" style="background: var(--primary-light); display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div>
+                <i class="fas fa-rocket" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
+                <h3>Hasil Sempurna</h3>
+                <p style="font-size: 16px;">Dengan mengikuti 4 langkah ini, probabilitas AI untuk "melantur" berkurang hingga 80%.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Workshop Praktik -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Workshop: AI Studio Tuning</h2>
+    <div style="display: grid; grid-template-columns: 1fr 400px; gap: 40px;">
+        <div class="card">
+            <h3>Instruksi Praktik:</h3>
+            <ol style="font-size: 18px; line-height: 2;">
+                <li>Buka <strong>Google AI Studio</strong>.</li>
+                <li>Atur <strong>System Instruction</strong> dengan Role tertentu.</li>
+                <li>Set <strong>Temperature</strong> ke 0.8 untuk kreativitas.</li>
+                <li>Gunakan <strong>Few-Shot</strong> (beri 2 contoh).</li>
+                <li>Berikan perintah utama Anda.</li>
+            </ol>
+            <div style="margin-top: 20px;">
+                <a href="https://aistudio.google.com/" target="_blank" style="background: var(--primary); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">Mulai Praktik Sekarang <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        <div class="card" style="background: #fff4e5; border-color: #fbbf24;">
+            <p style="font-size: 14px; color: #92400e;"><strong><i class="fas fa-lightbulb"></i> Tips:</strong><br>Jika AI berhenti di tengah jalan, tambahkan "Lanjutkan" atau periksa <em>Output Token Limit</em> di pengaturan kanan.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Penutup -->
+<div class="slide" style="text-align: center; justify-content: center; background: var(--secondary); color: white;">
+    <h1 style="color: white; font-size: 80px;">Sesi Diskusi</h1>
+    <p style="color: #94a3b8; font-size: 24px; margin-top: 20px;">"The quality of your prompt determines the quality of your life (with AI)."</p>
+    
+    <div style="margin-top: 60px; display: flex; justify-content: center; gap: 40px;">
+        <div style="width: 2px; background: #334155;"></div>
+        <div>
+            <p style="font-weight: bold; color: var(--primary); margin: 0;">M. Ikhwan Fathulloh</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
