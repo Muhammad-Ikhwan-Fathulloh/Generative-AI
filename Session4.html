@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4 - Teknik Prompting Lanjutan - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #0f172a;
+            --accent: #8b5cf6;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            margin: 0;
+            padding: 60px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: var(--bg-slide);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 80px;
+            color: var(--text-main);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 30px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--primary));
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 64px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 38px; color: var(--secondary); margin-bottom: 15px; font-weight: 800; border-left: 6px solid var(--accent); padding-left: 20px; }
+        h3 { font-size: 24px; color: var(--primary); margin-bottom: 10px; font-weight: 700; }
+        p, li { font-size: 18px; line-height: 1.6; color: var(--text-main); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .card { background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; }
+        
+        .theory-badge { background: var(--accent); color: white; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+
+        .prompt-box { background: var(--code-bg); color: #e2e8f0; padding: 18px; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 13px; border-left: 5px solid var(--accent); margin: 10px 0; line-height: 1.5; overflow-x: auto; }
+        .footer { position: absolute; bottom: 30px; left: 80px; font-size: 14px; color: var(--text-light); display: flex; gap: 20px; }
+        
+        /* Interactive Tabs */
+        .tab-container { margin-top: 15px; }
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+        .tab-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s; }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Gamification Elements */
+        .game-panel { background: var(--secondary); color: white; padding: 20px; border-radius: 15px; margin-top: 10px; position: relative; }
+        .interactive-btn { background: var(--accent); border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .interactive-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4); }
+        
+        .result-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); border-radius: 15px; display: none; align-items: center; justify-content: center; text-align: center; padding: 20px; z-index: 10; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        .comparison-table th { background: var(--primary-light); text-align: left; padding: 10px; border: 1px solid var(--border); }
+        .comparison-table td { padding: 10px; border: 1px solid var(--border); }
+
+        .step-list { list-style: none; padding: 0; }
+        .step-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+        .step-icon { width: 24px; height: 24px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <span class="tag tag-purple" style="background: rgba(139, 92, 246, 0.1); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 700;">Day 4: Reasoning & Patterns</span>
+        <h1 style="margin-top: 20px;">Teknik Dalam<br>Prompting 2</h1>
+        <p style="font-size: 28px; color: var(--text-light); margin-top: 15px;">Advanced Prompt Engineering & Reasoning Tasks</p>
+    </div>
+    <div class="footer">
+        <span><strong>Muhammad Ikhwan Fathulloh</strong></span>
+        <span>|</span>
+        <span>ikhwanfathulloh.netlify.app</span>
+    </div>
+</div>
+
+<!-- Slide 2: In-Context Learning (ICL) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>In-Context Learning (ICL)</h2>
+    <div class="grid-2">
+        <div>
+            <span class="theory-badge">Definisi</span>
+            <p>Teknik di mana model AI mempelajari pola dari contoh-contoh yang diberikan dalam prompt <strong>tanpa pelatihan ulang</strong>.</p>
+            <div class="step-list" style="margin-top: 20px;">
+                <div class="step-item">
+                    <div class="step-icon">1</div>
+                    <div><strong>Fleksibilitas:</strong> Menyesuaikan diri dengan tugas apa pun secara instan.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">2</div>
+                    <div><strong>Efisiensi:</strong> Mengurangi waktu & sumber daya pelatihan model.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">3</div>
+                    <div><strong>Real-Time:</strong> Penyesuaian output langsung saat interaksi.</div>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="background: var(--primary-light); border-color: var(--primary);">
+            <h3>Bagaimana ICL Bekerja?</h3>
+            <p style="font-size: 16px;">AI menggunakan memori konteksnya untuk memahami pola <strong>Input -> Output</strong> yang Anda sediakan dalam satu sesi.</p>
+            <div class="prompt-box">
+                "Kamar berdebu -> Negatif<br>
+                Kasur empuk -> Positif<br>
+                AC berisik -> [AI memetakan ke Negatif]"
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Zero-shot vs Few-shot (Interaktif) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Zero-shot vs Few-shot Prompting</h2>
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="openTab(event, 'zero-shot', 'tab-content-1')">Zero-shot</button>
+            <button class="tab-btn" onclick="openTab(event, 'few-shot', 'tab-content-1')">Few-shot</button>
+            <button class="tab-btn" onclick="openTab(event, 'structure', 'tab-content-1')">Struktur Penting</button>
+        </div>
+        
+        <div id="zero-shot" class="tab-content tab-content-1 active">
+            <div class="grid-2">
+                <div class="card">
+                    <p>Model diberikan instruksi tanpa contoh apapun. Mengandalkan pengetahuan umum internal AI.</p>
+                    <div class="prompt-box">"Klasifikasikan sentimen: 'Film ini sangat membosankan'."</div>
+                    <p style="font-size: 14px; color: var(--text-light);">Output: <strong>Negatif</strong></p>
+                </div>
+                <div class="card" style="background: #f1f5f9;">
+                    <h3>Kelemahan:</h3>
+                    <p style="font-size: 15px;">Kurang akurat untuk format yang sangat spesifik atau tugas yang belum pernah dilihat model sebelumnya.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="few-shot" class="tab-content tab-content-1">
+            <div class="grid-2">
+                <div class="card">
+                    <p>Memberikan beberapa contoh untuk membimbing pemahaman gaya atau format yang diinginkan.</p>
+                    <div class="prompt-box">
+                        "Ulasan: Film bagus -> 👍 Positif<br>
+                        Ulasan: Cerita jelek -> 👎 Negatif<br>
+                        Ulasan: Aktingnya luar biasa ->"
+                    </div>
+                    <p style="font-size: 14px; color: var(--accent); font-weight: bold;">Output: 👍 Positif</p>
+                </div>
+                <div class="card">
+                    <h3>Kapan Digunakan?</h3>
+                    <p style="font-size: 15px;">Saat Anda butuh format khusus (JSON, Emoji, Tabel) yang sulit dijelaskan hanya dengan instruksi teks.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="structure" class="tab-content tab-content-1">
+            <div class="card" style="border-left: 5px solid var(--warning);">
+                <h3>Penyusunan Contoh Sangat Krusial!</h3>
+                <p style="font-size: 16px;">Jika Anda menyusun contoh dalam format <code>Input: Klasifikasi</code>, AI akan menghasilkan satu kata. Jika Anda menyusunnya dengan kalimat lengkap, AI akan meniru gaya kalimat tersebut.</p>
+                <div class="prompt-box">
+                    "Contoh 1: [Data] -> [Hasil]<br>
+                    Contoh 2: [Data] -> [Hasil]"
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Keterbatasan Few-shot (Interactive Lab) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Kendala & Batasan Few-shot</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Masalah Utama:</h3>
+            <ul style="font-size: 16px;">
+                <li><strong>Kapasitas Pemahaman:</strong> Kesulitan di luar ruang lingkup contoh.</li>
+                <li><strong>Keterbatasan Penalaran:</strong> Cenderung meniru pola daripada menghitung fakta.</li>
+                <li><strong>Gagal Generalisasi:</strong> Terjebak pada bias contoh.</li>
+            </ul>
+        </div>
+        <div class="game-panel">
+            <p><i class="fas fa-flask"></i> <strong>Logic Failure Lab</strong></p>
+            <p style="font-size: 14px; color: #cbd5e1;">Klik tombol di bawah untuk melihat bagaimana AI bisa salah karena meniru pola.</p>
+            <div class="prompt-box" style="font-size: 11px;">
+                5+5+2 = 12 (Genap)<br>
+                10+10+4 = 24 (Genap)<br>
+                15+5+13+7+1 = [?]
+            </div>
+            <button class="interactive-btn" onclick="triggerFailure()">Simulasikan Respon AI</button>
+            <div id="failure-res" class="result-overlay">
+                <div>
+                    <h3 style="color: var(--danger);">Gagal! AI Menjawab: "GENAP"</h3>
+                    <p style="font-size: 15px; color: white;">Padahal 15+5+13+7+1 = 41 (Ganjil).<br>AI hanya mengikuti label "Genap" dari contoh sebelumnya.</p>
+                    <button class="tab-btn" style="margin-top:10px" onclick="closeOverlay('failure-res')">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Chain of Thought (CoT) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Chain of Thought (CoT) Prompting</h2>
+    <p>Metode yang mendorong AI untuk menjelaskan <strong>langkah-langkah berpikirnya</strong> sebelum memberikan jawaban.</p>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Zero-shot CoT</h3>
+            <p style="font-size: 15px;">Tanpa contoh, cukup tambahkan kalimat sakti:</p>
+            <div class="prompt-box" style="color: white; font-weight: bold; font-size: 18px; border-color: var(--success);">
+                "Mari berpikir secara bertahap."
+            </div>
+            <p style="font-size: 14px; color: var(--success); font-weight: bold; margin-top: 10px;"><i class="fas fa-check-circle"></i> Hasil: Akurasi meningkat drastis pada tugas aritmatika & logika.</p>
+        </div>
+        <div class="card" style="background: var(--secondary); color: white;">
+            <h3>Proses Visual:</h3>
+            <div id="cot-steps" style="font-family: monospace; font-size: 13px;">
+                <p style="color: #94a3b8;">[Prompt dikirim...]</p>
+            </div>
+            <button class="interactive-btn" style="width: 100%; margin-top: 20px;" onclick="runCoT()">Jalankan CoT</button>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Varian Thought Generation -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Varian Thought Generation</h2>
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Teknik</th>
+                <th>Cara Kerja</th>
+                <th>Kapan Digunakan?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Thread-of-Thought (ThoT)</strong></td>
+                <td>Membagi masalah besar menjadi sub-masalah kecil dan merangkum setiap langkah.</td>
+                <td>Data/Konteks yang sangat panjang dan kompleks.</td>
+            </tr>
+            <tr>
+                <td><strong>Contrastive CoT</strong></td>
+                <td>Memberikan contoh penalaran yang benar DAN yang salah secara berdampingan.</td>
+                <td>Tugas aritmatika dan fakta agar AI tahu apa yang harus dihindari.</td>
+            </tr>
+            <tr>
+                <td><strong>Self-Ask Prompting</strong></td>
+                <td>AI bertanya pada dirinya sendiri pertanyaan lanjutan sebelum menjawab pertanyaan utama.</td>
+                <td>Pertanyaan faktual kompleks yang butuh pencarian multi-tahap.</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="card" style="margin-top: 20px; background: #fff4e5;">
+        <p style="font-size: 15px; margin: 0;"><strong>Contoh Self-Ask:</strong> "Siapa presiden Indonesia saat ibukota pindah? -> <em>Langkah: Cari tahu kapan ibukota pindah, lalu cari tahu siapa presidennya saat itu.</em>"</p>
+    </div>
+</div>
+
+<!-- Slide 7: Workshop Day 4 -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Workshop: Reasoning Master</h2>
+    <div class="grid-2">
+        <div class="card" style="border-top: 5px solid var(--accent);">
+            <h3>Tugas A: Format Khusus</h3>
+            <p style="font-size: 15px;">Gunakan <strong>Few-shot Prompting</strong> untuk membuat AI mengekstrak nama orang dan pekerjaan dari artikel berita ke dalam format JSON.</p>
+        </div>
+        <div class="card" style="border-top: 5px solid var(--success);">
+            <h3>Tugas B: Logika Matematika</h3>
+            <p style="font-size: 15px;">Selesaikan soal probabilitas kartu menggunakan <strong>Zero-shot CoT</strong> dengan instruksi "Mari berpikir secara bertahap". Bandingkan hasilnya dengan prompt biasa!</p>
+        </div>
+    </div>
+    <div style="margin-top: 30px; background: var(--secondary); padding: 20px; border-radius: 12px; color: white;">
+        <p style="margin: 0; font-size: 14px;"><i class="fas fa-info-circle" style="color: var(--primary);"></i> <strong>Tips:</strong> Gunakan <em>Contrastive CoT</em> jika AI Anda sering melakukan kesalahan yang sama berulang kali.</p>
+    </div>
+</div>
+
+<!-- Slide 8: Penutup -->
+<div class="slide" style="text-align: center; justify-content: center; background: var(--secondary); color: white;">
+    <h1 style="color: white; font-size: 80px;">Sesi Diskusi</h1>
+    <p style="color: #94a3b8; font-size: 24px; margin-top: 20px;">"Berikan AI ruang untuk berpikir, maka ia akan memberikan Anda jawaban yang lebih cerdas."</p>
+    
+    <div style="margin-top: 60px; display: flex; justify-content: center; gap: 40px;">
+        <div>
+            <p style="font-weight: bold; color: var(--accent); margin: 0;">M. Ikhwan Fathulloh</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName, contentClass) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName(contentClass);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = evt.currentTarget.parentElement.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    function triggerFailure() {
+        document.getElementById('failure-res').style.display = 'flex';
+    }
+
+    function closeOverlay(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function runCoT() {
+        const container = document.getElementById('cot-steps');
+        container.innerHTML = '<p style="color: var(--accent);">[Menganalisis langkah...]</p>';
+        
+        const steps = [
+            "1. Menjumlahkan 15 + 5 = 20",
+            "2. Menjumlahkan 20 + 13 = 33",
+            "3. Menjumlahkan 33 + 7 = 40",
+            "4. Menjumlahkan 40 + 1 = 41",
+            "5. Memeriksa sisa bagi: 41 % 2 = 1",
+            "6. Kesimpulan: Jawabannya adalah GANJIL."
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < steps.length) {
+                const p = document.createElement('p');
+                p.style.margin = "5px 0";
+                p.style.color = i === steps.length - 1 ? "var(--success)" : "white";
+                p.innerText = steps[i];
+                container.appendChild(p);
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 800);
+    }
+</script>
+
+</body>
+</html>
