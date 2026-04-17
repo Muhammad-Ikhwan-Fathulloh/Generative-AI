@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 7 - Perplexity & Consensus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f43f5e;
+            --primary-dark: #be123c;
+            --secondary: #0f172a;
+            --accent: #8b5cf6;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --code-bg: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            margin: 0;
+            padding: 80px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            background: var(--bg-slide);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 80px;
+            color: var(--text-main);
+            border-radius: 24px;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 80px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 64px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; color: var(--secondary); margin-bottom: 24px; font-weight: 800; display: flex; align-items: center; gap: 15px; }
+        h2::before { content: ''; width: 8px; height: 40px; background: var(--primary); border-radius: 4px; display: inline-block; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .card { background: #f8fafc; padding: 24px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .prompt-container {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .prompt-text {
+            color: #fbbf24;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-primary { background: #ffe4e6; color: var(--primary-dark); }
+        .badge-accent { background: #f3e8ff; color: var(--accent); }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 40px;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Judul -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <span class="badge badge-primary" style="font-size: 18px; padding: 8px 20px;">Day 7: AI Search & Research</span>
+        <h1>AI Search Engines:<br>Perplexity & Consensus</h1>
+        <p style="font-size: 24px; color: var(--text-light); max-width: 800px; margin-top: 20px;">
+            Meninggalkan pencarian tradisional, menggunakan AI untuk merangkum literatur ilmiah dan mencari fakta dengan sitasi terpercaya.
+        </p>
+    </div>
+    <div class="footer">
+        <span>Muhammad Ikhwan Fathulloh</span>
+    </div>
+</div>
+
+<!-- Slide 2: Mengapa AI Search? -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Revolusi Mesin Pencari</h2>
+    <div class="grid-2">
+        <div>
+            <p>Pencarian tradisional (Google) mengharuskan kita membuka banyak tab dan membaca sendiri. AI Search (Perplexity) membaca untuk kita dan memberikan jawaban yang telah disintesis.</p>
+            <div class="card" style="background: #fff; border-left: 8px solid var(--accent);">
+                <h3>Perbedaan Utama:</h3>
+                <ul>
+                    <li><strong>Google:</strong> Memberikan <em>link</em> menuju jawaban.</li>
+                    <li><strong>Perplexity:</strong> Memberikan <strong>jawaban langsung</strong> beserta referensi (sitasi).</li>
+                    <li><strong>Consensus:</strong> Mengkhususkan pada <strong>jurnal ilmiah</strong> dan literatur akademis.</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="margin-top: 20px;">
+                <h3 style="color: var(--success);"><i class="fas fa-check-circle"></i> Keuntungan bagi Pendidik:</h3>
+                <p>1. Memverifikasi fakta dengan cepat.<br>2. Mencari materi ajar dengan referensi kredibel.<br>3. Meringkas jurnal dalam hitungan detik.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Perplexity -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Perplexity AI: The Answer Engine</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Apa itu Perplexity?</h3>
+            <p>Mesin pencari pintar yang membaca internet secara real-time untuk menjawab pertanyaan kompleks. Sangat cocok untuk riset umum.</p>
+            <h4 style="margin-top: 20px;">Fitur Utama:</h4>
+            <ul>
+                <li><strong>Copilot / Pro Search:</strong> Mengajukan pertanyaan lanjutan untuk mengklarifikasi niat Anda.</li>
+                <li><strong>Sources:</strong> Menampilkan footnote untuk setiap klaim.</li>
+                <li><strong>Collections:</strong> Menyimpan hasil riset dalam folder yang rapi.</li>
+            </ul>
+        </div>
+        <div>
+            <div class="prompt-container">
+                <div class="label">Contoh Prompt Perplexity</div>
+                <div class="prompt-text">
+                    "Tolong jelaskan sejarah revolusi industri secara kronologis dengan poin-poin. Berikan fokus khusus pada penemuan mesin uap, dan sertakan sumber terpercaya."
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Consensus -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Consensus: AI for Science</h2>
+    <div class="grid-2">
+        <div>
+            <p>Consensus hanya mencari jawaban dari repositori <strong>makalah akademik dan jurnal ilmiah peer-reviewed</strong> (seperti dari Semantic Scholar).</p>
+            <div class="card" style="border-top: 6px solid var(--primary);">
+                <h3>Kapan menggunakan Consensus?</h3>
+                <ul>
+                    <li>Menyusun kajian pustaka (literature review).</li>
+                    <li>Membutuhkan data empiris.</li>
+                    <li>Mencari tingkat kesepakatan ilmuwan (Consensus Meter) tentang suatu topik.</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div class="prompt-container">
+                <div class="label">Contoh Pertanyaan Consensus</div>
+                <div class="prompt-text">
+                    "Apakah penggunaan gadget terlalu dini mempengaruhi perkembangan kognitif balita?"<br><br>
+                    "Does project based learning increase student retention in mathematics?"
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Tugas Praktek -->
+<div class="slide" style="text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <i class="fas fa-search" style="font-size: 80px; color: #34d399; margin-bottom: 30px;"></i>
+        <h1 style="color: white;">Tantangan Riset</h1>
+        <p style="font-size: 20px; color: #94a3b8; max-width: 800px; margin: 20px auto;">
+            Pilih sebuah mitos pendidikan (misal: gaya belajar visual/auditori), lalu cari tahu kebenarannya melalui <strong>Consensus</strong> dan bandingkan dengan jawaban umum dari <strong>Perplexity</strong>.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
