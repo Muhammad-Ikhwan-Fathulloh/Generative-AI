@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 6 - Deep Dive Image Prompting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f43f5e;
+            --primary-dark: #be123c;
+            --secondary: #0f172a;
+            --accent: #8b5cf6;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --code-bg: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            margin: 0;
+            padding: 80px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            background: var(--bg-slide);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 80px;
+            color: var(--text-main);
+            border-radius: 24px;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 80px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 64px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; color: var(--secondary); margin-bottom: 24px; font-weight: 800; display: flex; align-items: center; gap: 15px; }
+        h2::before { content: ''; width: 8px; height: 40px; background: var(--primary); border-radius: 4px; display: inline-block; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .card { background: #f8fafc; padding: 24px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .prompt-container {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .prompt-text {
+            color: #fbbf24;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .image-box {
+            width: 100%;
+            height: 280px;
+            background: #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #94a3b8;
+            border: 2px dashed #cbd5e1;
+            margin-top: 15px;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th { background: #f1f5f9; text-align: left; padding: 12px; font-size: 14px; color: var(--secondary); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-primary { background: #ffe4e6; color: var(--primary-dark); }
+        .badge-accent { background: #f3e8ff; color: var(--accent); }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 40px;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Judul -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <span class="badge badge-primary" style="font-size: 18px; padding: 8px 20px;">Day 6: Image Generation</span>
+        <h1>Advanced Prompting:<br>Dall-E & Midjourney</h1>
+        <p style="font-size: 24px; color: var(--text-light); max-width: 800px; margin-top: 20px;">
+            Seni menjembatani imajinasi dan algoritma melalui teknik deskriptif, modifikasi gaya, dan kontrol parameter.
+        </p>
+    </div>
+    <div class="footer">
+        <span>Muhammad Ikhwan Fathulloh</span>
+    </div>
+</div>
+
+<!-- Slide 2: Anatomi Prompt yang Sempurna -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Anatomi Prompt Gambar</h2>
+    <div class="grid-2">
+        <div>
+            <p>Sebuah gambar yang "sempurna" jarang lahir dari prompt satu kata. Kita perlu memberikan struktur yang jelas bagi AI.</p>
+            <div class="card" style="background: #fff; border-left: 8px solid var(--accent);">
+                <h3>5 Elemen Kunci:</h3>
+                <ol style="font-size: 15px; line-height: 1.8;">
+                    <li><strong>Subject:</strong> Orang, hewan, benda, atau konsep utama.</li>
+                    <li><strong>Action/Context:</strong> Apa yang dilakukan subjek? Di mana lokasinya?</li>
+                    <li><strong>Style/Medium:</strong> Lukisan cat minyak, foto 35mm, pixel art, dll.</li>
+                    <li><strong>Lighting/Color:</strong> Golden hour, neon, monokrom, pastel.</li>
+                    <li><strong>Composition:</strong> Sudut kamera (shot types) dan kedalaman ruang.</li>
+                </ol>
+            </div>
+        </div>
+        <div>
+            <div class="prompt-container">
+                <div class="label">Contoh Evolusi Prompt</div>
+                <div class="prompt-text">
+                    <span style="color: #60a5fa;">Level 1:</span> "Seekor kucing"<br>
+                    <span style="color: #fb7185;">Level 2:</span> "Seekor kucing astronot di bulan"<br>
+                    <span style="color: #34d399;">Level 3:</span> "Seekor kucing astronot berbulu oranye sedang menanam bendera di bulan, gaya lukisan Van Gogh, sapuan kuas tebal, cahaya bintang biru, sinematik."
+                </div>
+            </div>
+            <div class="image-box">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Perpustakaan Style Modifiers (Bagian 1) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Katalog Style Modifiers</h2>
+    <p>Gunakan modifier ini untuk mengubah "mood" dan medium gambar secara instan.</p>
+    <div class="grid-3">
+        <div class="card">
+            <h3 style="color: var(--primary);"><i class="fas fa-paint-brush"></i> Artistic Medium</h3>
+            <table>
+                <tr><td><strong>Digital Painting</strong></td><td>Halus & modern</td></tr>
+                <tr><td><strong>Oil Painting</strong></td><td>Klasik & bertekstur</td></tr>
+                <tr><td><strong>Watercolor</strong></td><td>Transparan & lembut</td></tr>
+                <tr><td><strong>Sketch/Ink</strong></td><td>Hitam putih, kasar</td></tr>
+                <tr><td><strong>Ukiyo-e</strong></td><td>Tradisional Jepang</td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <h3 style="color: var(--accent);"><i class="fas fa-cube"></i> Digital Render</h3>
+            <table>
+                <tr><td><strong>Unreal Engine 5</strong></td><td>Sangat realistis</td></tr>
+                <tr><td><strong>Octane Render</strong></td><td>Pencahayaan fisik</td></tr>
+                <tr><td><strong>Low Poly</strong></td><td>Gaya game retro</td></tr>
+                <tr><td><strong>Isometric View</strong></td><td>Sudut pandang 3D</td></tr>
+                <tr><td><strong>Ray Tracing</strong></td><td>Refleksi sempurna</td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <h3 style="color: var(--success);"><i class="fas fa-camera"></i> Photography</h3>
+            <table>
+                <tr><td><strong>Macro Shot</strong></td><td>Detail sangat dekat</td></tr>
+                <tr><td><strong>Street Photo</strong></td><td>Candid & natural</td></tr>
+                <tr><td><strong>Analog Film</strong></td><td>Grainy, warna hangat</td></tr>
+                <tr><td><strong>Double Exposure</strong></td><td>Dua gambar menyatu</td></tr>
+                <tr><td><strong>Bokeh</strong></td><td>Background blur</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Power of Quality Boosters -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Quality Boosters: Lebih dari Sekedar "HD"</h2>
+    <div class="grid-2">
+        <div>
+            <p>Quality boosters memaksa model AI untuk memberikan perhatian lebih pada detail pixel dan koherensi tekstur.</p>
+            <div class="card">
+                <h3>Top 10 Boosters:</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                    <span class="badge badge-primary">Hyper-realistic</span>
+                    <span class="badge badge-primary">8K Resolution</span>
+                    <span class="badge badge-primary">Masterpiece</span>
+                    <span class="badge badge-primary">Highly Detailed</span>
+                    <span class="badge badge-primary">Professional Lighting</span>
+                    <span class="badge badge-primary">Trending on ArtStation</span>
+                    <span class="badge badge-primary">Intricate Details</span>
+                    <span class="badge badge-primary">Sharp Focus</span>
+                    <span class="badge badge-primary">Volumetric Lighting</span>
+                    <span class="badge badge-primary">Award Winning</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="prompt-container">
+                <div class="label">Prompt Comparison</div>
+                <div class="prompt-text">
+                    "Portrait of an old man" <br>
+                    <span style="color: #fff; opacity: 0.5;">vs</span><br>
+                    "Portrait of an old man, 8k, hyper-realistic, sharp focus, skin pores visible, cinematic lighting, masterpiece"
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="image-box" style="height: 150px; font-size: 10px;">[Standard Output]</div>
+                <div class="image-box" style="height: 150px; font-size: 10px; border-color: var(--success);">[Quality Boosted Output]</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Teknik Repetisi & Bobot (Midjourney Style) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Repetisi & Weighted Terms</h2>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Teknik Repetisi</h3>
+            <p>AI memproses kata secara berurutan. Mengulang kata meningkatkan "perhatian" AI terhadap objek tersebut.</p>
+            <div class="prompt-box" style="background: #1e293b; color: #fff; padding: 15px; border-radius: 8px;">
+                "A field of <strong>flowers flowers flowers flowers flowers</strong>"
+            </div>
+            <p style="font-size: 13px; margin-top: 10px;">Hasilnya: Kepadatan bunga akan jauh lebih tinggi daripada hanya menulis "many flowers".</p>
+        </div>
+        <div class="card">
+            <h3>Weighted Terms (::)</h3>
+            <p>Di Midjourney, anda bisa menentukan bobot spesifik menggunakan simbol <strong>::</strong></p>
+            <div class="prompt-container" style="margin-top: 10px;">
+                <div class="prompt-text">
+                    "Space::2 mountain::1 forest::-0.5"
+                </div>
+            </div>
+            <ul style="font-size: 13px;">
+                <li><strong>Space::2</strong> (Sangat dominan)</li>
+                <li><strong>Mountain::1</strong> (Normal)</li>
+                <li><strong>Forest::-0.5</strong> (Coba hilangkan/kurangi)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Masterclass Kamera (Shot Types) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Cinematography dalam Prompting</h2>
+    <p>Jangan biarkan AI memilih sudut kamera secara acak. Tentukan "Shot Type" anda.</p>
+    <div class="grid-3">
+        <div class="card">
+            <span class="badge badge-accent">Extreme Close-Up</span>
+            <div class="image-box" style="height: 150px;">Fokus pada pupil mata atau tekstur kulit</div>
+            <p style="font-size: 11px; margin-top: 8px;">Gunakan untuk emosi mendalam atau detail produk.</p>
+        </div>
+        <div class="card">
+            <span class="badge badge-accent">Drone / Aerial View</span>
+            <div class="image-box" style="height: 150px;">Sudut pandang tegak lurus dari atas</div>
+            <p style="font-size: 11px; margin-top: 8px;">Gunakan untuk pemandangan kota atau pola geografis.</p>
+        </div>
+        <div class="card">
+            <span class="badge badge-accent">Fish-eye Lens</span>
+            <div class="image-box" style="height: 150px;">Efek cembung 180 derajat</div>
+            <p style="font-size: 11px; margin-top: 8px;">Gunakan untuk kesan dinamis, urban, atau musik video.</p>
+        </div>
+    </div>
+    <div class="grid-3" style="margin-top: 20px;">
+        <div class="card">
+            <span class="badge badge-accent">Full Body Shot</span>
+            <div class="image-box" style="height: 150px;">Kepala hingga kaki terlihat</div>
+        </div>
+        <div class="card">
+            <span class="badge badge-accent">Low Angle (Hero Shot)</span>
+            <div class="image-box" style="height: 150px;">Kamera di bawah, melihat ke atas</div>
+        </div>
+        <div class="card">
+            <span class="badge badge-accent">Dutch Angle</span>
+            <div class="image-box" style="height: 150px;">Kamera miring (kesan tegang)</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Duel Maut: Dall-E 3 vs Midjourney v6 -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Dall-E 3 vs Midjourney v6</h2>
+    <div class="grid-2">
+        <div class="card" style="border-top: 6px solid #2563eb;">
+            <h3>Dall-E 3 (The Logic King)</h3>
+            <ul style="font-size: 14px; line-height: 1.8;">
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Semantic Understanding:</strong> Sangat paham bahasa manusia.</li>
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Text Rendering:</strong> Bisa menulis teks di gambar dengan akurat.</li>
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Aspect Ratio:</strong> Mudah diatur lewat chat.</li>
+                <li><i class="fas fa-times-circle" style="color: var(--primary);"></i> <strong>Vibe:</strong> Kadang terasa terlalu "halus" atau seperti stok foto.</li>
+            </ul>
+        </div>
+        <div class="card" style="border-top: 6px solid #8b5cf6;">
+            <h3>Midjourney (The Artist)</h3>
+            <ul style="font-size: 14px; line-height: 1.8;">
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Aesthetic Soul:</strong> Pencahayaan dan tekstur level dewa.</li>
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Creative Freedom:</strong> Sering memberi hasil tak terduga yang indah.</li>
+                <li><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Parameters:</strong> Kontrol teknis tinggi (--ar, --stylize, --chaos).</li>
+                <li><i class="fas fa-times-circle" style="color: var(--primary);"></i> <strong>Complexity:</strong> Susah mengikuti instruksi yang terlalu mendetail.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Case Study: Surrealisme & Abstraksi -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Studi Kasus: Surrealisme</h2>
+    <div class="prompt-container">
+        <div class="label">Prompt Kompleks</div>
+        <div class="prompt-text">
+            "A surreal landscape where mountains are made of stacked vintage books, waterfalls of flowing liquid ink, a sky with two moons, clock faces melting on trees like Dali's style, cinematic lighting, 8k."
+        </div>
+    </div>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Analisis Dall-E:</h3>
+            <p style="font-size: 13px;">Dall-E akan menggambar <strong>semuanya</strong>. Gunung buku ada, tinta mengalir ada, dua bulan ada, jam meleleh ada. Komposisinya rapi dan literal.</p>
+        </div>
+        <div class="card">
+            <h3>Analisis Midjourney:</h3>
+            <p style="font-size: 13px;">Midjourney mungkin melewatkan "dua bulan", tapi gunung bukunya akan terlihat sangat dramatis dengan pencahayaan yang luar biasa indah. Hasilnya terasa seperti lukisan galeri.</p>
+        </div>
+    </div>
+    <div class="grid-2" style="margin-top: 20px;">
+        <div class="image-box">[Visualisasi Literat Dall-E]</div>
+        <div class="image-box">[Visualisasi Artistik Midjourney]</div>
+    </div>
+</div>
+
+<!-- Slide 9: Tips Memperbaiki Gambar Rusak -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Memperbaiki "Deformed Generation"</h2>
+    <div class="grid-2">
+        <div>
+            <p>Pernah melihat tangan dengan 7 jari? Itu adalah masalah klasik AI. Berikut cara meminimalisirnya:</p>
+            <div class="card">
+                <h3>Strategi Perbaikan:</h3>
+                <ul style="font-size: 14px;">
+                    <li><strong>Negative Prompting:</strong> Di Midjourney gunakan <code>--no hands, deformed, extra fingers</code>.</li>
+                    <li><strong>Inpainting:</strong> Gunakan fitur "Editor" di Dall-E atau "Vary Region" di Midjourney untuk menggambar ulang area yang rusak.</li>
+                    <li><strong>Zoom Out:</strong> Terkadang masalah anatomi muncul karena frame terlalu sempit. Gunakan <code>--zoom 2</code>.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card" style="background: var(--secondary); color: white;">
+            <h3 style="color: var(--primary);">Expert Tip:</h3>
+            <p style="color: #cbd5e1; font-size: 14px;">Jika AI kesulitan menggambar wajah dari jauh, gunakan prompt <strong>"Detail portrait"</strong> terlebih dahulu, lalu gunakan fitur <strong>"Outpainting"</strong> untuk memperluas latar belakangnya.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: Tugas Praktek -->
+<div class="slide" style="text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <i class="fas fa-lightbulb" style="font-size: 80px; color: #fbbf24; margin-bottom: 30px;"></i>
+        <h1 style="color: white;">Tantangan Hari Ini</h1>
+        <p style="font-size: 20px; color: #94a3b8; max-width: 800px; margin: 20px auto;">
+            Buatlah sebuah gambar yang menggabungkan <strong>3 Unsur Mustahil</strong> (misal: air terjun api, istana di awan, pohon emas) menggunakan minimal 3 Style Modifiers dan 2 Quality Boosters.
+        </p>
+        <div class="prompt-container" style="display: inline-block; padding: 20px 40px;">
+            <span class="prompt-text" style="font-size: 18px;">/imagine prompt: [Subjek Ajaib] + [Gaya Artistik] + [Kualitas] --ar 16:9</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
