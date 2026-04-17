@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 - Asisten Spesialis (Opal & Chaining) Comprensive - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #10b981;
+            --secondary: #064e3b;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --bg-accent: #f8fafc;
+            --danger: #e63946;
+            --blue: #3b82f6;
+            --yellow: #f59e0b;
+            --purple: #8b5cf6;
+            --indigo: #4338ca;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+            margin: 0;
+            padding: 100px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1400px;
+            height: 800px;
+            background: var(--bg-slide);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 120px;
+            color: var(--text-main);
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 48px;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h3 {
+            font-size: 30px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        h4 {
+            font-size: 24px;
+            color: var(--secondary);
+            margin: 20px 0;
+            font-weight: 700;
+        }
+
+        p,
+        li {
+            font-size: 21px;
+            line-height: 1.7;
+            color: var(--text-main);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+        }
+
+        .card {
+            background: var(--bg-accent);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .source-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Ensure contrast in dark cards */
+        .card[style*="background"] h1,
+        .card[style*="background"] h2,
+        .card[style*="background"] h3,
+        .card[style*="background"] h4,
+        .card[style*="background"] p,
+        .card[style*="background"] li {
+            color: inherit !important;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 50px;
+            border-top: 2px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .tag-pill {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Opal Visual Flow */
+        .node-canvas {
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            border-radius: 30px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .opal-node {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 3px solid var(--blue);
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .opal-node::after {
+            content: '↓';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: var(--blue);
+        }
+
+        .opal-node:last-child::after {
+            display: none;
+        }
+
+        .option-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-card:hover, .option-card.active {
+            border-color: var(--primary);
+            background: #ecfdf5;
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Welcome -->
+    <div class="slide">
+        <div class="watermark">KOALAWAN X BINUS CENTER</div>
+        <div style="margin-top: auto; margin-bottom: auto;">
+            <div class="tag-pill" style="width: fit-content; margin-bottom: 30px;">FULL CURRICULUM: SESSION 3</div>
+            <h1>Asisten Spesialis (Opal):<br>Membangun Guru Digital Anda</h1>
+            <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
+                Eksplorasi mendalam platform Opal Google untuk merakit asisten pintar yang menguasai silabus, gaya bicara, dan kebutuhan unik kelas Anda.
+            </p>
+        </div>
+        <div class="footer">
+            <span>Pelatihan Komprehensif Guru (3 Jam)</span>
+            <span>By Muhammad Ikhwan Fathulloh</span>
+        </div>
+    </div>
+
+    <!-- Slide 2: Agenda Sesi 3 -->
+    <div class="slide">
+        <div class="watermark">AGENDA</div>
+        <h2><i class="fas fa-list-check"></i> Rencana Pembelajaran Sesi 3</h2>
+        <div class="grid-2">
+            <div class="card">
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 1:</strong> Ekosistem Opal (No-Code AI Architecture)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 2:</strong> Pengelolaan Knowledge Base (Data Ingestion)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 3:</strong> Perancangan Alur Kerja Bertingkat (Nodes)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 4:</strong> Integrasi & Kolaborasi dalam "Spaces"</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Workshop:</strong> Merakit Asisten Penilai Riset Sederhana</li>
+                </ul>
+            </div>
+            <div class="card" style="background: var(--indigo); color: white;">
+                <h4>Output Peserta:</h4>
+                <p>Memiliki satu link asisten khusus yang siap dibagikan ke siswa atau rekan guru dengan instruksi yang sudah terkunci.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Mengapa Harus Spesialis? -->
+    <div class="slide">
+        <div class="watermark">FILOSOFI</div>
+        <h2><i class="fas fa-user-gear"></i> Kebangkitan Asisten Spesialis</h2>
+        <div class="grid-2">
+            <div>
+                <p>Chat biasa adalah "Generalis"—serba tahu tapi seringkali kurang mendalam. Sebaliknya, <strong>Asisten Spesialis</strong> memiliki "Basis Pengetahuan" yang eksklusif.</p>
+                <div class="card" style="margin-top:30px">
+                    <h4>Benefit Spesialisasi:</h4>
+                    <ul>
+                        <li><strong>Konsistensi:</strong> Tidak akan keluar dari silabus yang sudah ditentukan.</li>
+                        <li><strong>Konteks Abadi:</strong> Tidak lupa instruksi meskipun percakapan sangat panjang.</li>
+                        <li><strong>Portabilitas:</strong> Berbentuk link yang bisa dibuka di browser siapa saja.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="text-align:center">
+                <i class="fas fa-robot fa-10x" style="color:var(--primary); opacity:0.1"></i>
+                <p style="font-style:italic; margin-top:20px">"Opal mengubah AI dari sekadar lawan bicara menjadi alat otomasi produktivitas yang tangguh."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Arsitektur Ekosistem Opal Google -->
+    <div class="slide">
+        <div class="watermark">TEKNOLOGI</div>
+        <h2><i class="fas fa-microchip"></i> Memahami Arsitektur Opal</h2>
+        <p>Opal bukan sekadar aplikasi chat, melainkan ekosistem "Mini-App Builder" berbasis AI.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h3>1. The Canvas (The Mind)</h3>
+                <p>Tempat kita merangkai logika berpikir AI menggunakan kotak-kotak (Nodes).</p>
+            </div>
+            <div class="card">
+                <h3>2. The Knowledge (The Memory)</h3>
+                <p>Tempat kita mengunggah PDF, draf RPP, atau buku teks agar AI "dilatih" secara instan.</p>
+            </div>
+            <div class="card" style="grid-column: span 2;">
+                <h3>3. The Space (The Office)</h3>
+                <p>Lingkungan kerja di mana Anda bisa mengelompokkan berbagai asisten berdasarkan Major atau Mata Pelajaran.</p>
+            </div>
+        </div>
+        <span class="source-tag">Selengkapnya: <a href="https://opal.google.com" target="_blank" class="source-link">Eksplorasi opal.google.com</a></span>
+    </div>
+
+    <!-- Slide 5: Konsep 1: Knowledge Base (Memory) -->
+    <div class="slide">
+        <div class="watermark">TEKNIK</div>
+        <h2><i class="fas fa-book-half"></i> Konsep 1: Knowledge Base</h2>
+        <p>Inilah yang membuat asisten Anda <strong>Unik</strong>. Ia hanya akan merujuk pada data yang Anda berikan.</p>
+        <div class="grid-2">
+            <div class="card" style="border-left:10px solid var(--primary)">
+                <h4>Data Ingestion:</h4>
+                <p>Anda bisa memasukkan:</p>
+                <ul>
+                    <li>Dokumen Kurikulum Sekolah</li>
+                    <li>Contoh gaya penulisan raport Anda</li>
+                    <li>Jurnal-jurnal referensi mengajar</li>
+                    <li>Data anonym siswa</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Dynamic Retrieval:</h4>
+                <p>Saat seseorang bertanya, asisten akan mencari jawaban <strong>terlebih dahulu</strong> di Knowledge Base sebelum menggunakan pengetahuan umumnya.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Konsep 2: Node-Based Logic (Visual Flow) -->
+    <div class="slide">
+        <div class="watermark">TEKNIK</div>
+        <h2><i class="fas fa-diagram-project"></i> Konsep 2: Node-Based Logic</h2>
+        <p>Mengubah instruksi teks menjadi alur kerja visual. Ini mempermudah pelacakan logika AI.</p>
+        <div class="node-canvas">
+            <div class="opal-node" style="border-color: var(--blue)">
+                <strong>TRIGGER:</strong> Input Materi (Teks/File)
+            </div>
+            <div class="opal-node" style="border-color: var(--purple)">
+                <strong>AI STEP 1:</strong> Identifikasi Konsep Kunci
+            </div>
+            <div class="opal-node" style="border-color: var(--primary)">
+                <strong>OUTPUT:</strong> Tabel Ringkasan & 3 Soal Diskusi
+            </div>
+        </div>
+        <p style="margin-top:30px; text-align:center">Logika linear semacam ini menjamin output yang <strong>terstruktur</strong> setiap kali digunakan.</p>
+    </div>
+
+    <!-- Slide 7: Konsep 3: Triggers & Parameters -->
+    <div class="slide">
+        <div class="watermark">AUTOMATION</div>
+        <h2><i class="fas fa-bolt"></i> Konsep 3: Triggers & Parameters</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Apa itu Trigger?</h3>
+                <p>Kejadian yang memulai kerja asisten. Di Opal, pemicu utamanya adalah <strong>Input Pengguna</strong> (Misal: Paste link video YouTube).</p>
+            </div>
+            <div class="card">
+                <h3>Parameter Kustom:</h3>
+                <p>Anda bisa membuat "isian form" yang harus diisi pengguna sebelum asisten bekerja. <br><small>Contoh: Pilihan Jenjang (SD/SMP/SMA) sebelum membuat soal.</small></p>
+            </div>
+        </div>
+        <div class="workshop-box" style="background:#fefce8; border-color:#fef08a">
+            <p><strong>Tips:</strong> Dengan Parameter, satu asisten bisa fleksibel melayani berbagai kelas dengan satu instruksi pusat.</p>
+        </div>
+    </div>
+
+    <!-- Slide 8: Tur Antarmuka: The Library vs The Canvas -->
+    <div class="slide">
+        <div class="watermark">TOUR</div>
+        <h2><i class="fas fa-compass"></i> Menavigasi Antarmuka Opal</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>1. The Library (Inspirasi)</h4>
+                <p>Tempat bagi para "Pioneer" memamerkan asisten mereka. Anda bisa me-<strong>Remix</strong> asisten guru lain—menduplikasinya dan menyesuaikannya untuk kelas Anda.</p>
+            </div>
+            <div class="card">
+                <h4>2. The Canvas (Praktek)</h4>
+                <p>Tampilan "seret dan lepas" (drag and drop) di mana langkah-langkah AI dirakit. Setiap kotak (Node) mewakili satu Prompt spesifik.</p>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:40px">
+            <i class="fas fa-shapes fa-8x" style="color:var(--primary); opacity:0.1"></i>
+        </div>
+    </div>
+
+    <!-- Slide 9: Step 1: Mendefinisikan Tujuan Asisten -->
+    <div class="slide">
+        <div class="watermark">TUTORIAL</div>
+        <h2><i class="fas fa-bullseye"></i> Langkah 1: Define the Purpose</h2>
+        <div class="card">
+            <h4>Pertanyaan Sebelum Membangun:</h4>
+            <ul style="font-size:20px">
+                <li>Apa <strong>satu masalah utama</strong> yang ingin diselesaikan asisten ini?</li>
+                <li>Data apa yang AI butuhkan agar bisa menjawab dengan baik? (Knowledge)</li>
+                <li>Siapa yang akan menggunakan asisten ini? (Guru sendiri atau Siswa?)</li>
+            </ul>
+        </div>
+        <div class="workshop-box" style="background:#e0f2fe; border-color:#0ea5e9">
+            <p><strong>Analisis:</strong> Semakin sempit fokus asisten Anda, semakin cerdas ia bekerja. <br><small>Buruk: "Asisten Guru IPA". Baik: "Asisten Pembuat Proyek Hidroponik".</small></p>
+        </div>
+    </div>
+
+    <!-- Slide 10: Step 2: Adding Logic Nodes (Conditionals) -->
+    <div class="slide">
+        <div class="watermark">TUTORIAL</div>
+        <h2><i class="fas fa-code-branch"></i> Langkah 2: Merakit Rantai Logika</h2>
+        <p>Gunakan teknik "Prompt Chaining" yang kita pelajari di Sesi 2 ke dalam struktur Node.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Node Logika 1: Analisis</h4>
+                <p>"Ekstrak poin penting dari materi ini."</p>
+            </div>
+            <div class="card" style="border-color: var(--blue)">
+                <h4>Node Logika 2: Transformasi</h4>
+                <p>"Ubah poin tersebut menjadi lirik lagu Rap untuk anak-anak."</p>
+            </div>
+        </div>
+        <div style="margin-top:40px; padding:20px; background:#fff; border-radius:12px; border:1px solid #ddd">
+            <p><strong>Advanced:</strong> Anda bisa menambahkan Node "Reviewer" di tengah jalan untuk mengecek apakah Output 1 sudah layak sebelum masuk ke Langkah 2.</p>
+        </div>
+    </div>
+
+    <!-- Slide 11: Step 3: Integrating Google Drive Data -->
+    <div class="slide">
+        <div class="watermark">INTEGRASI</div>
+        <h2><i class="fas fa-cloud"></i> Menghubungkan Google Drive</h2>
+        <div class="grid-2">
+            <div>
+                <p>Salah satu kekuatan Opal adalah integrasi <strong>"Live"</strong> dengan folder Google Drive Anda.</p>
+                <div class="card" style="margin-top:20px">
+                    <h4>Keuntungan:</h4>
+                    <ul>
+                        <li>Update file di Drive = Asisten otomatis terupdate ilmunya.</li>
+                        <li>Tidak perlu copy-paste teks panjang secara manual.</li>
+                        <li>Aman dalam ekosistem korporat/sekolah Google.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="text-align:center">
+                <i class="fab fa-google-drive fa-10x" style="color:var(--blue); opacity:0.1"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Interactive: Persona Expert Builder -->
+    <div class="slide">
+        <div class="watermark">PRAKTEK</div>
+        <h2><i class="fas fa-user-plus"></i> Workshop: Rancang Karakter Asisten</h2>
+        <p>Pilih kombinasi identitas asisten spesial Anda di Opal:</p>
+        <div class="grid-2">
+            <div class="option-card" onclick="selectPersona(this, 'Karakter: Socratic Tutor')">
+                <h3>Socratic Tutor</h3>
+                <p>Tidak langsung memberi jawaban, tapi bertanya balik untuk memicu logika siswa.</p>
+            </div>
+            <div class="option-card" onclick="selectPersona(this, 'Karakter: Curriculum Architect')">
+                <h3>Curriculum Architect</h3>
+                <p>Fokus merancang silabus kaku menjadi rencana belajar yang sangat terstruktur.</p>
+            </div>
+            <div class="option-card" onclick="selectPersona(this, 'Karakter: Admin Wizard')">
+                <h3>Admin Wizard</h3>
+                <p>Ahli merapikan data berantakan menjadi tabel dan formulir sekolah yang rapi.</p>
+            </div>
+            <div class="option-card" onclick="selectPersona(this, 'Karakter: Creative Game Master')">
+                <h3>Creative Game Master</h3>
+                <p>Mengubah setiap materi menjadi tantangan, teka-teki, dan petualangan gamifikasi.</p>
+            </div>
+        </div>
+        <div id="personaFeedback" class="card" style="margin-top:30px; display:none; border-color:var(--primary); background:#ecfdf5">
+            <p id="personaText"></p>
+        </div>
+    </div>
+
+    <!-- Slide 13: Interactive: 5-Step Workflow Logic Mapper -->
+    <div class="slide">
+        <div class="watermark">WORKSHOP</div>
+        <h2><i class="fas fa-project-diagram"></i> Praktik: Merakit Rantai 5 Tahap</h2>
+        <p>Urutkan langkah di bawah ini untuk membangun "Asisten Pembuat Bahan Ajar Mandiri":</p>
+        <div id="flowItems" style="margin-top:20px">
+            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(1, 'Identify Key Concepts')">Langkah 1: Identifikasi 3 Konsep Kunci dari Materi</div>
+            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(2, 'Analogy Creation')">Langkah 2: Buat Analogi Menarik untuk masing-masing konsep</div>
+            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(3, 'Draft Content')">Langkah 3: Susun Narasi Penjelasan Utama</div>
+            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(4, 'Quiz Generation')">Langkah 4: Buat Kuis Pengukuran Pemahaman</div>
+            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(5, 'Export Link')">Langkah 5: Sajikan Link Latihan untuk Siswa</div>
+        </div>
+        <div id="flowFeedback" style="margin-top:20px; font-weight:700; color:var(--blue); display:none"></div>
+    </div>
+
+    <!-- Slide 14: Context Injection & Prompt Injection -->
+    <div class="slide">
+        <div class="watermark">ADVANCED</div>
+        <h2><i class="fas fa-syringe"></i> Teknik Context Injection</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Apa itu Context Injection?</h4>
+                <p>Memasukkan data dari Node sebelumnya ke dalam Prompt Node berikutnya menggunakan <strong>Variable</strong> (Contoh: `{{node_1_output}}`).</p>
+            </div>
+            <div class="card">
+                <h4>Manfaat:</h4>
+                <p>AI bekerja dengan input yang sangat bersih dan terfokus, mengurangi kemungkinan ia "ngelantur" ke topik lain yang tidak relevan.</p>
+            </div>
+        </div>
+        <div class="workshop-box">
+            "Ini adalah rahasia mengapa asisten spesialis di Opal terasa jauh lebih pintar daripada chat Gemini biasa."
+        </div>
+    </div>
+
+    <!-- Slide 15: Case Study: Auto-Feedback Assistant -->
+    <div class="slide">
+        <div class="watermark">STUDI KASUS</div>
+        <h2><i class="fas fa-comment-dots"></i> Kasus: Asisten Pemberi Umpan Balik</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>The Problem:</h3>
+                <p>Mengoreksi 40 essay siswa memakan waktu 4 jam. Komentar guru seringkali jadi seragam karena kelelahan.</p>
+            </div>
+            <div class="card" style="background:var(--secondary); color:white">
+                <h3>The Opal Solution:</h3>
+                <ol>
+                    <li>Asisten dilatih dengan <strong>Rubrik Penilaian</strong> Guru.</li>
+                    <li>Siswa submit teks essay.</li>
+                    <li>AI memberikan umpan balik spesifik per paragraf berdasarkan rubrik.</li>
+                    <li><strong>Guru mereview & memvalidasi sebelum dikirim balik.</strong></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: Security & Collaboration in Spaces -->
+    <div class="slide">
+        <div class="watermark">COLLABORATION</div>
+        <h2><i class="fas fa-users-viewfinder"></i> Keamanan & Kolaborasi di Spaces</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Sharing is Caring:</h4>
+                <p>Anda bisa mengundang rekan sejawat ke <strong>Space</strong> Anda untuk mengedit asisten bersama-sama. <br><small>Cocok untuk tim MGMP atau Koordinator Level.</small></p>
+            </div>
+            <div class="card">
+                <h4>Publishing Control:</h4>
+                <p>Anda bisa menentukan asisten hanya untuk penggunaan pribadi, terbatas tim sekolah, atau dipublikasikan secara global di Library.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Tips Mengelola Library Asisten -->
+    <div class="slide">
+        <div class="watermark">MANAGEMENT</div>
+        <h2><i class="fas fa-folder-tree"></i> Mengelola Perpustakaan Asisten</h2>
+        <p>Semakin banyak Anda bereksperimen, semakin banyak "alat" yang Anda miliki.</p>
+        <div class="grid-2">
+            <div class="card" style="border-top:10px solid var(--blue)">
+                <h4>Kit Admin Harian:</h4>
+                <ul>
+                    <li>Asisten Raport</li>
+                    <li>Asisten Agenda WA</li>
+                    <li>Asisten Notulensi Rapat</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:10px solid var(--primary)">
+                <h4>Kit Pengajaran:</h4>
+                <ul>
+                    <li>Asisten Pembuat Kuis</li>
+                    <li>Asisten Ide Proyek P5</li>
+                    <li>Asisten Penjelasan Analogi</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: Link Referensi Sesi 3 (Lengkap) -->
+    <div class="slide">
+        <div class="watermark">REFERENSI</div>
+        <h2><i class="fas fa-book-bookmark"></i> Referensi & Sumber Belajar Sesi 3</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Eksplorasi Teknologi:</h4>
+                <ul style="font-size: 18px;">
+                    <li><a href="https://opal.google.com" target="_blank" class="source-link">Mulai Membangun di Opal Google</a></li>
+                    <li><a href="https://blog.google/technology/ai/google-labs-opal/" target="_blank" class="source-link">Google Blog: Introducing Opal Labs</a></li>
+                    <li><a href="https://vertexai.google/" target="_blank" class="source-link">Vertex AI Documentation</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Inspirasi Guru:</h4>
+                <ul style="font-size: 18px;">
+                    <li><a href="https://www.youtube.com/results?search_query=google+opal+ai+for+teachers" target="_blank" class="source-link">Daftar Putar Tutorial Opal (YouTube)</a></li>
+                    <li><a href="https://ikhwanfathulloh.netlify.app/" target="_blank" class="source-link">Bimbingan Teknis Pribadi: Ikhwan Fathulloh</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Tanya Jawab & Persiapan Sesi 4 -->
+    <div class="slide">
+        <div class="watermark">Q&A</div>
+        <h2><i class="fas fa-question-circle"></i> Diskusi & Tanya Jawab</h2>
+        <div class="card" style="text-align:center; padding:40px">
+            <p><strong>Coba pikirkan:</strong> Satu proses administrasi apa yang paling membosankan dan ingin Anda buatkan "Asisten Otomatis"-nya besok?</p>
+            <div style="margin-top:30px">
+                <a href="https://www.linkedin.com/in/muhammad-ikhwan-fathulloh/" target="_blank" class="tag-pill" style="text-decoration:none"><i class="fab fa-linkedin"></i> Konsultasikan Ide Asisten Anda di LinkedIn</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 20: Kesimpulan & Sesi Berikutnya -->
+    <div class="slide">
+        <div class="watermark">PENUTUP</div>
+        <h2><i class="fas fa-flag-checkered"></i> Selesai Sesi 3</h2>
+        <div class="card" style="text-align:center; padding:60px; background:var(--secondary); color:white">
+            <h3>Besok Sesi Terakhir:</h3>
+            <h1>Sesi 4: Membangun Kit Mengajar Otomatis</h1>
+            <p style="font-size:24px; color:#cbd5e1; margin-top:20px">Menyatukan seluruh asisten spesialis menjadi satu sistem "Pabrik Content" untuk RPP, Penilaian, dan Raport.</p>
+        </div>
+        <div class="footer">
+            <span>Sesi 3: Selesai</span>
+            <span>Koalawan x BINUS Center</span>
+        </div>
+    </div>
+
+    <script>
+        function selectPersona(el, text) {
+            const cards = document.querySelectorAll('.option-card');
+            cards.forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+
+            const res = document.getElementById('personaFeedback');
+            const txt = document.getElementById('personaText');
+            res.style.display = "block";
+            txt.innerHTML = "<i class='fas fa-id-badge'></i> <strong>Karakter Terpilih: " + text + "</strong>. Ini akan menjadi identitas permanen asisten Anda di Opal Google.";
+        }
+
+        let currentStep = 0;
+        function addFlow(s, text) {
+            if (s === currentStep + 1) {
+                currentStep = s;
+                const items = document.querySelectorAll('#flowItems .option-card');
+                items[s-1].classList.add('active');
+                if(currentStep === 5) {
+                    const res = document.getElementById('flowFeedback');
+                    res.innerHTML = "<i class='fas fa-check-circle'></i> Rantai Logika Sempurna! Asisten Anda kini siap meluncur.";
+                    res.style.display = "block";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4 - Membangun Kit Mengajar Otomatis Comprensive - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #10b981;
+            --secondary: #064e3b;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --bg-accent: #f8fafc;
+            --danger: #e63946;
+            --blue: #3b82f6;
+            --teal: #14b8a6;
+            --pink: #db2777;
+            --indigo: #4338ca;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+            margin: 0;
+            padding: 100px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1400px;
+            height: 800px;
+            background: var(--bg-slide);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 120px;
+            color: var(--text-main);
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 48px;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h3 {
+            font-size: 30px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        h4 {
+            font-size: 24px;
+            color: var(--secondary);
+            margin: 20px 0;
+            font-weight: 700;
+        }
+
+        p,
+        li {
+            font-size: 21px;
+            line-height: 1.7;
+            color: var(--text-main);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .card {
+            background: var(--bg-accent);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .source-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Ensure contrast in dark cards */
+        .card[style*="background"] h1,
+        .card[style*="background"] h2,
+        .card[style*="background"] h3,
+        .card[style*="background"] h4,
+        .card[style*="background"] p,
+        .card[style*="background"] li {
+            color: inherit !important;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 50px;
+            border-top: 2px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .tag-pill {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Interactive Kit Components */
+        .trait-pill {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #fff;
+            border: 3px solid #e2e8f0;
+            border-radius: 50px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .trait-pill.active {
+            border-color: var(--pink);
+            background: #fdf2f8;
+            color: var(--pink);
+            transform: scale(1.05);
+        }
+
+        .generator-display {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            border: 3px dashed var(--blue);
+            min-height: 200px;
+            margin-top: 30px;
+        }
+
+        .maturity-step {
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border-left: 10px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .maturity-step.active {
+            border-left-color: var(--primary);
+            background: #ecfdf5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Welcome -->
+    <div class="slide">
+        <div class="watermark">KOALAWAN X BINUS CENTER</div>
+        <div style="margin-top: auto; margin-bottom: auto;">
+            <div class="tag-pill" style="width: fit-content; margin-bottom: 30px;">FULL CURRICULUM: SESSION 4</div>
+            <h1>Automasi Kit Mengajar:<br>Penerapan di Kelas & Sekolah</h1>
+            <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
+                Sesi puncak! Merakit semua asisten spesialis menjadi satu sistem "Pabrik Konten" yang mendukung Kurikulum Merdeka, P5, dan Pelaporan Hasil Belajar.
+            </p>
+        </div>
+        <div class="footer">
+            <span>Pelatihan Komprehensif Guru (3 Jam)</span>
+            <span>By Muhammad Ikhwan Fathulloh</span>
+        </div>
+    </div>
+
+    <!-- Slide 2: Agenda Sesi 4 -->
+    <div class="slide">
+        <div class="watermark">AGENDA</div>
+        <h2><i class="fas fa-list-check"></i> Rencana Pembelajaran Sesi 4</h2>
+        <div class="grid-2">
+            <div class="card">
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 1:</strong> Automasi Differentiated Instruction</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 2:</strong> Engine Asesmen & Rubrik Berbasis Bloom</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 3:</strong> Master Narasi Raport & Komunikasi Ortu</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 4:</strong> Integrasi Opal ke Google Workspace</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Final:</strong> AI-Ready School Maturity Model</li>
+                </ul>
+            </div>
+            <div class="card" style="background: var(--pink); color: white;">
+                <h4>Output Akhir:</h4>
+                <p>Memiliki Roadmap 30 hari implementasi AI di sekolah dan satu 'Kit Mengajar' yang sudah terautomasi penuh.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Goal: Differentiated Instruction at Scale -->
+    <div class="slide">
+        <div class="watermark">PEDAGOGI</div>
+        <h2><i class="fas fa-users-rectangle"></i> Memecahkan Masalah Diferensiasi</h2>
+        <div class="grid-2">
+            <div>
+                <p>Menerapkan pengajaran berdiferensiasi secara manual hampir mustahil untuk 40 murid per kelas. AI hadir sebagai solusinya.</p>
+                <div class="card" style="margin-top:30px">
+                    <h4>Asas Diferensiasi AI:</h4>
+                    <ul>
+                        <li><strong>Diferensiasi Konten:</strong> Satu materi, tiga tingkat kesulitan (Scaffolding).</li>
+                        <li><strong>Diferensiasi Proses:</strong> AI menyarankan aktivitas kinestetik vs visual untuk materi yang sama.</li>
+                        <li><strong>Diferensiasi Produk:</strong> Memberikan opsi tugas beragam berdasarkan minat siswa.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="text-align:center">
+                <i class="fas fa-layer-group fa-10x" style="color:var(--primary); opacity:0.1"></i>
+                <p style="font-style:italic; margin-top:20px">"AI memungkinkan setiap murid memiliki 'bahan ajar' yang sesuai dengan kecepatan belajarnya masing-masing."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Strategic Kit 1: RPP Automator (Deep Dive) -->
+    <div class="slide">
+        <div class="watermark">KIT 1</div>
+        <h2><i class="fas fa-file-invoice"></i> Kit 1: Automasi RPP & Modul</h2>
+        <p>Bukan sekadar salin-tempel draf, tapi menyesuaikan dengan konteks <strong>P5 (Proyek Penguatan Profil Pelajar Pancasila)</strong>.</p>
+        <div class="grid-2">
+            <div class="card" style="border-left:10px solid var(--blue)">
+                <h4>Elemen yang Diotomasi:</h4>
+                <ul>
+                    <li>Pemetaan CP ke Tujuan Pembelajaran (TP).</li>
+                    <li>Perancangan Alur Tujuan Pembelajaran (ATP).</li>
+                    <li>Pembuatan Skenario Pembelajaran Berbasis Masalah (PBL).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Workshop Kit RPP:</h4>
+                <p style="font-size:18px">"Asisten ini mengintegrasikan tema-tema kearifan lokal ke dalam Modul Ajar tanpa perlu riset manual berjam-jam."</p>
+                <span class="source-tag">Inspirasi: <a href="https://kurikulum.kemdikbud.go.id/kurikulum-merdeka/" target="_blank" class="source-link">Pusat Kurikulum Merdeka</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Strategic Kit 2: Assessment & Rubric Engine -->
+    <div class="slide">
+        <div class="watermark">KIT 2</div>
+        <h2><i class="fas fa-vials"></i> Kit 2: Engine Asesmen & Rubrik</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Rubrik Spesifik (HOTS)</h3>
+                <p>AI merancang rubrik penilaian berdasarkan indikator keberhasilan yang Anda tentukan.</p>
+                <ul>
+                    <li>Skala 1-4 dengan deskriptor yang jelas.</li>
+                    <li>Fokus pada keterampilan berpikir kritis (C4-C6).</li>
+                </ul>
+            </div>
+            <div class="card" style="background:#ecfdf5; border-color:var(--primary)">
+                <h4>Feedback Generator:</h4>
+                <p>"Berdasarkan rubrik ini, berikan komentar motivatif untuk siswa yang mendapatkan nilai 2 pada aspek kerjasama kelompok."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Taksonomi Bloom dalam Prompting -->
+    <div class="slide">
+        <div class="watermark">APLIKASI TEORI</div>
+        <h2><i class="fas fa-brain"></i> Scaffolding dengan <strong>Taksonomi Bloom</strong></h2>
+        <p>Pastikan asisten AI Anda membuat soal yang menyasar tingkat kognitif yang tepat.</p>
+        <div style="display:flex; justify-content:space-between; margin-top:50px">
+            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid #ddd">
+                <strong>LOTS (C1-C2)</strong><br><small>Definisikan, Sebutkan</small>
+            </div>
+            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid var(--blue)">
+                <strong>MOTS (C3-C4)</strong><br><small>Terapkan, Analisis</small>
+            </div>
+            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid var(--primary)">
+                <strong>HOTS (C5-C6)</strong><br><small>Evaluasi, Ciptakan</small>
+            </div>
+        </div>
+        <div class="workshop-box" style="margin-top:60px">
+            <strong>Misi Anda:</strong> Perintahkan AI untuk menjaga rasio soal (Misal: 30% LOTS, 40% MOTS, 30% HOTS) guna menjaga standar kualitas ujian.
+        </div>
+    </div>
+
+    <!-- Slide 7: Strategic Kit 3: Master Narasi Raport -->
+    <div class="slide">
+        <div class="watermark">KIT 3</div>
+        <h2><i class="fas fa-comments"></i> Kit 3: Master Narasi Raport</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Psikologi Umpan Balik:</h4>
+                <p>AI dilatih untuk menggunakan metode <strong>Sandwich Feedback</strong>: <br>1. Pujian (Pencapaian) <br>2. Konstruktif (Perbaikan) <br>3. Harapan (Motivasi Masa Depan).</p>
+            </div>
+            <div class="card" style="border-left:10px solid var(--indigo)">
+                <h4>Anonymization Kit:</h4>
+                <p>Materi di Sesi 1 diterapkan di sini. Masukkan data draf secara anonim, biarkan AI merapikan narasinya, lalu guru melakukan verifikasi akhir.</p>
+            </div>
+        </div>
+        <p style="margin-top:40px; text-align:center; font-weight:700">"Output AI harus tetap terasa hangat dan manusiawi, jangan sampai ortu merasa sedang berbicara dengan mesin."</p>
+    </div>
+
+    <!-- Slide 8: Strategic Kit 4: Parent-Teacher Communication -->
+    <div class="slide">
+        <div class="watermark">KIT 4</div>
+        <h2><i class="fas fa-user-group"></i> Kit 4: Vault Komunikasi Ortu</h2>
+        <p>Mengelola krisis komunikasi dan menjaga transparansi kegiatan sekolah.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Drafting Pengumuman</h3>
+                <ul>
+                    <li>Undangan Perayaan Hari Besar.</li>
+                    <li>SOP Study Tour & Persetujuan Ortu.</li>
+                    <li>Informasi mendadak (Perubahan jadwal).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Crisis Management</h3>
+                <p>"Bantu saya menyusun draf WA untuk wali murid mengenai kejadian [Kejadian] dengan nada yang menenangkan namun tetap tegas secara kebijakan."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Automasi Link: Opal ke Google Workspace -->
+    <div class="slide">
+        <div class="watermark">TEKNIKAL</div>
+        <h2><i class="fas fa-link"></i> Menghubungkan Opal ke Dunia Nyata</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>The "Export" Button</h4>
+                <p>Segala hasil dari asisten Opal (RPP, Soal, Narasi) bisa Anda simpan langsung ke:</p>
+                <ul>
+                    <li><strong>Google Docs:</strong> Untuk draf dokumen resmi.</li>
+                    <li><strong>Google Sheets:</strong> Untuk database soal dan nilai.</li>
+                    <li><strong>Google Slides:</strong> Untuk bahan presentasi esok pagi.</li>
+                </ul>
+            </div>
+            <div class="card" style="text-align:center">
+                <i class="fab fa-google fa-10x" style="color:var(--danger); opacity:0.1"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Mengelola Library AI Sekolah (Knowledge Sharing) -->
+    <div class="slide">
+        <div class="watermark">MANAGEMENT</div>
+        <h2><i class="fas fa-boxes-stacked"></i> Library AI Tingkat Sekolah</h2>
+        <p>Jangan menyimpan kemajuan ini sendirian. Bangunlah <strong>Aset Pengetahuan Sekolah</strong>.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h4>AI Champion Team:</h4>
+                <p>3-5 guru yang bertugas mengkurasi link asisten Opal sekolah agar bisa digunakan oleh seluruh guru lain di unit tersebut.</p>
+            </div>
+            <div class="card" style="border-top:10px solid var(--secondary)">
+                <h4>Standardisasi:</h4>
+                <p>Memastikan seluruh guru menggunakan asisten yang memiliki "Knowledge Base" (Aturan) yang sama agar output raport seragam gayanya.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Interactive: Differentiated Instruction Builder -->
+    <div class="slide">
+        <div class="watermark">PRAKTEK</div>
+        <h2><i class="fas fa-wand-magic-sparkles"></i> Praktik: Diferensiasi Konten</h2>
+        <p>Lihat bagaimana satu topik diubah menjadi 3 tingkat Scaffolding secara instan.</p>
+        
+        <label style="font-weight:700">Pilih Topik Pembelajaran:</label>
+        <div style="margin-top:15px">
+            <div class="trait-pill" onclick="genDiff(this, 'Ekosistem Hutan')">Ekosistem Hutan</div>
+            <div class="trait-pill" onclick="genDiff(this, 'Hukum Newton')">Hukum Newton</div>
+            <div class="trait-pill" onclick="genDiff(this, 'Puisi Kontemporer')">Puisi Kontemporer</div>
+        </div>
+
+        <div id="diffDisplay" class="generator-display">
+            <p style="color:var(--text-light)">Pilih topik untuk memulai...</p>
+        </div>
+    </div>
+
+    <!-- Slide 12: Interactive: Maturity Model AI (Self-Test) -->
+    <div class="slide">
+        <div class="watermark">SELF-ASSESSMENT</div>
+        <h2><i class="fas fa-ranking-star"></i> AI-Ready School Maturity Model</h2>
+        <p>Di tahap mana posisi Anda dan sekolah Anda saat ini?</p>
+        
+        <div id="maturityTest">
+            <div class="maturity-step" onclick="checkMaturity(this, 1)">
+                <div style="font-size:32px; font-weight:800; color:var(--text-light)">1</div>
+                <div><strong>Tahap Ad-hoc:</strong> Guru menggunakan AI secara sembunyi-sembunyi dan individual.</div>
+            </div>
+            <div class="maturity-step" onclick="checkMaturity(this, 2)">
+                <div style="font-size:32px; font-weight:800; color:var(--text-light)">2</div>
+                <div><strong>Tahap Integrasi:</strong> Sekolah mulai melatih guru dan memiliki kebijakan AI tertulis.</div>
+            </div>
+            <div class="maturity-step" onclick="checkMaturity(this, 3)">
+                <div style="font-size:32px; font-weight:800; color:var(--text-light)">3</div>
+                <div><strong>Tahap Transformasi:</strong> AI menjadi bagian dari ekosistem (Opal Spaces) dan kurikulum adaptif.</div>
+            </div>
+        </div>
+        <div id="maturityFeedback" style="margin-top:20px; font-weight:700; color:var(--primary); display:none"></div>
+    </div>
+
+    <!-- Slide 13: Ethics Check: Checklist Verifikasi Terakhir -->
+    <div class="slide">
+        <div class="watermark">ETHICS CHECK</div>
+        <h2><i class="fas fa-shield-halved"></i> Audit Terakhir Sebelum Publish</h2>
+        <div class="grid-2">
+            <div class="card" style="border-left:10px solid var(--danger)">
+                <h4>Red Flags (Hentikan Jika):</h4>
+                <ul>
+                    <li>[ ] Ada nama asli siswa yang terkirim ke server publik.</li>
+                    <li>[ ] AI memberikan jawaban bias yang menyinggung kelompok tertentu.</li>
+                    <li>[ ] Hasil hitungan matematika belum saya hitung ulang manual.</li>
+                </ul>
+            </div>
+            <div class="card" style="border-left:10px solid var(--primary)">
+                <h4>Green Flags (Lanjutkan Jika):</h4>
+                <ul>
+                    <li>[ ] Saya sudah mengedit minimal 30% dari teks asli AI.</li>
+                    <li>[ ] Referensi draf tersebut sudah saya verifikasi di Google Scholar.</li>
+                    <li>[ ] Hasil ini mempermudah pemahaman siswa, bukan hanya tugas saya.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Roadmap: 30 Hari Menuju AI-Fluent Teacher -->
+    <div class="slide">
+        <div class="watermark">ROADMAP</div>
+        <h2><i class="fas fa-map-location-dot"></i> Rencana Aksi 30 Hari</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Minggu 1-2: Eksplorasi Bersih</h4>
+                <p>Menggunakan AI hanya untuk brainstroming ide dan merapikan anonymized raport.</p>
+            </div>
+            <div class="card">
+                <h4>Minggu 3-4: Spesialisasi Opal</h4>
+                <p>Membangun satu asisten khusus untuk mata pelajaran Anda sendiri di Opal.</p>
+            </div>
+            <div class="card" style="grid-column: span 2; background:var(--secondary); color:white">
+                <h4>Bulan ke-2: Kolaborasi Tim</h4>
+                <p>Membagikan asisten tersebut ke rekan sejawat dan melakukan evaluasi efektivitas waktu kerja.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: Case Study: Membedah RPP Draf AI vs Manual -->
+    <div class="slide">
+        <div class="watermark">STUDI KASUS</div>
+        <h2><i class="fas fa-magnifying-glass-chart"></i> Bedah Kasus: RPP AI vs Manual</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>RPP Manual (2 Jam)</h3>
+                <p>Sangat akurat dengan konteks sekolah, namun biasanya "statis" dan sulit diubah-ubah dengan cepat jika siswa merasa bosan.</p>
+            </div>
+            <div class="card" style="border-color:var(--primary)">
+                <h3>RPP AI-Augmented (20 Menit)</h3>
+                <p>Kaya akan variasi aktivitas kreatif. Membutuhkan verifikasi konteks lokal dari guru, namun sangat "dinamis" dan mudah di-remix.</p>
+            </div>
+        </div>
+        <div class="workshop-box" style="text-align:center">
+            "Guru yang menang adalah yang mengambil keakuratan Manual dan menggabungkannya dengan kreativitas AI."
+        </div>
+    </div>
+
+    <!-- Slide 16: P5 & Merdeka Learning dalam Genggaman AI -->
+    <div class="slide">
+        <div class="watermark">KURIKULUM</div>
+        <h2><i class="fas fa-star"></i> AI untuk Sukseskan P5</h2>
+        <p>Proyek Penguatan Profil Pelajar Pancasila membutuhkan kreativitas tinggi dalam perencanaan tema.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Tema: Gaya Hidup Berkelanjutan</h4>
+                <p>AI menyarankan ide: "Audit Sampah Plastik di Kantin Sekolah" lengkap dengan instrumen pengumpulan datanya.</p>
+            </div>
+            <div class="card">
+                <h4>Tema: Bangunlah Jiwa & Raganya</h4>
+                <p>AI menyarankan ide: "Kampanye Kesehatan Mental Digital Siswa" berupa pembuatan konten edukasi di TikTok kelas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Persiapan Menghadapi Masa Depan (AI in 2030) -->
+    <div class="slide">
+        <div class="watermark">FUTURE SHOCK</div>
+        <h2><i class="fas fa-forward"></i> Mengintip Pendidikan Tahun 2030</h2>
+        <div class="grid-2">
+            <div>
+                <p>Kurikulum akan menjadi <strong>Adaptive</strong>. AI akan menyesuaikan tingkat kesulitan soal secara real-time berdasarkan jawaban siswa detik itu juga.</p>
+            </div>
+            <div class="card" style="background:#f1f5f9">
+                <h4>Peran Guru Mendatang:</h4>
+                <ul>
+                    <li>Mentor Emosional & Moral.</li>
+                    <li>Kurator Konten AI.</li>
+                    <li>Fasilitator Projek Dunia Nyata.</li>
+                    <li>Validator Kebenaran Informasi.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: Link Referensi Sesi 4 (The Mega List) -->
+    <div class="slide">
+        <div class="watermark">REFERENSI</div>
+        <h2><i class="fas fa-book-bookmark"></i> Referensi & Sumber Belajar Sesi 4</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Daftar Tools Unggulan:</h4>
+                <ul style="font-size: 18px;">
+                    <li><a href="https://opal.google.com" target="_blank" class="source-link">Opal Google (Workflow Builder)</a></li>
+                    <li><a href="https://www.canva.com/education/" target="_blank" class="source-link">Canva for Education AI Tools</a></li>
+                    <li><a href="https://www.briskteaching.com/" target="_blank" class="source-link">Brisk Teaching (Chrome Extension)</a></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Komunitas & Framework:</h4>
+                <ul style="font-size: 18px;">
+                    <li><a href="https://www.iste.org/areas-of-focus/AI-in-education" target="_blank" class="source-link">ISTE: AI in Education Guides</a></li>
+                    <li><a href="https://www.edutopia.org/article/using-ai-teachers-planning" target="_blank" class="source-link">Edutopia: AI Planning for Teachers</a></li>
+                    <li><a href="https://ikhwanfathulloh.netlify.app/" target="_blank" class="source-link">Layanan Konsultasi: Ikhwan Fathulloh</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Pesan Penutup & Motivasi -->
+    <div class="slide">
+        <div class="watermark">FAREWELL</div>
+        <h2><i class="fas fa-heart"></i> Pesan Untuk Seluruh Guru Hebat</h2>
+        <div style="margin-top: auto; margin-bottom: auto; text-align:center">
+            <h1 style="font-size: 100px; color:var(--primary); opacity:0.1; position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); width:100%; pointer-events:none">TERIMA KASIH</h1>
+            <p style="font-size:32px; font-weight:700; color:var(--secondary); position:relative; z-index:2">
+                "AI tidak akan pernah memiliki empati, kasih sayang, dan naluri kebapakan/keibuan yang Anda berikan kepada siswa setiap hari."
+            </p>
+            <p style="font-size:24px; color:var(--text-light); margin-top:30px; position:relative; z-index:2">
+                Gunakan teknologi ini untuk memperpanjang jangkauan pelayanan Anda, bukan untuk menggantikan kehadiran Anda.
+            </p>
+        </div>
+    </div>
+
+    <!-- Slide 20: Kontak & Selesai -->
+    <div class="slide">
+        <div class="watermark">CONTACT</div>
+        <h2><i class="fas fa-flag-checkered"></i> Selesai Seluruh Sesi Pelatihan</h2>
+        <div class="grid-2" style="margin-top:auto; margin-bottom:auto">
+            <div class="card">
+                <h3>Mari Tetap Terhubung!</h3>
+                <p>Saya Muhammad Ikhwan Fathulloh, siap membantu Anda dalam perjalanan transformasi AI ini.</p>
+                <div style="display:flex; gap:30px; margin-top:20px">
+                    <a href="https://www.linkedin.com/in/muhammad-ikhwan-fathulloh/" target="_blank" style="color:var(--blue); font-size:40px"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://ikhwanfathulloh.netlify.app/" target="_blank" style="color:var(--text-main); font-size:40px"><i class="fas fa-globe"></i></a>
+                </div>
+            </div>
+            <div class="card" style="background:var(--secondary); color:white">
+                <h4>Program Lanjutan?</h4>
+                <p>Tersedia workshop teknis intensif membangun "School AI Portal" menggunakan Opal Google secara kustom untuk institusi Anda.</p>
+                <p class="small">Hubungi melalui LinkedIn untuk detail lebih lanjut.</p>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Kurikulum Komprehensif AI untuk Guru v2.0</span>
+            <span>By Ikhwan Fathulloh - Koalawan</span>
+        </div>
+    </div>
+
+    <script>
+        function genDiff(el, topic) {
+            const pills = document.querySelectorAll('.trait-pill');
+            pills.forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+
+            const disp = document.getElementById('diffDisplay');
+            disp.innerHTML = `
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <div class="card" style="font-size:16px"><strong>Dasar:</strong> Penjelasan video singkat & kuis mencocokkan istilah.</div>
+                    <div class="card" style="font-size:16px; border-color:var(--blue)"><strong>Menengah:</strong> Analisis teks & membuat mind-map digital.</div>
+                    <div class="card" style="font-size:16px; border-color:var(--primary)"><strong>Tinggi:</strong> Mini-riset & membuat poster kampanye solusi.</div>
+                </div>
+                <p style="margin-top:20px; font-weight:700; color:var(--indigo)">Hasil Diferensiasi untuk topik "${topic}" telah siap di draf RPP Anda!</p>
+            `;
+        }
+
+        function checkMaturity(el, level) {
+            const steps = document.querySelectorAll('.maturity-step');
+            steps.forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+
+            const fed = document.getElementById('maturityFeedback');
+            fed.style.display = "block";
+            const advice = [
+                "Saran: Mulailah membuat kebijakan 'AI Code of Conduct' di kelas.",
+                "Saran: Inilah saat yang tepat untuk membangun Library Asisten bersama di Opal.",
+                "Saran: Bagikan praktik baik sekolah Anda ke komunitas guru yang lebih luas!"
+            ];
+            fed.innerHTML = `<i class="fas fa-lightbulb"></i> Anda di Level ${level}. ${advice[level-1]}`;
+        }
+    </script>
+</body>
+
+</html>
