@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5 - Teknik Prompting Lanjutan - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --code-bg: #1e293b;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --purple: #8b5cf6;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            margin: 0;
+            padding: 60px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: var(--bg-slide);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 80px;
+            color: var(--text-main);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 30px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--purple));
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 60px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 34px; color: var(--secondary); margin-bottom: 12px; font-weight: 800; border-left: 6px solid var(--primary); padding-left: 20px; }
+        h3 { font-size: 20px; color: var(--primary-dark); margin-bottom: 8px; font-weight: 700; }
+        p, li { font-size: 16px; line-height: 1.5; color: var(--text-main); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .card { background: #f8fafc; padding: 20px; border-radius: 16px; border: 1px solid var(--border); transition: 0.3s; position: relative; }
+        
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .badge-blue { background: #e0f2fe; color: var(--primary-dark); }
+        .badge-purple { background: #f3e8ff; color: var(--purple); }
+        .badge-success { background: #dcfce7; color: var(--success); }
+
+        .prompt-box { background: var(--code-bg); color: #e2e8f0; padding: 15px; border-radius: 10px; font-family: 'Fira Code', monospace; font-size: 12px; border-left: 5px solid var(--primary); margin: 8px 0; line-height: 1.4; }
+        
+        /* Interactive Elements */
+        .demo-panel { background: var(--secondary); color: white; padding: 20px; border-radius: 16px; margin-top: 15px; height: 100%; }
+        .interactive-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 14px; }
+        .interactive-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .comparison-table th { background: #f1f5f9; padding: 10px; text-align: left; border: 1px solid var(--border); font-size: 13px; font-weight: 700; }
+        .comparison-table td { padding: 10px; border: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+
+        .footer { position: absolute; bottom: 30px; left: 80px; font-size: 14px; color: var(--text-light); }
+
+        .highlight-box { background: #fff4e5; border-radius: 12px; padding: 15px; border-left: 4px solid var(--accent); margin-top: 10px; }
+        .step-num { width: 22px; height: 22px; background: var(--primary); color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 8px; }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <div style="margin-top: auto; margin-bottom: auto;">
+        <span class="badge badge-purple" style="font-size: 16px; padding: 8px 16px;">Day 5: Mastery of Reasoning</span>
+        <h1>Other Prompting<br>Techniques</h1>
+        <p style="font-size: 26px; color: var(--text-light); margin-top: 15px;">Dekomposisi Masalah, Kritik Mandiri, & Verifikasi Fakta</p>
+    </div>
+    <div class="footer">
+        <strong>Muhammad Ikhwan Fathulloh</strong> | Teknik Prompting Lanjutan
+    </div>
+</div>
+
+<!-- Slide 2: Problem Decomposition Prompting -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Problem Decomposition Prompting</h2>
+    <div class="grid-2">
+        <div>
+            <p>Metode memecah pertanyaan kompleks menjadi sub-pertanyaan yang lebih kecil untuk meningkatkan pemahaman model.</p>
+            <div class="card" style="margin-top: 15px;">
+                <h3>Mengapa Menggunakan Dekomposisi?</h3>
+                <ul style="padding-left: 20px; font-size: 14px;">
+                    <li><strong>Pemahaman Mendalam:</strong> Membantu LLM memahami inti masalah sebelum memberikan solusi.</li>
+                    <li><strong>Struktur Logis:</strong> Setiap sub-pertanyaan membawa model lebih dekat ke solusi akhir secara terarah.</li>
+                    <li><strong>Efetivitas:</strong> Meminimalisir risiko detail penting yang terlewatkan (terutama pada tugas numerik).</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 13px; margin: 0;"><strong>Statistik:</strong> Dekomposisi mampu memperbaiki lebih dari <strong>60% kesalahan</strong> yang dibuat pada pertanyaan asli.</p>
+            </div>
+        </div>
+        <div class="card" style="background: var(--primary-light); border-color: var(--primary);">
+            <h3>Area Penggunaan Utama:</h3>
+            <table class="comparison-table">
+                <tr>
+                    <td><strong>Multi-hop QA</strong></td>
+                    <td>Tugas yang butuh beberapa langkah pencarian fakta.</td>
+                </tr>
+                <tr>
+                    <td><strong>Matematika</strong></td>
+                    <td>Memecah soal cerita menjadi ekstraksi data dan perhitungan simbolik.</td>
+                </tr>
+                <tr>
+                    <td><strong>Penjelasan</strong></td>
+                    <td>Membantu model membuat narasi penalaran yang lebih transparan.</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Least to Most Prompting (LtM) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Least to Most Prompting (LtM)</h2>
+    <div class="grid-2">
+        <div>
+            <p>Teknik pengembangan dari CoT yang terinspirasi dari strategi pendidikan anak-anak: menyelesaikan masalah dari yang paling sederhana hingga yang paling kompleks.</p>
+            <div class="card">
+                <h3>4 Langkah Utama LtM:</h3>
+                <ol style="padding-left: 20px; font-size: 14px;">
+                    <li><strong>Identifikasi:</strong> Tentukan masalah utama yang kompleks.</li>
+                    <li><strong>Decompose:</strong> Bagi menjadi sub-masalah spesifik.</li>
+                    <li><strong>Iterasi:</strong> Selesaikan sub-masalah #1, lalu gunakan hasilnya untuk sub-masalah #2.</li>
+                    <li><strong>Gabungkan:</strong> Satukan semua jawaban menjadi solusi akhir.</li>
+                </ol>
+            </div>
+        </div>
+        <div class="demo-panel">
+            <h3 style="color: var(--primary-light);">Alur Kerja LtM:</h3>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="prompt-box" style="margin: 0;">Sub-masalah 1 -> Solusi A</div>
+                <div style="text-align: center;"><i class="fas fa-arrow-down"></i></div>
+                <div class="prompt-box" style="margin: 0; border-color: var(--accent);">Prompt: [Solusi A] + Sub-masalah 2 -> Solusi B</div>
+                <div style="text-align: center;"><i class="fas fa-arrow-down"></i></div>
+                <div class="prompt-box" style="margin: 0; border-color: var(--success);">Final: Solusi Gabungan</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Plan-and-Solve Prompting (PaS) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Plan-and-Solve Prompting (PaS)</h2>
+    <div class="grid-2">
+        <div class="card">
+            <span class="badge badge-success">Perbaikan Zero-shot CoT</span>
+            <p style="font-size: 14px;">PaS memperbaiki kelemahan CoT standar dengan menambahkan fase **perencanaan** eksplisit sebelum eksekusi.</p>
+            <h3>Tujuan PaS:</h3>
+            <ul style="padding-left: 20px; font-size: 14px;">
+                <li><strong>Pendekatan Terstruktur:</strong> Masalah dipahami total sebelum dikerjakan.</li>
+                <li><strong>Sistematis:</strong> Menghindari loncatan logika mendadak.</li>
+                <li><strong>Scalability:</strong> Mempermudah pengelolaan masalah yang sangat kompleks.</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Kalimat "Sakti" PaS:</h3>
+            <div class="prompt-box" style="font-size: 14px; border-color: var(--purple);">
+                "Mari kita pertama-tama memahami masalahnya dan rancanglah rencana untuk menyelesaikannya. Kemudian, mari kita laksanakan rencana tersebut dan selesaikan masalahnya langkah demi langkah."
+            </div>
+            <div class="card" style="margin-top: 15px; border: 1px dashed var(--purple);">
+                <p style="font-size: 13px; color: var(--text-light); margin: 0;">Metode ini terbukti memberikan solusi yang lebih tepat daripada sekadar mengatakan "pikirkan langkah demi langkah" karena adanya tahap <strong>perancangan strategi</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Self-Criticism & Self-Evaluation -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Self-Criticism & Self-Evaluation</h2>
+    <div class="grid-2">
+        <div>
+            <p>Mengubah LLM menjadi evaluator bagi dirinya sendiri melalui siklus evaluasi dan perbaikan dinamis.</p>
+            <div class="card" style="margin-bottom: 10px;">
+                <span class="badge badge-blue">Self-Evaluation</span>
+                <p style="font-size: 13px;">Model memberikan jawaban, lalu menilai seberapa besar kemungkinan jawaban tersebut benar (tingkat kepercayaan diri).</p>
+            </div>
+            <div class="card">
+                <span class="badge badge-purple">Self-Refine</span>
+                <p style="font-size: 13px;">Mirip proses belajar: AI menilai kesalahannya, memberi tips pada dirinya sendiri, dan mencoba lagi sampai dianggap selesai.</p>
+            </div>
+        </div>
+        <div class="demo-panel">
+            <h3 style="color: var(--accent);">Interactive Refine Loop:</h3>
+            <div id="refine-demo" style="font-size: 12px; font-family: monospace;">
+                <p style="color: #94a3b8;">[Klik tombol untuk memulai siklus...]</p>
+            </div>
+            <button class="interactive-btn" onclick="startRefine()">Simulasikan Self-Refine</button>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Chain of Verification (CoVe) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Chain of Verification (CoVe)</h2>
+    <div class="grid-2">
+        <div>
+            <p>Metode cerdas untuk memerangi <strong>halusinasi</strong> dengan memisahkan proses verifikasi dari proses penjawaban.</p>
+            <div class="step-list" style="margin-top: 15px;">
+                <p><span class="step-num">1</span> <strong>Draft:</strong> Model membuat jawaban awal.</p>
+                <p><span class="step-num">2</span> <strong>Verify:</strong> Membuat daftar pertanyaan cek fakta.</p>
+                <p><span class="step-num">3</span> <strong>Independent Check:</strong> Menjawab setiap cek fakta secara terpisah (tanpa melihat draf awal).</p>
+                <p><span class="step-num">4</span> <strong>Final:</strong> Menggabungkan fakta yang sudah terverifikasi.</p>
+            </div>
+        </div>
+        <div class="card" style="background: #fdf2f2; border-color: var(--danger);">
+            <h3>Kapan Menggunakan CoVe?</h3>
+            <ul style="padding-left: 20px; font-size: 14px;">
+                <li>Penulisan Biografi (cek tanggal/nama).</li>
+                <li>Rangkuman Dokumen Hukum atau Medis.</li>
+                <li>Pemecahan masalah logika yang sangat rumit.</li>
+            </ul>
+            <p style="font-size: 13px; color: var(--danger); font-weight: bold;"><i class="fas fa-triangle-exclamation"></i> Kunci keberhasilan CoVe: Setiap pemeriksaan harus benar-benar terpisah (seperti percakapan baru).</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Rephrase and Respond (RaR) -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Rephrase and Respond (RaR)</h2>
+    <div class="grid-2">
+        <div class="card">
+            <p style="font-size: 14px;">Strategi ini memerintahkan model untuk mengubah (rephrase) pertanyaan pengguna ke dalam bahasanya sendiri sebelum menjawab.</p>
+            <div class="prompt-box" style="border-color: var(--accent);">
+                "Ulangi pertanyaan di atas agar lebih jelas bagi Anda, jelaskan pemahaman Anda, lalu jawab pertanyaannya."
+            </div>
+        </div>
+        <div>
+            <h3>Keunggulan RaR:</h3>
+            <ul style="padding-left: 20px; font-size: 14px;">
+                <li><strong>Alignment:</strong> Memastikan interpretasi AI sama dengan maksud user.</li>
+                <li><strong>Pemahaman:</strong> Memaksa AI memproses struktur pertanyaan secara aktif.</li>
+                <li><strong>Akurasi:</strong> Sangat efektif untuk pertanyaan yang ambigu atau punya struktur bahasa yang buruk.</li>
+            </ul>
+            <div class="highlight-box" style="background: #e0f2fe; border-color: var(--primary);">
+                <p style="font-size: 13px; margin: 0;">"Jika AI tidak mengerti pertanyaan Anda, ia tidak akan pernah bisa memberikan jawaban yang benar."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Workshop & Final Tips -->
+<div class="slide">
+    <div class="watermark">KOALAWAN</div>
+    <h2>Workshop Day 5: Multi-Technique</h2>
+    <div class="grid-2">
+        <div class="card" style="border-left: 5px solid var(--primary);">
+            <h3>Tugas A: Decomposition</h3>
+            <p style="font-size: 13px;">Gunakan metode **Plan-and-Solve** untuk memecahkan masalah inventaris gudang yang melibatkan penambahan, pengurangan, dan persentase kerusakan barang.</p>
+        </div>
+        <div class="card" style="border-left: 5px solid var(--purple);">
+            <h3>Tugas B: Verification</h3>
+            <p style="font-size: 13px;">Gunakan teknik **Chain of Verification** untuk mengecek fakta tentang sebuah peristiwa sejarah. Bandingkan draf awal dengan hasil akhir setelah verifikasi.</p>
+        </div>
+    </div>
+    <div class="card" style="margin-top: 20px; background: var(--secondary); color: white;">
+        <h3>Tips Penggunaan:</h3>
+        <p style="font-size: 13px; color: #94a3b8;">1. Dekomposisi untuk Angka | 2. Self-Refine untuk Teks Kreatif | 3. CoVe untuk Fakta | 4. RaR untuk Prompt Ambigu.</p>
+    </div>
+</div>
+
+<!-- Slide 9: Closing -->
+<div class="slide" style="text-align: center; justify-content: center; background: var(--secondary); color: white;">
+    <h1 style="color: white; font-size: 80px;">Sesi Diskusi</h1>
+    <p style="color: #94a3b8; font-size: 24px; margin-top: 20px;">"Selamat! Anda telah menguasai spektrum teknik prompting dari dasar hingga tingkat agen logika."</p>
+    
+    <div style="margin-top: 60px; display: flex; justify-content: center; gap: 40px;">
+        <div>
+            <p style="font-weight: bold; color: var(--primary); margin: 0;">M. Ikhwan Fathulloh</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function startRefine() {
+        const container = document.getElementById('refine-demo');
+        container.innerHTML = '<p style="color: var(--primary);">[Langkah 1: Menghasilkan Draf Awal...]</p>';
+        
+        const steps = [
+            "Draf: 'Kucing itu lari kencang sekali.'",
+            "Evaluasi: Terlalu sederhana, tidak deskriptif.",
+            "Saran: Tambahkan kata sifat dan lokasi agar lebih hidup.",
+            "Refine 1: 'Kucing oranye itu berlari kencang melewati pagar kayu.'",
+            "Evaluasi: Lebih baik, tapi bisa lebih dramatis.",
+            "Saran: Gunakan metafora untuk kecepatan.",
+            "Hasil Akhir: 'Kucing oranye itu melesat bagai kilat, melompati pagar kayu tua dengan keanggunan seorang predator.'"
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < steps.length) {
+                const p = document.createElement('p');
+                p.style.margin = "4px 0";
+                if (steps[i].startsWith("Evaluasi")) p.style.color = "var(--danger)";
+                else if (steps[i].startsWith("Saran")) p.style.color = "var(--accent)";
+                else if (steps[i].startsWith("Hasil Akhir")) p.style.color = "var(--success)";
+                else p.style.color = "white";
+                
+                p.innerText = steps[i];
+                container.appendChild(p);
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 1200);
+    }
+</script>
+
+</body>
+</html>
