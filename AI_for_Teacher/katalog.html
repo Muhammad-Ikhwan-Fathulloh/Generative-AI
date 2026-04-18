@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Karya Guru AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="gallery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="javascript:history.back()" class="back-btn">
+        <i class="fas fa-chevron-left"></i> Kembali
+    </a>
+
+    <header class="gallery-header">
+        <div class="container">
+            <h1 class="hero-title animate-fade">Katalog Karya <span style="color: var(--accent);">AI Teacher</span></h1>
+            <p class="hero-subtitle animate-fade" style="animation-delay: 0.1s;">
+                Kumpulan inovasi pembelajaran berbasis kecerdasan buatan untuk masa depan pendidikan Indonesia.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="gallery-grid">
+            <!-- Project 1 -->
+            <article class="project-card animate-fade" style="animation-delay: 0.2s;">
+                <div class="project-image-wrapper">
+                    <img src="Project1.png" alt="Quiz Master AI" class="project-thumbnail">
+                </div>
+                <div class="project-content">
+                    <span class="project-badge">Asesmen Otomatis</span>
+                    <h3 class="project-title">Quiz Master AI</h3>
+                    <p class="project-desc">
+                        Teknologi konversi materi pembelajaran menjadi kuis interaktif secara instan untuk efisiensi asesmen.
+                    </p>
+                    <div class="card-footer">
+                        <button class="btn-primary" onclick="openGallery(0)">
+                            <i class="fas fa-search-plus"></i> Lihat Detail
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 2 -->
+            <article class="project-card animate-fade" style="animation-delay: 0.3s;">
+                <div class="project-image-wrapper">
+                    <img src="Project2.png" alt="RPP Generator Pro" class="project-thumbnail">
+                </div>
+                <div class="project-content">
+                    <span class="project-badge">Administrasi</span>
+                    <h3 class="project-title">RPP Generator Pro</h3>
+                    <p class="project-desc">
+                        Penyusun rencana pembelajaran digital yang kreatif dan mengacu pada standar pendidikan terbaru.
+                    </p>
+                    <div class="card-footer">
+                        <button class="btn-primary" onclick="openGallery(1)">
+                            <i class="fas fa-search-plus"></i> Lihat Detail
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 3 -->
+            <article class="project-card animate-fade" style="animation-delay: 0.4s;">
+                <div class="project-image-wrapper">
+                    <img src="Project3.png" alt="Essay Grader Assistant" class="project-thumbnail">
+                </div>
+                <div class="project-content">
+                    <span class="project-badge">Feedback AI</span>
+                    <h3 class="project-title">AI Essay Grader</h3>
+                    <p class="project-desc">
+                        Asisten penilaian esai yang memberikan umpan balik objektif dan saran perbaikan untuk siswa.
+                    </p>
+                    <div class="card-footer">
+                        <button class="btn-primary" onclick="openGallery(2)">
+                            <i class="fas fa-search-plus"></i> Lihat Detail
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="close-modal" onclick="closeGallery()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 id="lightboxTitle"></h2>
+            <img src="" alt="View Detail" id="lightboxImg">
+            <div class="lightbox-thumbs" id="lightboxThumbs">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <footer style="padding: 3rem 0; background: #fff; border-top: 1px solid var(--border);">
+        <div class="container text-center">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                &copy; 2026 AI for Teacher Community. Built with <i class="fas fa-heart" style="color: #ef4444;"></i> for Education.
+            </p>
+        </div>
+    </footer>
+
+    <script src="gallery-logic.js"></script>
+    <script>
+        // Progress bar logic
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            const pb = document.getElementById("progressBar");
+            if(pb) pb.style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
