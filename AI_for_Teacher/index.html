@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Teacher | Projek Inovasi Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="gallery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-glow: rgba(37, 99, 235, 0.4);
+        }
+
+        .hub-banner {
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), url('Project2.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 30px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hub-banner h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hub-banner p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .nav-crumbs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .nav-crumbs a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .nav-crumbs a:hover {
+            text-decoration: underline;
+        }
+
+        .back-to-main {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .project-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .access-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .access-card:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .access-card i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .access-card span {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="light-theme" style="background-color: #0f172a; color: white;">
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <main class="container" style="padding-top: 40px;">
+        
+        <div class="nav-crumbs animate-fade">
+            <a href="../index.html">Dashboard Utama</a>
+            <span>/</span>
+            <span>AI for Teacher Hub</span>
+        </div>
+
+        <div class="hub-banner animate-fade">
+            <h1>Showcase Projek <span style="color: var(--accent);">Guru Masa Depan</span></h1>
+            <p>Eksplorasi hasil karya inovatif yang mengintegrasikan AI ke dalam alur kerja pendidikan modern.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="#karya" class="btn btn-primary" style="background: var(--accent); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 700;">
+                    <i class="fas fa-eye"></i> Mulai Eksplorasi
+                </a>
+                <a href="panduan_proyek.html" class="btn" style="background: rgba(255,255,255,0.1); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 700; border: 1px solid var(--glass-border);">
+                    <i class="fas fa-book"></i> Panduan Lengkap
+                </a>
+            </div>
+        </div>
+
+        <div class="quick-access animate-fade" style="animation-delay: 0.1s;">
+            <a href="Project1_Study_Notes_to_Quiz/" class="access-card">
+                <i class="fas fa-folder-open"></i>
+                <span>Aset Projek 1</span>
+            </a>
+            <a href="Project2_Penyusun_RPP_Digital/" class="access-card">
+                <i class="fas fa-folder-open"></i>
+                <span>Aset Projek 2</span>
+            </a>
+            <a href="Project3_Asisten_Penilai_Esai/" class="access-card">
+                <i class="fas fa-folder-open"></i>
+                <span>Aset Projek 3</span>
+            </a>
+        </div>
+
+        <section id="materi" style="margin-bottom: 60px;">
+            <h2 class="animate-fade" style="animation-delay: 0.15s; margin-bottom: 25px; font-size: 1.8rem;">Materi Pelatihan Komprehensif</h2>
+            <div class="session-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <!-- Session 1 -->
+                <a href="Session1.html" class="session-card" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 20px; padding: 25px; text-decoration: none; color: white; transition: all 0.3s ease;">
+                    <div style="font-size: 12px; font-weight: 800; color: #10b981; text-transform: uppercase; margin-bottom: 5px;">Sesi 01</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Fondasi & Etika AI</h3>
+                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">Memahami cara kerja AI, bias, halusinasi, dan regulasi UU PDP untuk keamanan data sekolah.</p>
+                    <div style="color: #10b981; font-weight: 700; font-size: 14px;">Pelajari Materi <i class="fas fa-arrow-right"></i></div>
+                </a>
+                
+                <!-- Session 2 -->
+                <a href="Session2.html" class="session-card" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 20px; padding: 25px; text-decoration: none; color: white; transition: all 0.3s ease;">
+                    <div style="font-size: 12px; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 5px;">Sesi 02</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Seni Prompting</h3>
+                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">Menguasai teknik instruksi presisi untuk mengotomasi tugas administrasi guru yang membosankan.</p>
+                    <div style="color: #38bdf8; font-weight: 700; font-size: 14px;">Pelajari Materi <i class="fas fa-arrow-right"></i></div>
+                </a>
+
+                <!-- Session 3 -->
+                <a href="Session3.html" class="session-card" style="background: rgba(129, 140, 248, 0.1); border: 1px solid rgba(129, 140, 248, 0.2); border-radius: 20px; padding: 25px; text-decoration: none; color: white; transition: all 0.3s ease;">
+                    <div style="font-size: 12px; font-weight: 800; color: #818cf8; text-transform: uppercase; margin-bottom: 5px;">Sesi 03</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Asisten Spesialis (Opal)</h3>
+                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">Merakit asisten pintar bertenaga Opal Google yang menguasai silabus dan gaya bicara Anda.</p>
+                    <div style="color: #818cf8; font-weight: 700; font-size: 14px;">Pelajari Materi <i class="fas fa-arrow-right"></i></div>
+                </a>
+
+                <!-- Session 4 -->
+                <a href="Session4.html" class="session-card" style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: 20px; padding: 25px; text-decoration: none; color: white; transition: all 0.3s ease;">
+                    <div style="font-size: 12px; font-weight: 800; color: #ec4899; text-transform: uppercase; margin-bottom: 5px;">Sesi 04</div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Automasi Kit Mengajar</h3>
+                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px;">Implementasi Roadmap 30 hari untuk otomasi RPP, asesmen, dan narasi raport di sekolah.</p>
+                    <div style="color: #ec4899; font-weight: 700; font-size: 14px;">Pelajari Materi <i class="fas fa-arrow-right"></i></div>
+                </a>
+            </div>
+        </section>
+
+        <div id="karya" style="scroll-margin-top: 40px;">
+            <h2 class="animate-fade" style="animation-delay: 0.2s; margin-bottom: 30px; font-size: 1.8rem;">Katalog Hasil Projek</h2>
+            
+            <div class="gallery-grid">
+                <!-- Project 1 -->
+                <article class="project-card animate-fade" style="animation-delay: 0.3s; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--glass-border); border-radius: 20px;">
+                    <div class="project-image-wrapper">
+                        <img src="Project1.png" alt="Quiz Master AI" class="project-thumbnail">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">Asesmen Otomatis</span>
+                        <h3 class="project-title" style="color: white;">Quiz Master AI</h3>
+                        <p class="project-desc" style="color: #94a3b8;">
+                            Konversi materi pembelajaran menjadi kuis interaktif secara instan menggunakan generative AI.
+                        </p>
+                        <div class="card-footer" style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="openGallery(0)" style="flex: 2; background: var(--accent); border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">
+                                <i class="fas fa-expand"></i> Pratinjau Hasil
+                            </button>
+                            <a href="panduan_proyek.html?p=0" class="btn-secondary-outline" title="Lihat Panduan" style="display: flex; align-items: center; justify-content: center; width: 44px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: white; text-decoration: none;">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="project-card animate-fade" style="animation-delay: 0.4s; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--glass-border); border-radius: 20px;">
+                    <div class="project-image-wrapper">
+                        <img src="Project2.png" alt="RPP Generator Pro" class="project-thumbnail">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">Administrasi</span>
+                        <h3 class="project-title" style="color: white;">RPP Generator Pro</h3>
+                        <p class="project-desc" style="color: #94a3b8;">
+                            Penyusun rencana pembelajaran digital yang kreatif dan mengacu pada standar pendidikan terbaru.
+                        </p>
+                        <div class="card-footer" style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="openGallery(1)" style="flex: 2; background: var(--accent); border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">
+                                <i class="fas fa-expand"></i> Pratinjau Hasil
+                            </button>
+                            <a href="panduan_proyek.html?p=1" class="btn-secondary-outline" title="Lihat Panduan" style="display: flex; align-items: center; justify-content: center; width: 44px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: white; text-decoration: none;">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="project-card animate-fade" style="animation-delay: 0.5s; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--glass-border); border-radius: 20px;">
+                    <div class="project-image-wrapper">
+                        <img src="Project3.png" alt="AI Essay Grader" class="project-thumbnail">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-badge" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">Feedback AI</span>
+                        <h3 class="project-title" style="color: white;">AI Essay Grader</h3>
+                        <p class="project-desc" style="color: #94a3b8;">
+                            Asisten penilaian esai yang memberikan umpan balik objektif dan saran perbaikan untuk siswa.
+                        </p>
+                        <div class="card-footer" style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="openGallery(2)" style="flex: 2; background: var(--accent); border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">
+                                <i class="fas fa-expand"></i> Pratinjau Hasil
+                            </button>
+                            <a href="panduan_proyek.html?p=2" class="btn-secondary-outline" title="Lihat Panduan" style="display: flex; align-items: center; justify-content: center; width: 44px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: white; text-decoration: none;">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content" style="background: #1e293b; color: white; border: 1px solid var(--glass-border);">
+            <button class="close-modal" onclick="closeGallery()" aria-label="Close" style="background: rgba(255,255,255,0.1); color: white;">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 id="lightboxTitle"></h2>
+            <img src="" alt="View Detail" id="lightboxImg">
+            <div class="lightbox-thumbs" id="lightboxThumbs">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <footer style="padding: 3rem 0; background: #0b1120; border-top: 1px solid var(--glass-border); text-align: center;">
+        <div class="container">
+            <p style="color: #64748b; font-size: 0.9rem;">
+                &copy; 2026 AI for Teacher Community. Bagian dari Generative AI Masterclass.
+            </p>
+        </div>
+    </footer>
+
+    <script src="gallery-logic.js"></script>
+    <script>
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            const pb = document.getElementById("progressBar");
+            if(pb) pb.style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
