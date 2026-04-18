@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumen Penjelasan Proyek | Guru Digital AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Slab:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gray: #334155;
+            --accent-blue: #2563eb;
+            --bg-page: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            margin: 0;
+            padding: 40px 0;
+            color: #1e293b;
+        }
+
+        .paper {
+            background-color: white;
+            width: 210mm; /* A4 Width */
+            min-height: 297mm; /* A4 Height */
+            margin: 0 auto;
+            padding: 60px 80px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* PDF Styles */
+        h1, h2, h3 {
+            font-family: 'Roboto Slab', serif;
+            color: var(--primary-gray);
+        }
+
+        .header {
+            border-bottom: 2px solid var(--accent-blue);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-title {
+            font-size: 28px;
+            margin: 0;
+            color: var(--accent-blue);
+        }
+
+        .instansi {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .project-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        section {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .section-title {
+            font-size: 20px;
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 15px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 10px 15px;
+        }
+
+        .content-text {
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .features-list {
+            padding-left: 20px;
+        }
+
+        .features-list li {
+            margin-bottom: 10px;
+        }
+
+        .footer-doc {
+            position: relative;
+            margin-top: 60px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .ss-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .ss-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .ss-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .no-break {
+            break-inside: avoid;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-gray);
+            border: 1px solid var(--primary-gray);
+        }
+
+        /* Print Hacks */
+        @media print {
+            body { background: white; padding: 0; }
+            .paper { box-shadow: none; margin: 0; width: 100%; }
+            .controls { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button class="btn" onclick="window.print()">Cetak / Simpan PDF</button>
+        <button class="btn btn-secondary" onclick="window.history.back()">Kembali ke Katalog</button>
+    </div>
+
+    <div class="paper" id="paperContent">
+        <div class="header">
+            <div>
+                <p class="instansi">LAPORAN DOKUMENTASI PROYEK</p>
+                <h1 class="header-title">GURU AI DIGITAL</h1>
+            </div>
+            <div style="text-align: right">
+                <p style="font-size: 12px;">ID Dokumen: <span id="docId"></span></p>
+                <p style="font-size: 12px;">Tanggal: 18 April 2026</p>
+            </div>
+        </div>
+
+        <h2 class="project-title" id="pTitle"></h2>
+        
+        <img id="pHero" src="" alt="Thumbnail" class="hero-img">
+
+        <section>
+            <h3 class="section-title">Ringkasan Eksekutif</h3>
+            <p class="content-text" id="pSummary"></p>
+        </section>
+
+        <section>
+            <h3 class="section-title">Fitur Unggulan</h3>
+            <ul class="features-list" id="pFeatures">
+                <!-- Features go here -->
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="section-title">Manfaat Pendidikan</h3>
+            <p class="content-text" id="pBenefits"></p>
+        </section>
+
+        <section class="no-break">
+            <h3 class="section-title">Dokumentasi Visual</h3>
+            <div class="ss-grid" id="pScreenshots">
+                <!-- Screenshots go here -->
+            </div>
+        </section>
+
+        <div class="footer-doc">
+            Dokumen ini dihasilkan secara otomatis oleh Sistem Katalog Karya Guru Digital AI - &copy; 2026
+        </div>
+    </div>
+
+    <script>
+        const projectData = [
+            {
+                title: "Quiz Master AI",
+                folder: "Project1_Study_Notes_to_Quiz",
+                img: "Project1.png",
+                images: ["Gambar1.png", "Gambar2.png", "Gambar3.png", "Gambar4.png"],
+                summary: "Quiz Master AI adalah platform inovatif yang dirancang khusus untuk membantu tenaga pendidik dalam melakukan transformasi materi ajar statis menjadi instrumen asesmen yang dinamis dan interaktif. Dengan memanfaatkan algoritma kecerdasan buatan terbaru, sistem ini mampu mengekstraksi poin-poin penting dari teks panjang dan merumuskan pertanyaan kuis yang berkualitas.",
+                features: [
+                    "Ekstraksi teks otomatis dari berbagai format dokumen.",
+                    "Generasi soal pilihan ganda, isian singkat, dan uraian.",
+                    "Export langsung ke platform Learning Management System (LMS).",
+                    "Analisis tingkat kesulitan soal berbasis AI."
+                ],
+                benefits: "Solusi ini menghemat waktu guru hingga 70% dalam proses penyusunan evaluasi pembelajaran. Selain itu, kuis yang dihasilkan lebih objektif dan mampu mencakup seluruh spektrum materi yang diajarkan."
+            },
+            {
+                title: "RPP Generator Pro",
+                folder: "Project2_Penyusun_RPP_Digital",
+                img: "Project2.png",
+                images: ["Gambar1.png", "Gambar2.png", "Gambar3.png", "Gambar4.png", "Gambar5.png", "Gambar6.png"],
+                summary: "RPP Generator Pro hadir sebagai asisten digital dalam menyusun Rencana Pelaksanaan Pembelajaran (RPP) yang kreatif dan komprehensif. Proyek ini mengatasi tantangan administratif guru dengan menyediakan kerangka RPP yang adaptif terhadap kurikulum nasional maupun internasional.",
+                features: [
+                    "Integrasi Kurikulum Merdeka dan K-13 secara otomatis.",
+                    "Saran strategi pembelajaran berdiferensiasi.",
+                    "Pembuatan lembar kerja siswa (LKS) yang relevan.",
+                    "Penyelarasan Kompetensi Dasar (KD) dan Tujuan Pembelajaran (TP)."
+                ],
+                benefits: "Memungkinkan guru untuk lebih fokus pada implementasi pengajaran di kelas daripada terjebak dalam tugas administratif yang repetitif. RPP yang dihasilkan lebih variatif dan menginspirasi metode pengajaran baru."
+            },
+            {
+                title: "AI Essay Grader",
+                folder: "Project3_Asisten_Penilai_Esai",
+                img: "Project3.png",
+                images: ["Gambar1.png", "Gambar2.png", "Gambar3.png", "Gambar4.png", "Gambar5.png"],
+                summary: "AI Essay Grader merupakan sistem penilaian esai cerdas yang memberikan feedback secara mendetail dan konstruktif. Berbeda dengan penilaian otomatis biasa, alat ini mampu memahami nuansa bahasa dan konteks argumen dalam tulisan siswa.",
+                features: [
+                    "Penilaian berbasis rubrik yang dapat dikustomisasi.",
+                    "Deteksi orisinalitas dan kejujuran akademik.",
+                    "Saran perbaikan tata bahasa dan struktur argumen.",
+                    "Dasbor progres capaian literasi siswa."
+                ],
+                benefits: "Memberikan keadilan dalam penilaian dengan parameter yang konsisten. Siswa tidak hanya mendapatkan skor, tetapi juga bimbingan instan tentang bagaimana cara meningkatkan kemampuan menulis mereka."
+            }
+        ];
+
+        // Route logic
+        const urlParams = new URLSearchParams(window.location.search);
+        const pId = parseInt(urlParams.get('p')) || 0;
+        const project = projectData[pId];
+
+        if (project) {
+            document.title = `Laporan - ${project.title}`;
+            document.getElementById('pTitle').innerText = project.title;
+            document.getElementById('pHero').src = project.img;
+            document.getElementById('pSummary').innerText = project.summary;
+            document.getElementById('pBenefits').innerText = project.benefits;
+            document.getElementById('docId').innerText = `DOC-AI-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            const featuresList = document.getElementById('pFeatures');
+            project.features.forEach(f => {
+                const li = document.createElement('li');
+                li.innerText = f;
+                featuresList.appendChild(li);
+            });
+
+            // Render screenshots
+            const ssGrid = document.getElementById('pScreenshots');
+            project.images.forEach(img => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'ss-item';
+                const imgTag = document.createElement('img');
+                imgTag.src = `${project.folder}/${img}`;
+                imgTag.alt = "Screenshot";
+                wrapper.appendChild(imgTag);
+                ssGrid.appendChild(wrapper);
+            });
+        }
+    </script>
+</body>
+</html>

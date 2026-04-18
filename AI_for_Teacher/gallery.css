@@ -189,6 +189,28 @@ body.light-theme {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
+.btn-secondary-outline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 48px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: #ef4444; /* Red color for PDF feel */
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-outline:hover {
+    background: #fef2f2;
+    border-color: #f87171;
+    color: #b91c1c;
+    box-shadow: var(--shadow-sm);
+}
+
 /* Lightbox Modal */
 .lightbox {
     position: fixed;
