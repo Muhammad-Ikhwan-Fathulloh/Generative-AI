@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 13 - Lovable & Claude for Web Development - Koalawan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #9333ea; /* Purple for AI web apps */
+            --secondary: #1a1a1a;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --bg-accent: #f5f3ff;
+            --claude: #d97706;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+            margin: 0;
+            padding: 100px 0;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide {
+            width: 1400px;
+            height: 800px;
+            background: var(--bg-slide);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 120px;
+            color: var(--text-main);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--claude));
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 16px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 72px; font-weight: 800; color: var(--secondary); margin: 0; line-height: 1.1; }
+        h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 48px; color: var(--secondary); margin-bottom: 25px; display: flex; align-items: center; gap: 20px; }
+        h3 { font-size: 32px; color: var(--primary); margin-bottom: 15px; font-weight: 700; }
+        p, li { font-size: 24px; line-height: 1.6; color: var(--text-main); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        
+        .card {
+            background: var(--bg-accent);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(147, 51, 234, 0.1);
+            height: 100%;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 40px;
+            border-top: 2px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        .badge { background: var(--primary); color: white; padding: 8px 20px; border-radius: 50px; font-size: 16px; font-weight: 700; display: inline-block; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <!-- SLIDE 1 -->
+    <div class="slide">
+        <div class="watermark">WEB 3.0</div>
+        <div style="margin-top: auto; margin-bottom: auto;">
+            <div class="badge">Session 13: Instant Web Development</div>
+            <h1>Bikin Web App Instan dengan<br><span style="color: var(--primary);">Lovable</span> & <span style="color: var(--claude);">Claude</span></h1>
+            <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
+                Dapatkan aplikasi web fungsional dalam hitungan menit cukup dengan menjelaskan instruksi dalam bahasa manusia.
+            </p>
+        </div>
+        <div class="footer">
+            <span>Kurikulum Automasi AI 2026</span>
+            <span>By Muhammad Ikhwan Fathulloh</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide">
+        <div class="watermark">METHODOLOGY</div>
+        <h2><i class="fas fa-magic"></i> Prompt-to-Project Workflow</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>The Lovable Way:</h3>
+                <p>Lovable menggunakan teknologi Claude 3.5 Sonnet untuk membangun frontend dan backend aplikasi web secara real-time.</p>
+                <ul>
+                    <li><strong>Idea:</strong> Jelaskan fitur aplikasi Anda.</li>
+                    <li><strong>Generate:</strong> AI membangun kode (React, Tailwind, Supabase).</li>
+                    <li><strong>Refine:</strong> Berikan feedback untuk perbaikan instan.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Apa yang Bisa Dibangun?</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                    <span style="background: white; padding: 10px 20px; border-radius: 10px; font-size: 18px; font-weight: 700;">Dashboard CRM</span>
+                    <span style="background: white; padding: 10px 20px; border-radius: 10px; font-size: 18px; font-weight: 700;">Inventory App</span>
+                    <span style="background: white; padding: 10px 20px; border-radius: 10px; font-size: 18px; font-weight: 700;">Portfolio Site</span>
+                    <span style="background: white; padding: 10px 20px; border-radius: 10px; font-size: 18px; font-weight: 700;">SaaS Starter</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
