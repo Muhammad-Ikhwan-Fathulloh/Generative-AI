@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumpulan Tugas Hands-On | AI for Teacher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 50px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .form-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #334155;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+        }
+
+        .required::after {
+            content: " *";
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <h2>Pengumpulan Tugas</h2>
+            <p>Kirimkan hasil latihan (Hands-On) Anda untuk direviu oleh tim instruktur Koalawan.</p>
+        </div>
+
+        <script>var submitted = false;</script>
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"
+            onload="if(submitted) { handleSuccess(); }"></iframe>
+
+        <form id="submissionForm"
+            action="https://docs.google.com/forms/d/e/1FAIpQLSeaYL4eieWfLOFLeyHZuV2Ii2nt2_qcrjyueltKfutczfDMXA/formResponse"
+            method="post" target="hidden_iframe" onsubmit="submitted=true; animateBtn();">
+
+            <div class="form-group">
+                <label class="required">Nama Lengkap</label>
+                <input type="text" name="entry.349526714" class="form-control" placeholder="Masukkan nama Anda..."
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Pilih Modul Selesai</label>
+                <select class="form-control" name="entry.907143091" required>
+                    <option value="" disabled selected>-- Pilih Sesi Hands-On --</option>
+                    <option value="Sesi 1: Ideasi Gemini">Sesi 1: Ideasi Gemini</option>
+                    <option value="Sesi 2: Seni Instruksi (CREATE/CoT)">Sesi 2: Seni Instruksi (CREATE/CoT)</option>
+                    <option value="Sesi 3: Riset NotebookLM">Sesi 3: Riset NotebookLM</option>
+                    <option value="Sesi 4: Aplikasi Opal">Sesi 4: Aplikasi Opal</option>
+                    <option value="Tantangan Akhir (Integrasi)">Tantangan Akhir (Integrasi)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Tautan (Link) Hasil Karya</label>
+                <input type="url" name="entry.1681322141" class="form-control"
+                    placeholder="Contoh: https://gemini.google.com/share/..." required>
+                <small style="display:block; margin-top:8px; color:#94a3b8;">*Pastikan share link diset ke Publik/Bisa
+                    Dilihat.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Salinan Super Prompt / Catatan (Opsional)</label>
+                <textarea class="form-control" name="entry.721645147"
+                    placeholder="Tempelkan Super Prompt Anda atau berikan catatan singkat tentang aplikasi yang Anda buat..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Kirim Tugas Saya</button>
+        </form>
+
+        <a href="OneDayIntensive.html" class="btn-back"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard (Hub)</a>
+    </div>
+
+    <script>
+        const btn = document.querySelector('.btn-submit');
+        function animateBtn() {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+        }
+
+        function handleSuccess() {
+            setTimeout(() => {
+                alert('Tugas Anda telah sukses dikumpulkan langsung ke Google Form/Sheet! Terima kasih atas kerja kerasnya, Master AI!');
+                window.location.href = 'OneDayIntensive.html';
+            }, 600);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest 1: The Oracle's Whisper | Zen Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #ffffff;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --accent: #f59e0b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 120px;
+            padding: 100px 0;
+            scroll-snap-type: y mandatory;
+        }
+
+        .slide {
+            width: 85vw;
+            max-width: 1100px;
+            min-height: 80vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            scroll-snap-align: center;
+            transition: transform 0.4s ease;
+        }
+
+        .slide:hover {
+            transform: translateY(-5px);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-weight: 700;
+            color: var(--border);
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+        }
+
+        p {
+            font-size: 1.6rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+            max-width: 800px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .card {
+            padding: 40px;
+            border-radius: 24px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .btn-action {
+            margin-top: 60px;
+            padding: 20px 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.3rem;
+            width: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .code-box {
+            background: #f1f5f9;
+            padding: 40px;
+            border-radius: 20px;
+            border-left: 6px solid var(--primary);
+            font-family: inherit;
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin: 40px 0;
+            line-height: 1.4;
+        }
+
+        .xp-label {
+            position: absolute;
+            top: 40px;
+            left: 80px;
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px;
+                width: 95vw;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1 -->
+    <div class="slide">
+        <span class="slide-number">01</span>
+        <div class="xp-label">Starting Quest</div>
+        <h1>The Oracle's Whisper</h1>
+        <p>Mari kita memulai transformasi digital hari ini. Gemini adalah rekan kreatif Anda dalam mendesain masa depan
+            pendidikan.</p>
+        <a href="#slide2" class="btn-action">Eksplorasi</a>
+    </div>
+
+    <!-- Slide 2 -->
+    <div id="slide2" class="slide">
+        <span class="slide-number">02</span>
+        <h2>Definisi Gemini</h2>
+        <p>Bukan sekadar mesin pencari. Gemini adalah sistem kognitif yang memproses informasi secara mendalam dan
+            kontekstual.</p>
+        <div class="feature-grid">
+            <div class="card">
+                <i class="fas fa-brain"></i>
+                <h3>Kreativitas</h3>
+                <p>Membantu guru menghasilkan ide segar untuk modul ajar kelas.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-bolt"></i>
+                <h3>Kecepatan</h3>
+                <p>Menghemat berjam-jam waktu administrasi dalam hitungan detik.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div id="slide3" class="slide">
+        <span class="slide-number">03</span>
+        <h2>Patuhi Etika Data</h2>
+        <p>Sebagai pendidik, integritas data adalah prioritas utama. Selalu jaga privasi dalam setiap interaksi.</p>
+        <div class="feature-grid">
+            <div class="card" style="background: #fffcf0;">
+                <i class="fas fa-shield-alt" style="color: var(--accent);"></i>
+                <h3>Anonimitas</h3>
+                <p>Jangan pernah memasukkan nama asli atau data sensitif siswa ke dalam sistem.</p>
+            </div>
+            <div class="card" style="background: #f0f9ff;">
+                <i class="fas fa-search" style="color: var(--primary);"></i>
+                <h3>Verifikasi</h3>
+                <p>Hasil AI harus selalu diperiksa kesesuaiannya dengan kurikulum nasional.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div id="slide4" class="slide">
+        <span class="slide-number">04</span>
+        <h2>Tantangan Pertama</h2>
+        <p>Coba gunakan perintah ini untuk meledakkan antusiasme di kelas Anda besok pagi.</p>
+        <div class="code-box">
+            "Berikan saya 3 cara unik untuk menjelaskan konsep [Topik] kepada kelas [Tingkatan] menggunakan analogi yang
+            relevan dengan tren masa kini."
+        </div>
+        <p style="font-size: 1.1rem;">Semakin spesifik detail yang Anda berikan, semakin akurat bantuan yang Anda
+            terima.</p>
+    </div>
+
+    <!-- Slide 5 -->
+    <div id="slide5" class="slide">
+        <span class="slide-number">05</span>
+        <div style="text-align: center;">
+            <i class="fas fa-award fa-6x" style="color: var(--accent); margin-bottom: 40px;"></i>
+            <h2>Quest Selesai</h2>
+            <p style="margin: 0 auto 50px;">Anda telah mengamankan 100 XP pertama. Dasar-dasar kecerdasan buatan telah
+                Anda kuasai.</p>
+            <a href="Quest2_Prompting.html" class="btn-action"
+                style="background: var(--accent); align-self: center;">Lanjut ke Seni Prompting</a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>

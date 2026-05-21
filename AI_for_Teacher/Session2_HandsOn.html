@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 2: Seni Memerintah (Prompting) | Praktek Langsung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --bg: #ffffff;
+            --text: #1e293b;
+            --dim: #64748b;
+            --border: #e2e8f0;
+            --accent: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .slide {
+            width: 85vw;
+            max-width: 1100px;
+            min-height: 80vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            left: 80px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-mini {
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+            color: var(--dim);
+        }
+
+        .btn-mini:hover {
+            background: var(--theory-bg, #f8fafc);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .step-badge {
+            background: #f5f3ff;
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .handson-container {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .step-text {
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        .code-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            border-left: 5.5px solid var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-nav {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 40px;
+            align-self: flex-start;
+            transition: 0.3s;
+        }
+
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateX(5px);
+        }
+
+        .framework-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #ede9fe;
+            color: var(--primary);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1 -->
+
+    <div class="slide">
+        <div class="top-nav">
+            <a href="Session2.html" class="btn-mini"><i class="fas fa-book"></i> Kembali ke Teori</a>
+            <a href="OneDayIntensive.html" class="btn-mini"><i class="fas fa-home"></i> Hub</a>
+        </div>
+        <div class="step-badge">SESI 02: INTERMEDIATE</div>
+        <h1>Seni Memerintah (Prompting)</h1>
+        <p style="font-size: 1.5rem; color: var(--dim);">Menguasai framework PTCF untuk mendapatkan hasil AI yang
+            presisi, profesional, dan siap pakai.</p>
+        <a href="#step1" class="btn-nav">Mulai Praktek <i class="fas fa-arrow-down"></i></a>
+    </div>
+
+    <!-- Slide 2: Step 1 -->
+    <div id="step1" class="slide">
+        <div class="step-badge">LANGKAH PERTAMA</div>
+        <h2>Memahami Konteks & Peran</h2>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka kembali chat Gemini Anda. Ketikkan bagian pertama dari framework (Context &
+                    Role):</div>
+            </div>
+            <div class="code-box">
+                "Bertindaklah sebagai seorang Guru Bahasa Inggris senior (Persona). Saat ini saya
+                sedang mencari cara menarik untuk mengajarkan Grammar (Context)."
+            </div>
+            <div class="instruction-step" style="margin-top: 25px;">
+                <div class="step-num">2</div>
+                <div class="step-text">Jangan tekan enter dahulu. Kita akan lanjut ke instruksi lengkap di langkah
+                    berikutnya.</div>
+            </div>
+        </div>
+        <a href="#step2" class="btn-nav">Lanjut ke Langkah 2</a>
+    </div>
+
+    <!-- Slide 3: Step 2 -->
+    <div id="step2" class="slide">
+        <div class="step-badge">LANGKAH KEDUA</div>
+        <h2>Menambahkan Tugas & Target</h2>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Gabungkan perintah sebelumnya dengan elemen <strong>Task</strong> dan
+                    <strong>Target</strong>:
+                </div>
+            </div>
+            <div class="code-box">
+                "...Tugas Anda adalah membuat 5 skenario percakapan (Task). Sajikan hasil dalam format Tabel (Format)."
+            </div>
+            <div class="instruction-step" style="margin-top: 25px;">
+                <div class="step-num">2</div>
+                <div class="step-text">Sekarang tekan <strong>Enter</strong> dan lihat perbedaannya dengan prompt biasa.
+                </div>
+            </div>
+        </div>
+        <a href="#step3" class="btn-nav">Lanjut ke Langkah 3</a>
+    </div>
+
+    <!-- Slide 4: Step 3 -->
+    <div id="step3" class="slide">
+        <div class="step-badge">LANGKAH KETIGA</div>
+        <h2>Eksperimen Mega-Prompt</h2>
+        <p>Mari coba automasi administrasi yang lebih kompleks.</p>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Gunakan mega-prompt ini untuk membuat email formal ke orang tua siswa:</div>
+            </div>
+            <div class="code-box" style="border-left-color: var(--accent);">
+                "Role: Staf Admin Sekolah. Context: Pemberitahuan rapor semester. Task: Buat draf email yang
+                mengapresiasi kerja keras siswa selama ini dan mengingatkan jadwal pengambilan rapor. Adjective: Sopan,
+                Hangat, Profesional."
+            </div>
+        </div>
+        <a href="#final" class="btn-nav">Selesai</a>
+    </div>
+
+    <div id="tools-sesi2" class="slide">
+        <div class="case-badge case-both">🛠️ ALAT BANTU (MULTIPART)</div>
+        <h2>Koleksi Alat Bantu Sesi 2</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 30px;">Kombinasikan metode CREATE dengan
+            instruksi struktural tahap demi tahap (CoT) untuk menghasilkan sebuah *Prompt* yang menyeluruh dan aman dari
+            kegagalan logika.</p>
+
+        <!-- Tool 1: CREATE -->
+        <div
+            style="background: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">1. Kerangka Dasar Lanjutan (CREATE)</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                <input type="text" id="t2-c" placeholder="C: Character (Karakter Ahli)"
+                    style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+                <input type="text" id="t2-r" placeholder="R: Request (Permintaan Utama)"
+                    style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+            </div>
+            <textarea id="t2-e" rows="2" placeholder="E: Explanation (Penjelasan Latar Belakang Lengkap)"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px;"></textarea>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                <input type="text" id="t2-a" placeholder="A: Adjustments (Gaya/Nada Bahasa)"
+                    style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+                <input type="text" id="t2-t" placeholder="T: Type (Tipe/Format Keluaran)"
+                    style="padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+            </div>
+            <input type="text" id="t2-ex" placeholder="E: Extras (Batasan Tambahan/Larangan/Syarat Khusus)"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px;">
+            <button onclick="genT2a()" class="btn-nav" style="margin-top:0; padding:10px 20px; font-size:1rem;"><i
+                    class="fas fa-plus"></i> Tambahkan ke Super Prompt</button>
+        </div>
+
+        <!-- Tool 2: Chain of Thought -->
+        <div
+            style="background: #eff6ff; padding: 30px; border-radius: 16px; border: 1px solid #bfdbfe; width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #3b82f6;">2. Pendukung Pemecahan Masalah Sistematis (CoT)</h3>
+            <textarea id="t2b-prob" rows="2"
+                placeholder="Detail tantangan yang harus diurai (Opsional jika sudah ada di CREATE)"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #93c5fd; margin-bottom:15px;"></textarea>
+            <button onclick="genT2b()" class="btn-nav"
+                style="margin-top:0; padding:10px 20px; background:#3b82f6; font-size:1rem;"><i class="fas fa-plus"></i>
+                Tambahkan Logika CoT</button>
+        </div>
+
+        <!-- Tool 3: Few Shot -->
+        <div style="background: #fdf4ff; padding: 30px; border-radius: 16px; border: 1px solid #f5d0fe; width: 100%;">
+            <h3 style="margin-bottom: 15px; color: #d946ef;">3. Pendukung Analogi (Few-Shot)</h3>
+            <input type="text" id="t2c-ex1"
+                placeholder="Contoh Pemicu & Respon (Cth: Input: Sedih -> Output: Biasa Saja)"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #e879f9; margin-bottom:10px;">
+            <input type="text" id="t2c-target" placeholder="Target Akhir (Cth: Sekarang kerjakan untuk -> Marah)"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #e879f9; margin-bottom:15px;">
+            <button onclick="genT2c()" class="btn-nav"
+                style="margin-top:0; padding:10px 20px; background:#d946ef; font-size:1rem;"><i class="fas fa-plus"></i>
+                Tambahkan Contoh Pola</button>
+        </div>
+
+        <script>
+            function genT2a() {
+                const c = document.getElementById("t2-c").value, r = document.getElementById("t2-r").value;
+                const e = document.getElementById("t2-e").value, a = document.getElementById("t2-a").value;
+                const t = document.getElementById("t2-t").value, ex = document.getElementById("t2-ex").value;
+                let text = `Peran Anda: ${c}\nTujuan Utama: ${r}\nLatar Belakang: ${e}\nGaya Bahasa: ${a}\nFormat Hasil: ${t}\nAturan Tambahan: ${ex}`;
+                appendToMaster(text);
+            }
+            function genT2b() {
+                const prob = document.getElementById("t2b-prob").value;
+                let text = "Mari pikirkan langkah demi langkah (berpikir sistematis tahap demi tahap) untuk membangun solusi yang akurat dan solid.";
+                if (prob) text += ` Khususnya dalam menghadapi tantangan berikut: "${prob}".`;
+                appendToMaster(text);
+            }
+            function genT2c() {
+                appendToMaster(`Gunakan logika dan pola penulisan seperti contoh berikut ini:\nContoh: ${document.getElementById("t2c-ex1").value}\n\nSekarang terapkan pola tersebut untuk target ini: ${document.getElementById("t2c-target").value}`);
+            }
+        </script>
+
+        <!-- MASTER PROMPT -->
+        <div
+            style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; margin-top: 30px;">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fas fa-layer-group"></i> Instruksi Terpadu (Super
+                Prompt)</h3>
+            <p style="font-size: 1rem; color: #94a3b8; margin-bottom: 15px;">Kumpulan instruksi dari alat bantu di atas
+                akan digabungkan di sini menjadi satu *prompt* yang sangat kuat (powerful).</p>
+            <textarea id="master-res" rows="6" placeholder="Hasil instruksi gabungan akan muncul di sini..."
+                style="width:100%; padding:15px; border-radius:12px; border:2px solid #38bdf8; font-size:1.1rem; font-family:monospace; background: #0f172a; color: #f8fafc;"></textarea>
+            <div style="margin-top:15px; display: flex; gap: 10px;">
+                <button onclick="copyMaster('master-res')"
+                    style="padding:12px 25px; background:#38bdf8; color:#0f172a; border:none; border-radius:8px; cursor:pointer; font-weight:700; flex-grow:1;"><i
+                        class="fas fa-copy"></i> Salin Super Prompt</button>
+                <button onclick="clearMaster()"
+                    style="padding:12px 25px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;"><i
+                        class="fas fa-trash"></i> Bersihkan</button>
+            </div>
+        </div>
+        <script>
+            function appendToMaster(text) {
+                const master = document.getElementById("master-res");
+                if (master.value.trim() !== '') {
+                    master.value += '\n\n' + text;
+                } else {
+                    master.value = text;
+                }
+            }
+            function clearMaster() {
+                document.getElementById("master-res").value = '';
+            }
+            function copyMaster(id) {
+                const ta = document.getElementById(id);
+                if (!ta.value) return alert('Prompt masih kosong!');
+                ta.select();
+                document.execCommand('copy');
+                alert('Super Prompt berhasil disalin!');
+            }
+        </script>
+    </div>
+
+    <!-- Slide 5 -->
+    <div id="final" class="slide" style="text-align: center;">
+        <i class="fas fa-bolt fa-5x" style="color: var(--primary); margin-bottom: 30px;"></i>
+        <h2>Sesi 2 Selesai</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 40px;">Luar biasa! Anda kini memiliki kunci untuk memerintah AI
+            dengan sangat akurat.</p>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="OneDayIntensive.html" class="btn-nav" style="margin-top: 0; background: #64748b;">Ke Hub</a>
+            <a href="Session3.html" class="btn-nav" style="margin-top: 0;">Lanjut ke Sesi 3 (Teori) <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

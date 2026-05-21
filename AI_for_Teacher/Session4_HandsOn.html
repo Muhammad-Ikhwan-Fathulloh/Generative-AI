@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 4: Google Opal — Praktek Langsung | Koalawan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --bg: #ffffff;
+            --text: #1e293b;
+            --dim: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --purple: #8b5cf6;
+            --blue: #3b82f6;
+            --orange: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .slide {
+            width: 85vw;
+            max-width: 1100px;
+            min-height: 80vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            left: 80px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-mini {
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+            color: var(--dim);
+        }
+
+        .btn-mini:hover {
+            background: #fffbeb;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .step-badge {
+            background: #fffbeb;
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .case-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .case-guru {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .case-dosen {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .case-both {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .handson-container {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .instruction-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 4px;
+            font-size: 0.95rem;
+        }
+
+        .step-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .btn-nav {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 40px;
+            align-self: flex-start;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateX(5px);
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-top: 25px;
+        }
+
+        .result-box {
+            background: #ecfdf5;
+            border: 2px solid var(--green);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-top: 25px;
+        }
+
+        .prompt-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 25px;
+            font-family: monospace;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 15px 0;
+            white-space: pre-wrap;
+        }
+
+        .node-flow {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .mini-card {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            font-size: 0.95rem;
+            background: white;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .arrow-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Hero -->
+    <div class="slide">
+        <div class="top-nav">
+            <a href="Session4.html" class="btn-mini"><i class="fas fa-book"></i> Kembali ke Teori</a>
+            <a href="OneDayIntensive.html" class="btn-mini"><i class="fas fa-home"></i> Hub</a>
+        </div>
+        <div class="step-badge">SESI 04: PRAKTEK</div>
+        <h1>Praktek Google Opal</h1>
+        <p style="font-size: 1.5rem; color: var(--dim);">Panduan langkah demi langkah membangun 3
+            <strong>Aplikasi AI tanpa kode</strong> di Opal untuk guru dan dosen.
+        </p>
+        <a href="#case1" class="btn-nav">Mulai Studi Kasus 1 <i class="fas fa-arrow-down"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 1: GURU — ASISTEN PEMBUAT BAHAN AJAR ===== -->
+
+    <div id="case1" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h2>Asisten Pembuat Bahan Ajar</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Membangun app di mana guru upload materi bab → AI otomatis menghasilkan rangkuman terstruktur + kuis.
+        </p>
+        <div class="node-flow">
+            <div class="mini-card" style="border-color: var(--orange);">📄 File Unggah</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--blue);">🧠 Gemini (Rangkum)</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--blue);">🧠 Gemini (Buat Kuis)</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--green);">📋 Hasil Keluaran</div>
+        </div>
+        <a href="#case1-step1" class="btn-nav">Mulai Langkah 1 <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step1" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 1: Buat Aplikasi Baru di Opal</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka <strong>opal.google.com</strong> dan login dengan akun Google Anda.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Klik <strong>"Create Aplikasi"</strong> (atau tombol <strong>"+"</strong> di pojok).
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Di kotak deskripsi, ketik perintah berikut:</div>
+            </div>
+            <div class="prompt-box">Buatkan aplikasi yang:
+                1. Menerima upload file PDF materi pelajaran
+                2. Menghasilkan rangkuman terstruktur dengan poin-poin utama
+                3. Membuat 5 soal pilihan ganda dan 3 soal essay berdasarkan materi
+                4. Menampilkan hasil dalam format yang rapi dengan judul, rangkuman, dan soal</div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Tekan Enter — Opal akan <strong>otomatis membuat alur kerja</strong> (Kartu Visual)
+                    berdasarkan deskripsi Anda.</div>
+            </div>
+        </div>
+        <a href="#case1-step2" class="btn-nav">Lanjut: Edit Kanvas Visual <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step2" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 2: Edit & Sesuaikan Kanvas Visual</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Perhatikan Kanvas Visual — Opal sudah membuat beberapa Kartu Visual secara otomatis.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text"><strong>Klik Kartu Visual "Hasilkan" (Gemini)</strong> → Edit prompt di dalamnya untuk
+                    lebih spesifik:</div>
+            </div>
+            <div class="prompt-box">Kamu adalah asisten guru profesional. Berdasarkan materi yang diunggah:
+
+                1. Buat RANGKUMAN terstruktur:
+                - Judul Bab
+                - 5-7 Poin Utama (format bullet points)
+                - Konsep Kunci yang harus dikuasai siswa
+
+                2. Buat 5 SOAL PILIHAN GANDA level C3-C4 Bloom:
+                - Berikan stimulus/konteks
+                - 4 opsi jawaban (A-D)
+                - Kunci jawaban
+
+                3. Buat 3 SOAL ESSAY level C5-C6 Bloom:
+                - Berikan skenario kasus
+                - Pertanyaan yang mendorong analisis kritis
+
+                Target: Siswa SMP/SMA (sesuaikan bahasa).</div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Pastikan Kartu Visual Masukan Data terhubung ke Kartu Visual Hasilkan dengan garis (wire). Jika belum,
+                    <strong>tarik garis</strong> dari output Masukan Data ke input Hasilkan.</div>
+            </div>
+        </div>
+        <a href="#case1-step3" class="btn-nav">Lanjut: Unggah Basis Pengetahuan <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step3" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 3: Tambahkan Basis Pengetahuan</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik ikon ⚙️ (Settings) pada app Anda.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Masuk ke tab <strong>"Basis Pengetahuan"</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Unggah <strong>Capaian Pembelajaran (Capaian Pembelajaran)</strong> mata pelajaran Anda agar AI
+                    mengacu pada standar kurikulum.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">(Opsional) Unggah <strong>contoh soal UN/AKM</strong> agar AI memahami format dan
+                    level soal yang diharapkan.</div>
+            </div>
+        </div>
+        <div class="tip-box">
+            <strong>💡 Tips:</strong> Basis Pengetahuan membuat AI menjadi "spesialis". Tanpa Basis Pengetahuan, AI
+            menggunakan pengetahuan umum. Dengan Basis Pengetahuan, AI merujuk pada dokumen resmi Anda.
+        </div>
+        <a href="#case1-step4" class="btn-nav">Lanjut: Pratinjau & Bagikan <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step4" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 4: Pratinjau, Uji Coba & Bagikan</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik <strong>"Pratinjau"</strong> (ikon ▶️) untuk melihat tampilan app Anda.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Unggah sebuah file PDF materi bab untuk uji coba. Tunggu AI memproses.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Periksa output — apakah rangkuman lengkap? Soal sesuai level Bloom? Edit prompt
+                    jika perlu.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Jika sudah memuaskan, klik <strong>"Bagikan"</strong> → Copy link.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">5</div>
+                <div class="step-text">Bagikan link ke siswa via <strong>Google Classroom</strong>, WhatsApp, atau
+                    email. Siswa tinggal upload materi dan mendapat rangkuman + kuis otomatis!</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Aplikasi "Asisten Bahan Ajar" siap dibagikan — siswa upload PDF, langsung dapat
+            rangkuman + soal. Guru tidak perlu membuat materi berulang!
+        </div>
+        <a href="#case2" class="btn-nav" style="background: var(--purple);">Lanjut ke Studi Kasus 2 (Dosen) <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 2: DOSEN — AUTO-FEEDBACK ESSAY ===== -->
+
+    <div id="case2" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h2>Aplikasi Auto-Umpan Balik Essay</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Membangun app di mana mahasiswa kirim draf essay → AI memberikan umpan balik per paragraf berdasarkan rubrik.
+        </p>
+        <div class="node-flow">
+            <div class="mini-card" style="border-color: var(--orange);">✍️ Text Masukan Data</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--blue);">🧠 Gemini (Analisis)</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--purple);">👤 Peninjau</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--green);">📋 Hasil Keluaran</div>
+        </div>
+        <a href="#case2-step1" class="btn-nav" style="background: var(--purple);">Mulai Langkah 1 <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step1" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 1: Buat Aplikasi dengan Deskripsi</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Di Opal, klik <strong>"Create Aplikasi"</strong> dan ketik deskripsi berikut:</div>
+            </div>
+            <div class="prompt-box">Buatkan aplikasi untuk umpan balik essay mahasiswa:
+                1. Mahasiswa memasukkan teks essay mereka
+                2. AI menganalisis essay per paragraf berdasarkan rubrik penilaian
+                3. Dosen dapat mereview dan mengedit umpan balik sebelum dikirim
+                4. Hasil Keluaran berupa: skor per kriteria, umpan balik per paragraf, dan saran perbaikan</div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Opal akan membuat alur otomatis. Periksa Kanvas Visual — pastikan ada Kartu Visual Masukan Data,
+                    Hasilkan, dan Hasil Keluaran.</div>
+            </div>
+        </div>
+        <a href="#case2-step2" class="btn-nav" style="background: var(--purple);">Lanjut: Unggah Rubrik <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step2" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 2: Unggah Rubrik ke Basis Pengetahuan</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka Settings → Tab <strong>"Basis Pengetahuan"</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Unggah <strong>Rubrik Penilaian Essay</strong> Anda (PDF atau Google Docs).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">(Opsional) Unggah <strong>contoh essay berkualitas</strong> sebagai referensi
+                    jawaban ideal.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Kembali ke Kanvas Visual. Klik Kartu Visual Gemini dan <strong>edit prompt</strong>:</div>
+            </div>
+            <div class="prompt-box">Kamu adalah asisten dosen penilai essay profesional.
+
+                Berdasarkan rubrik penilaian di Basis Pengetahuan, analisis essay mahasiswa berikut:
+
+                {{user_input}}
+
+                Berikan output dengan format:
+                1. SKOR PER KRITERIA (berdasarkan rubrik):
+                - Konten & Substansi: [skor]/4
+                - Argumentasi & Logika: [skor]/4
+                - Tata Bahasa & Referensi: [skor]/4
+
+                2. FEEDBACK PER PARAGRAF:
+                - Paragraf 1: [kelebihan] [saran perbaikan]
+                - Paragraf 2: ...
+                - (dst)
+
+                3. SARAN PERBAIKAN UTAMA:
+                - 3 hal prioritas yang harus diperbaiki</div>
+        </div>
+        <a href="#case2-step3" class="btn-nav" style="background: var(--purple);">Lanjut: Tambah Peninjau <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step3" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 3: Tambahkan Kartu Visual Peninjau</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Di Kanvas Visual, klik <strong>"+ Add Kartu Visual"</strong> → pilih
+                    <strong>"Peninjau"</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Letakkan Kartu Visual Peninjau <strong>antara Kartu Visual Gemini dan Kartu Visual Hasil Keluaran</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Hubungkan: Gemini → Peninjau → Hasil Keluaran dengan menarik garis (wire).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Fungsi Peninjau: Setiap kali mahasiswa kirim essay, AI akan menganalisis — tapi
+                    hasilnya <strong>tidak langsung terkirim</strong>. Dosen harus <strong>mereview dan approve</strong>
+                    terlebih dahulu.</div>
+            </div>
+        </div>
+        <div class="tip-box">
+            <strong>⚠️ Human in the Loop:</strong> Kartu Visual Peninjau memastikan dosen tetap memegang kendali penuh. AI
+            membantu analisis, tetapi keputusan akhir ada di tangan dosen.
+        </div>
+        <a href="#case2-step4" class="btn-nav" style="background: var(--purple);">Lanjut: Uji Coba & Bagikan <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step4" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 4: Pratinjau, Uji Coba & Distribusi</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik <strong>"Pratinjau"</strong> dan masukkan contoh essay pendek untuk uji coba.
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Periksa: Apakah skor sesuai rubrik? Apakah umpan balik relevan per paragraf?</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Edit prompt jika output belum sesuai harapan. Iterasi sampai puas.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Klik <strong>"Bagikan"</strong> → Bagikan link ke mahasiswa di LMS (Moodle/Google
+                    Classroom).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">5</div>
+                <div class="step-text">Mahasiswa kirim essay lewat link → AI analisis → Dosen review di dashboard →
+                    Umpan Balik dikirim.</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Aplikasi umpan balik essay otomatis dengan human-in-the-loop. Waktu koreksi 40 essay: 30
+            menit (review AI) vs 4 jam (manual penuh).
+        </div>
+        <a href="#case3" class="btn-nav" style="background: var(--orange);">Lanjut ke Studi Kasus 3 <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 3: GURU & DOSEN — GENERATOR KUIS INTERAKTIF ===== -->
+
+    <div id="case3" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h2>Generator Kuis Multi-Level</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Membangun app yang membuat kuis dengan tingkat kesulitan berbeda berdasarkan jenjang yang dipilih.
+        </p>
+        <div class="node-flow">
+            <div class="mini-card" style="border-color: var(--orange);">📝 Text + Pilihan Level</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--purple);">🔀 Percabangan</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--blue);">🧠 Gemini</div>
+            <div class="arrow-icon">→</div>
+            <div class="mini-card" style="border-color: var(--green);">📋 Kuis Siap Pakai</div>
+        </div>
+        <a href="#case3-step1" class="btn-nav" style="background: var(--orange);">Mulai Langkah 1 <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case3-step1" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h3>Langkah 1: Buat Aplikasi dengan Percabangan Logic</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Di Opal, klik <strong>"Create Aplikasi"</strong> dan ketik:</div>
+            </div>
+            <div class="prompt-box">Buatkan aplikasi generator kuis:
+                1. Pengguna memasukkan topik materi dan memilih level (SD, SMP, SMA, atau Mahasiswa)
+                2. Berdasarkan level yang dipilih, buat soal dengan tingkat kesulitan berbeda:
+                - SD: soal pemahaman dasar (C1-C2)
+                - SMP: soal aplikasi (C3)
+                - SMA: soal analisis dan evaluasi (C4-C5)
+                - Mahasiswa: soal evaluasi dan kreasi (C5-C6)
+                3. Hasil Keluaran: 10 soal PG + 3 soal essay + kunci jawaban</div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Periksa Kanvas Visual — Opal seharusnya membuat <strong>Kartu Visual Percabangan</strong> yang
+                    bercabang berdasarkan level.</div>
+            </div>
+        </div>
+        <a href="#case3-step2" class="btn-nav" style="background: var(--orange);">Lanjut: Edit Percabangan <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case3-step2" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h3>Langkah 2: Konfigurasi Percabangan & Instruksi</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik Kartu Visual <strong>Percabangan</strong> → pastikan percabangan sesuai:<br>
+                    <code>JIKA level = "SMA" → MAKA gunakan prompt Kemampuan Berpikir Tingkat Tinggi</code>
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Klik Kartu Visual Gemini untuk <strong>setiap cabang</strong> dan sesuaikan prompt.
+                    Contoh untuk cabang SMA:</div>
+            </div>
+            <div class="prompt-box">Berdasarkan topik: {{user_topic}}
+
+                Buatkan 10 soal PG level Analisis (C4) dan Evaluasi (C5):
+                - Setiap soal wajib memiliki stimulus berupa kasus/data/grafik
+                - 5 pilihan jawaban (A-E) dengan 1 pengecoh yang kuat
+                - Kunci jawaban beserta penjelasan logika
+
+                Buatkan 3 soal Essay level C5-C6:
+                - Berikan skenario kontekstual dunia nyata
+                - Pertanyaan yang membutuhkan argumentasi kritis
+                - Rubrik penilaian ringkas (skor 1-4)
+
+                Bahasa: Indonesia, sesuai untuk siswa SMA kelas 10-12.</div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Untuk cabang Mahasiswa, sesuaikan prompt agar level C5-C6 dan gunakan bahasa
+                    akademis.</div>
+            </div>
+        </div>
+        <a href="#case3-step3" class="btn-nav" style="background: var(--orange);">Lanjut: Uji Coba & Finalisasi <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case3-step3" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h3>Langkah 3: Uji Coba Semua Cabang & Bagikan</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik <strong>"Pratinjau"</strong> dan uji coba setiap level:<br>
+                    Uji Coba topik "Fotosintesis" dengan level SD, SMP, SMA, dan Mahasiswa secara bergantian.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Verifikasi: Apakah soal SD benar-benar mudah? Apakah soal Mahasiswa benar-benar
+                    menantang?</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Edit prompt per cabang jika level kesulitan belum sesuai.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Jika sudah puas, klik <strong>"Bagikan"</strong> dan bagikan link ke rekan MGMP,
+                    dosen satu prodi, atau langsung ke siswa/mahasiswa.</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Satu app kuis yang melayani seluruh jenjang — dari SD hingga Mahasiswa. Guru &
+            dosen tinggal masukkan topik, pilih level, dan langsung mendapat soal terstruktur. Bisa dibagikan ke seluruh
+            tim pengajar!
+        </div>
+    </div>
+
+    
+    <!-- Slide Penutup -->
+    <div class="slide"
+    <div class="slide"
+    <!-- ALAT BANTU SESI 4 -->
+    <div id="tools-sesi4" class="slide" style="margin-bottom: 20px;">
+        <div class="case-badge case-both">🛠️ ALAT BANTU (MULTIPART)</div>
+        <h2>Koleksi Alat Perangkai Aplikasi (Opal)</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 30px;">Setiap aplikasi mini memerlukan Masukan, Proses, dan Logika percabangan. Gabungkan deskripsi dari ketiga komponen ini agar ruang aplikasi terbentuk sempurna dengan sekali *Prompt*!</p>
+        
+        <!-- Tool 1: Input -->
+        <div style="background: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">1. Deskripsi Jalur Masukan (Input)</h3>
+            <input type="text" id="t4-in" placeholder="Informasi/file apa yang akan selalu dimasukkan calon pengguna Anda?" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px;">
+            <button onclick="genT4a()" class="btn-nav" style="margin-top:0; padding:10px 20px; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Deskripsi App</button>
+        </div>
+
+        <!-- Tool 2: Generate Process -->
+        <div style="background: #fffbeb; padding: 30px; border-radius: 16px; border: 1px solid #fde68a; width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #d97706;">2. Deskripsi Otak Utama (Generate)</h3>
+            <textarea id="t4-proc" rows="2" placeholder="Bagaimana AI akan mengolah masukan tersebut dan format keluaran seperti apa yang dihasilkan?" style="width:100%; padding:10px; border-radius:8px; border:1px solid #fcd34d; margin-bottom:15px;"></textarea>
+            <button onclick="genT4b()" class="btn-nav" style="margin-top:0; padding:10px 20px; background:#f59e0b; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Deskripsi App</button>
+        </div>
+
+        <!-- Tool 3: Logic -->
+        <div style="background: #eff6ff; padding: 30px; border-radius: 16px; border: 1px solid #bfdbfe; width: 100%;">
+            <h3 style="margin-bottom: 15px; color: #3b82f6;">3. Deskripsi Sistem Peninjau (Conditional Logic)</h3>
+            <input type="text" id="t4-cond" placeholder="Syarat ekstra sebelum pengguna menerima output (Cth: Harus disetujui Guru terlebih dahulu)" style="width:100%; padding:10px; border-radius:8px; border:1px solid #93c5fd; margin-bottom:15px;">
+            <button onclick="genT4c()" class="btn-nav" style="margin-top:0; padding:10px 20px; background:#3b82f6; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Deskripsi App</button>
+        </div>
+        
+        <script>
+            function genT4a() { appendToMaster(`Aplikasi ini ditujukan untuk memfasilitasi data berikut:\n- Masukan Pengguna: ${document.getElementById("t4-in").value}`); }
+            function genT4b() { appendToMaster(`Tahapan Pemrosesan AI Utama:\n- Saat input diterima, proses AI akan melakukan: ${document.getElementById("t4-proc").value}`); }
+            function genT4c() { appendToMaster(`Alur Validasi Tambahan:\n- Proses ini akan diberhentikan/mendapat percabangan baru jika: ${document.getElementById("t4-cond").value}`); }
+        </script>
+
+        <!-- MASTER PROMPT -->
+        <div style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; margin-top: 30px;">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fas fa-layer-group"></i> Instruksi Terpadu (Super Prompt)</h3>
+            <p style="font-size: 1rem; color: #94a3b8; margin-bottom: 15px;">Kumpulan instruksi dari alat bantu di atas akan digabungkan di sini menjadi satu *prompt* yang sangat kuat (powerful).</p>
+            <textarea id="master-res" rows="6" placeholder="Hasil instruksi gabungan akan muncul di sini..." style="width:100%; padding:15px; border-radius:12px; border:2px solid #38bdf8; font-size:1.1rem; font-family:monospace; background: #0f172a; color: #f8fafc;"></textarea>
+            <div style="margin-top:15px; display: flex; gap: 10px;">
+                <button onclick="copyMaster('master-res')" style="padding:12px 25px; background:#38bdf8; color:#0f172a; border:none; border-radius:8px; cursor:pointer; font-weight:700; flex-grow:1;"><i class="fas fa-copy"></i> Salin Super Prompt</button>
+                <button onclick="clearMaster()" style="padding:12px 25px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-trash"></i> Bersihkan</button>
+            </div>
+        </div>
+        <script>
+            function appendToMaster(text) {
+                const master = document.getElementById("master-res");
+                if(master.value.trim() !== '') {
+                    master.value += '\n\n' + text;
+                } else {
+                    master.value = text;
+                }
+            }
+            function clearMaster() {
+                document.getElementById("master-res").value = '';
+            }
+            function copyMaster(id) {
+                const ta = document.getElementById(id);
+                if (!ta.value) return alert('Prompt masih kosong!');
+                ta.select();
+                document.execCommand('copy');
+                alert('Super Prompt berhasil disalin!');
+            }
+        </script>
+    </div>
+
+    <div class="slide" style="text-align: center;">
+        <i class="fas fa-microchip fa-5x" style="color: var(--primary); margin-bottom: 30px;"></i>
+        <h2>Praktek Sesi 4 Selesai!</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 20px;">Luar biasa! Anda telah membangun <strong>3 Aplikasi
+                AI</strong>
+            tanpa menulis satu baris kode pun.</p>
+        <p style="font-size: 1.1rem; color: var(--dim); margin-bottom: 40px;">
+            Anda kini bisa: membuat asisten bahan ajar, app umpan balik essay, dan generator kuis multi-level
+            — semuanya bisa dibagikan ke siswa, mahasiswa, dan rekan kerja lewat link.
+        </p>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="OneDayIntensive.html" class="btn-nav" style="margin-top: 0; background: #64748b;">Ke Hub</a>
+            <a href="Project_Final.html" class="btn-nav" style="margin-top: 0; background: var(--green);">Tantangan
+                Akhir <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>

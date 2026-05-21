@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 1: Dasar & Ideasi (Gemini) | Praktek Langsung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #ffffff;
+            --text: #1e293b;
+            --dim: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .slide {
+            width: 85vw;
+            max-width: 1100px;
+            min-height: 80vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            left: 80px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-mini {
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+            color: var(--dim);
+        }
+
+        .btn-mini:hover {
+            background: var(--theory-bg, #f8fafc);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .step-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .handson-container {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .step-text {
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        .code-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-nav {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 40px;
+            align-self: flex-start;
+            transition: 0.3s;
+        }
+
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Welcome -->
+    <div class="slide">
+        <div class="top-nav">
+            <a href="Session1.html" class="btn-mini"><i class="fas fa-book"></i> Kembali ke Teori</a>
+            <a href="OneDayIntensive.html" class="btn-mini"><i class="fas fa-home"></i> Hub</a>
+        </div>
+        <div class="step-badge">SESI 01: BEGINNER</div>
+        <h1>Dasar & Ideasi (Gemini)</h1>
+        <p style="font-size: 1.5rem; color: var(--dim);">Langkah praktis membuka potensi AI sebagai partner kreatif
+            dalam menyusun materi ajar.</p>
+        <a href="#step1" class="btn-nav">Mulai Praktek <i class="fas fa-arrow-down"></i></a>
+    </div>
+
+    <!-- Slide: Token Exploration -->
+    <div id="step0" class="slide">
+        <div class="step-badge">EKSPLORASI TOOLS</div>
+        <h2>Mengenal Token di AI Studio</h2>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka <strong>https://aistudio.google.com/</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Ketikkan sebuah kalimat panjang di kotak prompt.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Perhatikan angka di pojok kanan bawah kotak teks (misal: "12 tokens"). Itulah
+                    jumlah unit bahasa yang diproses AI.</div>
+            </div>
+        </div>
+        <a href="#step1" class="btn-nav">Lanjut ke Ideasi Gemini</a>
+    </div>
+
+    <!-- Slide 2: Step 1 -->
+    <div id="step1" class="slide">
+        <div class="step-badge">LANGKAH PERTAMA</div>
+        <h2>Persiapan & Akses</h2>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka browser Anda dan akses <strong>gemini.google.com</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Login menggunakan akun Google (pribadi atau institusi).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Pastikan Anda berada di antarmuka chat Gemini yang bersih.</div>
+            </div>
+        </div>
+        <a href="#step2" class="btn-nav">Lanjut ke Langkah 2</a>
+    </div>
+
+    <!-- Slide 3: Step 2 -->
+    <div id="step2" class="slide">
+        <div class="step-badge">LANGKAH KEDUA</div>
+        <h2>Eksplorasi Ideasi</h2>
+        <p style="margin-bottom: 30px;">Gunakan Gemini untuk mencari ide segar secara instan.</p>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Salin dan tempel (copy-paste) perintah ini ke kolom chat Gemini:</div>
+            </div>
+            <div class="code-box">
+                "Berikan 3 ide kegiatan Praktek Langsung yang seru untuk menjelaskan konsep Jaringan Komputer Dasar kepada siswa
+                SMK."
+            </div>
+            <div class="instruction-step" style="margin-top: 25px;">
+                <div class="step-num">2</div>
+                <div class="step-text">Amati bagaimana Gemini memberikan variasi ide yang berbeda.</div>
+            </div>
+        </div>
+        <a href="#step3" class="btn-nav">Lanjut ke Langkah 3</a>
+    </div>
+
+    <!-- Slide 4: Step 3 -->
+    <div id="step3" class="slide">
+        <div class="step-badge">LANGKAH KETIGA</div>
+        <h2>Refinement (Penajaman)</h2>
+        <div class="handson-container">
+            <div class="instruction-step" style="margin-bottom: 15px;">
+                <div class="step-num">1</div>
+                <div class="step-text">Pilih salah satu ide yang paling Anda sukai, lalu ketik perintah lanjutan:</div>
+            </div>
+            <div class="code-box" style="border-left-color: #10b981;">
+                "Detailkan ide nomor [Nomer Ide] menjadi langkah-langkah belajar berdurasi 30 menit."
+            </div>
+            <div class="instruction-step" style="margin-top: 25px;">
+                <div class="step-num">2</div>
+                <div class="step-text">Anda kini telah memiliki draf rencana kegiatan yang siap digunakan.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Completion -->
+    <div class="slide"
+    <div class="slide"
+    <!-- ALAT BANTU SESI 1 -->
+    <div id="tools-sesi1" class="slide">
+        <div class="case-badge case-both">🛠️ ALAT BANTU (MULTIPART)</div>
+        <h2>Koleksi Alat Bantu Sesi 1</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 30px;">Setiap komponen alat bantu di bawah ini dapat digabungkan (dikombinasikan) untuk menghasilkan satu instruksi yang sangat kuat (Super Prompt).</p>
+        
+        <!-- Tool 1: RTC -->
+        <div style="background: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">1. Alat Pembuat Instruksi Dasar (Konsep R-T-C)</h3>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom: 5px;">Peran (Role) AI</label>
+                <input type="text" id="t1-role" placeholder="Cth: Guru Matematika" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom: 5px;">Tugas (Task)</label>
+                <input type="text" id="t1-task" placeholder="Cth: Buatkan 5 soal cerita" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom: 5px;">Konteks (Context)</label>
+                <textarea id="t1-context" rows="2" placeholder="Cth: Untuk siswa SD kelas 4 Topik Pecahan" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1;"></textarea>
+            </div>
+            <button onclick="genT1()" class="btn-nav" style="margin-top:0; padding:10px 20px; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Super Prompt</button>
+        </div>
+
+        <!-- Tool 2: Evaluator -->
+        <div style="background: #fffbeb; padding: 30px; border-radius: 16px; border: 1px solid #fde68a; width: 100%;">
+            <h3 style="margin-bottom: 15px; color: #d97706;">2. Alat Evaluator Ide (Kritik AI)</h3>
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; font-weight:600; margin-bottom: 5px;">Ide yang dievaluasi / dianalisis</label>
+                <input type="text" id="t1b-idea" placeholder="Cth: Menggunakan game Minecraft untuk belajar Sejarah..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #fcd34d;">
+            </div>
+            <button onclick="genT1b()" class="btn-nav" style="margin-top:0; padding:10px 20px; background:#f59e0b; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Super Prompt</button>
+        </div>
+        
+        <script>
+            function genT1() {
+                const r=document.getElementById("t1-role").value, t=document.getElementById("t1-task").value, c=document.getElementById("t1-context").value;
+                appendToMaster(`Bertindaklah sebagai ${r||'seorang ahli'}. Tugas Utama Anda: ${t||'bantu menyelesaikan masalah saya'}. Konteks tambahan untuk diperhatikan: ${c||'-'}`);
+            }
+            function genT1b() {
+                const idea=document.getElementById("t1b-idea").value;
+                appendToMaster(`Selain itu, tolong evaluasi ide pembelajaran berikut secara kritis: "${idea}". Berikan 3 potensi kelemahan dan cara memperbaikinya agar lebih efektif.`);
+            }
+        </script>
+
+        <!-- MASTER PROMPT -->
+        <div style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; margin-top: 30px;">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fas fa-layer-group"></i> Instruksi Terpadu (Super Prompt)</h3>
+            <p style="font-size: 1rem; color: #94a3b8; margin-bottom: 15px;">Kumpulan instruksi dari alat bantu di atas akan digabungkan di sini menjadi satu *prompt* yang sangat kuat (powerful).</p>
+            <textarea id="master-res" rows="6" placeholder="Hasil instruksi gabungan akan muncul di sini..." style="width:100%; padding:15px; border-radius:12px; border:2px solid #38bdf8; font-size:1.1rem; font-family:monospace; background: #0f172a; color: #f8fafc;"></textarea>
+            <div style="margin-top:15px; display: flex; gap: 10px;">
+                <button onclick="copyMaster('master-res')" style="padding:12px 25px; background:#38bdf8; color:#0f172a; border:none; border-radius:8px; cursor:pointer; font-weight:700; flex-grow:1;"><i class="fas fa-copy"></i> Salin Super Prompt</button>
+                <button onclick="clearMaster()" style="padding:12px 25px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-trash"></i> Bersihkan</button>
+            </div>
+        </div>
+        <script>
+            function appendToMaster(text) {
+                const master = document.getElementById("master-res");
+                if(master.value.trim() !== '') {
+                    master.value += '\n\n' + text;
+                } else {
+                    master.value = text;
+                }
+            }
+            function clearMaster() {
+                document.getElementById("master-res").value = '';
+            }
+            function copyMaster(id) {
+                const ta = document.getElementById(id);
+                if (!ta.value) return alert('Prompt masih kosong!');
+                ta.select();
+                document.execCommand('copy');
+                alert('Super Prompt berhasil disalin!');
+            }
+        </script>
+    </div>
+
+    <div class="slide" style="text-align: center;">
+        <i class="fas fa-check-circle fa-5x" style="color: #10b981; margin-bottom: 30px;"></i>
+        <h2>Sesi 1 Selesai</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 40px;">Anda telah berhasil mempraktikkan ideasi dasar. Kumpulkan
+            poin Anda!</p>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="OneDayIntensive.html" class="btn-nav" style="margin-top: 0; background: #64748b;">Ke Hub</a>
+            <a href="Session2.html" class="btn-nav" style="margin-top: 0;">Lanjut ke Sesi 2 (Teori) <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+    </body>
+
+</html>

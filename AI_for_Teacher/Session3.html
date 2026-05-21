@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 3 - Asisten Spesialis (Opal & Chaining) Comprensive - Koalawan</title>
+    <title>Sesi 3 - NotebookLM: Asisten Riset Terpadu - Koalawan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -32,29 +32,30 @@
         }
 
         body {
-            background-color: #e2e8f0;
+            background-color: var(--bg-slide);
             display: flex;
             flex-direction: column;
-            gap: 120px;
+            gap: 0;
             margin: 0;
-            padding: 100px 0;
+            padding: 0 20px;
             align-items: center;
             font-family: 'Inter', sans-serif;
         }
 
         .slide {
-            width: 1400px;
-            height: 800px;
-            background: var(--bg-slide);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 1200px;
+            min-height: auto;
+            background: transparent;
+            box-shadow: none;
             position: relative;
             display: flex;
             flex-direction: column;
-            padding: 50px 120px;
+            padding: 50px 80px;
             color: var(--text-main);
             flex-shrink: 0;
-            border-radius: 8px;
-            overflow: hidden;
+            border-radius: 0;
+            overflow: visible;
         }
 
         .slide::before {
@@ -140,7 +141,13 @@
             font-weight: 600;
         }
 
-        /* Ensure contrast in dark cards */
+        .source-tag {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
         .card[style*="background"] h1,
         .card[style*="background"] h2,
         .card[style*="background"] h3,
@@ -169,7 +176,6 @@
             font-weight: 600;
         }
 
-        /* Opal Visual Flow */
         .node-canvas {
             background: #f1f5f9;
             border: 2px dashed #94a3b8;
@@ -182,18 +188,18 @@
             margin-top: 20px;
         }
 
-        .opal-node {
+        .flow-node {
             background: #fff;
             padding: 20px 40px;
             border-radius: 15px;
             border: 3px solid var(--blue);
-            width: 350px;
+            width: 400px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             position: relative;
         }
 
-        .opal-node::after {
+        .flow-node::after {
             content: '↓';
             position: absolute;
             bottom: -25px;
@@ -203,7 +209,7 @@
             color: var(--blue);
         }
 
-        .opal-node:last-child::after {
+        .flow-node:last-child::after {
             display: none;
         }
 
@@ -217,10 +223,64 @@
             text-align: center;
         }
 
-        .option-card:hover, .option-card.active {
+        .option-card:hover,
+        .option-card.active {
             border-color: var(--primary);
             background: #ecfdf5;
             transform: translateY(-5px);
+        }
+
+        .workshop-box {
+            background: #ecfdf5;
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-top: 30px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: var(--secondary);
+            color: white;
+            padding: 18px 25px;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        .comparison-table td {
+            padding: 16px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 18px;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        .comparison-table .check {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .comparison-table .cross {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -229,425 +289,578 @@
 
     <!-- Slide 1: Welcome -->
     <div class="slide">
-        <div class="watermark">KOALAWAN X BINUS CENTER</div>
+        <div class="watermark">KOALAWAN</div>
         <div style="margin-top: auto; margin-bottom: auto;">
             <div class="tag-pill" style="width: fit-content; margin-bottom: 30px;">FULL CURRICULUM: SESSION 3</div>
-            <h1>Asisten Spesialis (Opal):<br>Membangun Guru Digital Anda</h1>
+            <h1>NotebookLM:<br>Asisten Riset Terpadu Anda</h1>
             <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
-                Eksplorasi mendalam platform Opal Google untuk merakit asisten pintar yang menguasai silabus, gaya bicara, dan kebutuhan unik kelas Anda.
+                Eksplorasi mendalam platform NotebookLM Google untuk mengubah tumpukan dokumen menjadi
+                asisten pintar yang menjawab pertanyaan Anda berdasarkan data nyata — tanpa halusinasi.
             </p>
         </div>
         <div class="footer">
-            <span>Pelatihan Komprehensif Guru (3 Jam)</span>
+            <span>Pelatihan Komprehensif Guru & Dosen (3 Jam)</span>
             <span>By Muhammad Ikhwan Fathulloh</span>
         </div>
     </div>
 
     <!-- Slide 2: Agenda Sesi 3 -->
     <div class="slide">
-        <div class="watermark">AGENDA</div>
+        <div class="watermark">RENCANA BELAJAR</div>
         <h2><i class="fas fa-list-check"></i> Rencana Pembelajaran Sesi 3</h2>
         <div class="grid-2">
             <div class="card">
                 <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 1:</strong> Ekosistem Opal (No-Code AI Architecture)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 2:</strong> Pengelolaan Knowledge Base (Data Ingestion)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 3:</strong> Perancangan Alur Kerja Bertingkat (Nodes)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 4:</strong> Integrasi & Kolaborasi dalam "Spaces"</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Workshop:</strong> Merakit Asisten Penilai Riset Sederhana</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 1:</strong> Apa itu NotebookLM & Mengapa Penting?
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 2:</strong> Arsitektur: Sumber Data, Notebook & Obrolan Berbasis Data
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 3:</strong> Fitur Unggulan: Ringkasan Audio, Catatan, Kutipan Rujukan
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 4:</strong> Hasil Keluaran Otomatis: Panduan Belajar, Pertanyaan Umum, Dokumen Rangkuman Eksekutif
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 5:</strong> Studi Kasus Guru & Dosen
+                    </li>
                 </ul>
             </div>
-            <div class="card" style="background: var(--indigo); color: white;">
-                <h4>Output Peserta:</h4>
-                <p>Memiliki satu link asisten khusus yang siap dibagikan ke siswa atau rekan guru dengan instruksi yang sudah terkunci.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 3: Mengapa Harus Spesialis? -->
-    <div class="slide">
-        <div class="watermark">FILOSOFI</div>
-        <h2><i class="fas fa-user-gear"></i> Kebangkitan Asisten Spesialis</h2>
-        <div class="grid-2">
-            <div>
-                <p>Chat biasa adalah "Generalis"—serba tahu tapi seringkali kurang mendalam. Sebaliknya, <strong>Asisten Spesialis</strong> memiliki "Basis Pengetahuan" yang eksklusif.</p>
-                <div class="card" style="margin-top:30px">
-                    <h4>Benefit Spesialisasi:</h4>
-                    <ul>
-                        <li><strong>Konsistensi:</strong> Tidak akan keluar dari silabus yang sudah ditentukan.</li>
-                        <li><strong>Konteks Abadi:</strong> Tidak lupa instruksi meskipun percakapan sangat panjang.</li>
-                        <li><strong>Portabilitas:</strong> Berbentuk link yang bisa dibuka di browser siapa saja.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card" style="text-align:center">
-                <i class="fas fa-robot fa-10x" style="color:var(--primary); opacity:0.1"></i>
-                <p style="font-style:italic; margin-top:20px">"Opal mengubah AI dari sekadar lawan bicara menjadi alat otomasi produktivitas yang tangguh."</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 4: Arsitektur Ekosistem Opal Google -->
-    <div class="slide">
-        <div class="watermark">TEKNOLOGI</div>
-        <h2><i class="fas fa-microchip"></i> Memahami Arsitektur Opal</h2>
-        <p>Opal bukan sekadar aplikasi chat, melainkan ekosistem "Mini-App Builder" berbasis AI.</p>
-        <div class="grid-2">
-            <div class="card">
-                <h3>1. The Canvas (The Mind)</h3>
-                <p>Tempat kita merangkai logika berpikir AI menggunakan kotak-kotak (Nodes).</p>
-            </div>
-            <div class="card">
-                <h3>2. The Knowledge (The Memory)</h3>
-                <p>Tempat kita mengunggah PDF, draf RPP, atau buku teks agar AI "dilatih" secara instan.</p>
-            </div>
-            <div class="card" style="grid-column: span 2;">
-                <h3>3. The Space (The Office)</h3>
-                <p>Lingkungan kerja di mana Anda bisa mengelompokkan berbagai asisten berdasarkan Major atau Mata Pelajaran.</p>
-            </div>
-        </div>
-        <span class="source-tag">Selengkapnya: <a href="https://opal.google.com" target="_blank" class="source-link">Eksplorasi opal.google.com</a></span>
-    </div>
-
-    <!-- Slide 5: Konsep 1: Knowledge Base (Memory) -->
-    <div class="slide">
-        <div class="watermark">TEKNIK</div>
-        <h2><i class="fas fa-book-half"></i> Konsep 1: Knowledge Base</h2>
-        <p>Inilah yang membuat asisten Anda <strong>Unik</strong>. Ia hanya akan merujuk pada data yang Anda berikan.</p>
-        <div class="grid-2">
-            <div class="card" style="border-left:10px solid var(--primary)">
-                <h4>Data Ingestion:</h4>
-                <p>Anda bisa memasukkan:</p>
-                <ul>
-                    <li>Dokumen Kurikulum Sekolah</li>
-                    <li>Contoh gaya penulisan raport Anda</li>
-                    <li>Jurnal-jurnal referensi mengajar</li>
-                    <li>Data anonym siswa</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h4>Dynamic Retrieval:</h4>
-                <p>Saat seseorang bertanya, asisten akan mencari jawaban <strong>terlebih dahulu</strong> di Knowledge Base sebelum menggunakan pengetahuan umumnya.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 6: Konsep 2: Node-Based Logic (Visual Flow) -->
-    <div class="slide">
-        <div class="watermark">TEKNIK</div>
-        <h2><i class="fas fa-diagram-project"></i> Konsep 2: Node-Based Logic</h2>
-        <p>Mengubah instruksi teks menjadi alur kerja visual. Ini mempermudah pelacakan logika AI.</p>
-        <div class="node-canvas">
-            <div class="opal-node" style="border-color: var(--blue)">
-                <strong>TRIGGER:</strong> Input Materi (Teks/File)
-            </div>
-            <div class="opal-node" style="border-color: var(--purple)">
-                <strong>AI STEP 1:</strong> Identifikasi Konsep Kunci
-            </div>
-            <div class="opal-node" style="border-color: var(--primary)">
-                <strong>OUTPUT:</strong> Tabel Ringkasan & 3 Soal Diskusi
-            </div>
-        </div>
-        <p style="margin-top:30px; text-align:center">Logika linear semacam ini menjamin output yang <strong>terstruktur</strong> setiap kali digunakan.</p>
-    </div>
-
-    <!-- Slide 7: Konsep 3: Triggers & Parameters -->
-    <div class="slide">
-        <div class="watermark">AUTOMATION</div>
-        <h2><i class="fas fa-bolt"></i> Konsep 3: Triggers & Parameters</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>Apa itu Trigger?</h3>
-                <p>Kejadian yang memulai kerja asisten. Di Opal, pemicu utamanya adalah <strong>Input Pengguna</strong> (Misal: Paste link video YouTube).</p>
-            </div>
-            <div class="card">
-                <h3>Parameter Kustom:</h3>
-                <p>Anda bisa membuat "isian form" yang harus diisi pengguna sebelum asisten bekerja. <br><small>Contoh: Pilihan Jenjang (SD/SMP/SMA) sebelum membuat soal.</small></p>
-            </div>
-        </div>
-        <div class="workshop-box" style="background:#fefce8; border-color:#fef08a">
-            <p><strong>Tips:</strong> Dengan Parameter, satu asisten bisa fleksibel melayani berbagai kelas dengan satu instruksi pusat.</p>
-        </div>
-    </div>
-
-    <!-- Slide 8: Tur Antarmuka: The Library vs The Canvas -->
-    <div class="slide">
-        <div class="watermark">TOUR</div>
-        <h2><i class="fas fa-compass"></i> Menavigasi Antarmuka Opal</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>1. The Library (Inspirasi)</h4>
-                <p>Tempat bagi para "Pioneer" memamerkan asisten mereka. Anda bisa me-<strong>Remix</strong> asisten guru lain—menduplikasinya dan menyesuaikannya untuk kelas Anda.</p>
-            </div>
-            <div class="card">
-                <h4>2. The Canvas (Praktek)</h4>
-                <p>Tampilan "seret dan lepas" (drag and drop) di mana langkah-langkah AI dirakit. Setiap kotak (Node) mewakili satu Prompt spesifik.</p>
-            </div>
-        </div>
-        <div style="text-align:center; margin-top:40px">
-            <i class="fas fa-shapes fa-8x" style="color:var(--primary); opacity:0.1"></i>
-        </div>
-    </div>
-
-    <!-- Slide 9: Step 1: Mendefinisikan Tujuan Asisten -->
-    <div class="slide">
-        <div class="watermark">TUTORIAL</div>
-        <h2><i class="fas fa-bullseye"></i> Langkah 1: Define the Purpose</h2>
-        <div class="card">
-            <h4>Pertanyaan Sebelum Membangun:</h4>
-            <ul style="font-size:20px">
-                <li>Apa <strong>satu masalah utama</strong> yang ingin diselesaikan asisten ini?</li>
-                <li>Data apa yang AI butuhkan agar bisa menjawab dengan baik? (Knowledge)</li>
-                <li>Siapa yang akan menggunakan asisten ini? (Guru sendiri atau Siswa?)</li>
-            </ul>
-        </div>
-        <div class="workshop-box" style="background:#e0f2fe; border-color:#0ea5e9">
-            <p><strong>Analisis:</strong> Semakin sempit fokus asisten Anda, semakin cerdas ia bekerja. <br><small>Buruk: "Asisten Guru IPA". Baik: "Asisten Pembuat Proyek Hidroponik".</small></p>
-        </div>
-    </div>
-
-    <!-- Slide 10: Step 2: Adding Logic Nodes (Conditionals) -->
-    <div class="slide">
-        <div class="watermark">TUTORIAL</div>
-        <h2><i class="fas fa-code-branch"></i> Langkah 2: Merakit Rantai Logika</h2>
-        <p>Gunakan teknik "Prompt Chaining" yang kita pelajari di Sesi 2 ke dalam struktur Node.</p>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Node Logika 1: Analisis</h4>
-                <p>"Ekstrak poin penting dari materi ini."</p>
-            </div>
-            <div class="card" style="border-color: var(--blue)">
-                <h4>Node Logika 2: Transformasi</h4>
-                <p>"Ubah poin tersebut menjadi lirik lagu Rap untuk anak-anak."</p>
-            </div>
-        </div>
-        <div style="margin-top:40px; padding:20px; background:#fff; border-radius:12px; border:1px solid #ddd">
-            <p><strong>Advanced:</strong> Anda bisa menambahkan Node "Reviewer" di tengah jalan untuk mengecek apakah Output 1 sudah layak sebelum masuk ke Langkah 2.</p>
-        </div>
-    </div>
-
-    <!-- Slide 11: Step 3: Integrating Google Drive Data -->
-    <div class="slide">
-        <div class="watermark">INTEGRASI</div>
-        <h2><i class="fas fa-cloud"></i> Menghubungkan Google Drive</h2>
-        <div class="grid-2">
-            <div>
-                <p>Salah satu kekuatan Opal adalah integrasi <strong>"Live"</strong> dengan folder Google Drive Anda.</p>
-                <div class="card" style="margin-top:20px">
-                    <h4>Keuntungan:</h4>
-                    <ul>
-                        <li>Update file di Drive = Asisten otomatis terupdate ilmunya.</li>
-                        <li>Tidak perlu copy-paste teks panjang secara manual.</li>
-                        <li>Aman dalam ekosistem korporat/sekolah Google.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card" style="text-align:center">
-                <i class="fab fa-google-drive fa-10x" style="color:var(--blue); opacity:0.1"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 12: Interactive: Persona Expert Builder -->
-    <div class="slide">
-        <div class="watermark">PRAKTEK</div>
-        <h2><i class="fas fa-user-plus"></i> Workshop: Rancang Karakter Asisten</h2>
-        <p>Pilih kombinasi identitas asisten spesial Anda di Opal:</p>
-        <div class="grid-2">
-            <div class="option-card" onclick="selectPersona(this, 'Karakter: Socratic Tutor')">
-                <h3>Socratic Tutor</h3>
-                <p>Tidak langsung memberi jawaban, tapi bertanya balik untuk memicu logika siswa.</p>
-            </div>
-            <div class="option-card" onclick="selectPersona(this, 'Karakter: Curriculum Architect')">
-                <h3>Curriculum Architect</h3>
-                <p>Fokus merancang silabus kaku menjadi rencana belajar yang sangat terstruktur.</p>
-            </div>
-            <div class="option-card" onclick="selectPersona(this, 'Karakter: Admin Wizard')">
-                <h3>Admin Wizard</h3>
-                <p>Ahli merapikan data berantakan menjadi tabel dan formulir sekolah yang rapi.</p>
-            </div>
-            <div class="option-card" onclick="selectPersona(this, 'Karakter: Creative Game Master')">
-                <h3>Creative Game Master</h3>
-                <p>Mengubah setiap materi menjadi tantangan, teka-teki, dan petualangan gamifikasi.</p>
-            </div>
-        </div>
-        <div id="personaFeedback" class="card" style="margin-top:30px; display:none; border-color:var(--primary); background:#ecfdf5">
-            <p id="personaText"></p>
-        </div>
-    </div>
-
-    <!-- Slide 13: Interactive: 5-Step Workflow Logic Mapper -->
-    <div class="slide">
-        <div class="watermark">WORKSHOP</div>
-        <h2><i class="fas fa-project-diagram"></i> Praktik: Merakit Rantai 5 Tahap</h2>
-        <p>Urutkan langkah di bawah ini untuk membangun "Asisten Pembuat Bahan Ajar Mandiri":</p>
-        <div id="flowItems" style="margin-top:20px">
-            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(1, 'Identify Key Concepts')">Langkah 1: Identifikasi 3 Konsep Kunci dari Materi</div>
-            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(2, 'Analogy Creation')">Langkah 2: Buat Analogi Menarik untuk masing-masing konsep</div>
-            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(3, 'Draft Content')">Langkah 3: Susun Narasi Penjelasan Utama</div>
-            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(4, 'Quiz Generation')">Langkah 4: Buat Kuis Pengukuran Pemahaman</div>
-            <div class="option-card" style="margin-bottom:10px" onclick="addFlow(5, 'Export Link')">Langkah 5: Sajikan Link Latihan untuk Siswa</div>
-        </div>
-        <div id="flowFeedback" style="margin-top:20px; font-weight:700; color:var(--blue); display:none"></div>
-    </div>
-
-    <!-- Slide 14: Context Injection & Prompt Injection -->
-    <div class="slide">
-        <div class="watermark">ADVANCED</div>
-        <h2><i class="fas fa-syringe"></i> Teknik Context Injection</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Apa itu Context Injection?</h4>
-                <p>Memasukkan data dari Node sebelumnya ke dalam Prompt Node berikutnya menggunakan <strong>Variable</strong> (Contoh: `{{node_1_output}}`).</p>
-            </div>
-            <div class="card">
-                <h4>Manfaat:</h4>
-                <p>AI bekerja dengan input yang sangat bersih dan terfokus, mengurangi kemungkinan ia "ngelantur" ke topik lain yang tidak relevan.</p>
-            </div>
-        </div>
-        <div class="workshop-box">
-            "Ini adalah rahasia mengapa asisten spesialis di Opal terasa jauh lebih pintar daripada chat Gemini biasa."
-        </div>
-    </div>
-
-    <!-- Slide 15: Case Study: Auto-Feedback Assistant -->
-    <div class="slide">
-        <div class="watermark">STUDI KASUS</div>
-        <h2><i class="fas fa-comment-dots"></i> Kasus: Asisten Pemberi Umpan Balik</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>The Problem:</h3>
-                <p>Mengoreksi 40 essay siswa memakan waktu 4 jam. Komentar guru seringkali jadi seragam karena kelelahan.</p>
-            </div>
-            <div class="card" style="background:var(--secondary); color:white">
-                <h3>The Opal Solution:</h3>
+            <div class="card" style="background: var(--secondary); color: white;">
+                <h3 style="color: var(--primary)">🎯 Target Sesi Ini</h3>
+                <p>Setelah sesi ini, Anda mampu:</p>
                 <ol>
-                    <li>Asisten dilatih dengan <strong>Rubrik Penilaian</strong> Guru.</li>
-                    <li>Siswa submit teks essay.</li>
-                    <li>AI memberikan umpan balik spesifik per paragraf berdasarkan rubrik.</li>
-                    <li><strong>Guru mereview & memvalidasi sebelum dikirim balik.</strong></li>
+                    <li>Membuat Notebook dan mengunggah berbagai sumber dokumen</li>
+                    <li>Bertanya kepada AI berdasarkan data Anda sendiri (grounded)</li>
+                    <li>Menghasilkan Ringkasan Audio (Siaran Audio AI)</li>
+                    <li>Membuat Panduan Belajar, Pertanyaan Umum, dan Dokumen Rangkuman Eksekutif otomatis</li>
+                    <li>Menerapkan NotebookLM untuk keperluan mengajar dan riset</li>
                 </ol>
             </div>
         </div>
     </div>
 
-    <!-- Slide 16: Security & Collaboration in Spaces -->
+    <!-- Slide 3: Mengapa NotebookLM? -->
     <div class="slide">
-        <div class="watermark">COLLABORATION</div>
-        <h2><i class="fas fa-users-viewfinder"></i> Keamanan & Kolaborasi di Spaces</h2>
-        <div class="grid-2">
+        <div class="watermark">FUNDAMENTAL</div>
+        <h2><i class="fas fa-lightbulb"></i> Mengapa NotebookLM?</h2>
+        <p>Masalah utama AI generatif: <strong>Halusinasi</strong>. ChatGPT/Gemini kadang mengarang jawaban.
+            NotebookLM menyelesaikan ini.</p>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspek</th>
+                    <th>Chatbot Biasa (Gemini/ChatGPT)</th>
+                    <th>NotebookLM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sumber Jawaban</td>
+                    <td>Seluruh internet</td>
+                    <td class="check">✅ Hanya dokumen Anda</td>
+                </tr>
+                <tr>
+                    <td>Risiko Halusinasi</td>
+                    <td class="cross">❌ Tinggi</td>
+                    <td class="check">✅ Sangat Rendah</td>
+                </tr>
+                <tr>
+                    <td>Rujukan Kutipan</td>
+                    <td class="cross">❌ Tidak ada</td>
+                    <td class="check">✅ Klik langsung ke sumber</td>
+                </tr>
+                <tr>
+                    <td>Ringkasan Audio</td>
+                    <td class="cross">❌ Tidak tersedia</td>
+                    <td class="check">✅ Siaran Audio 2 host otomatis</td>
+                </tr>
+                <tr>
+                    <td>Privasi Data</td>
+                    <td>Bisa digunakan melatih AI</td>
+                    <td class="check">✅ Tidak dipakai melatih model</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="workshop-box">
+            <strong>Kesimpulan:</strong> NotebookLM = AI yang hanya menjawab berdasarkan fakta dari dokumen Anda.
+            Sempurna untuk guru & dosen yang butuh <strong>akurasi 100%</strong>.
+        </div>
+    </div>
+
+    <!-- Slide 4: Arsitektur NotebookLM -->
+    <div class="slide">
+        <div class="watermark">ARSITEKTUR</div>
+        <h2><i class="fas fa-sitemap"></i> Arsitektur NotebookLM</h2>
+        <p>NotebookLM terdiri dari 3 komponen utama yang saling terhubung:</p>
+        <div class="node-canvas">
+            <div class="flow-node" style="border-color: #f97316;">
+                <strong>📂 SOURCES</strong><br>
+                <small>Unggah dokumen Anda (PDF, Docs, Slides, Tautan Situs Web, YouTube, Teks)</small>
+            </div>
+            <div class="flow-node" style="border-color: var(--purple);">
+                <strong>📓 NOTEBOOK</strong><br>
+                <small>Ruang kerja tempat AI membaca & memahami semua Sumber Data</small>
+            </div>
+            <div class="flow-node" style="border-color: var(--primary);">
+                <strong>💬 GROUNDED CHAT</strong><br>
+                <small>Tanya jawab AI yang hanya menjawab berdasarkan Sumber Data Anda</small>
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 40px;">
             <div class="card">
-                <h4>Sharing is Caring:</h4>
-                <p>Anda bisa mengundang rekan sejawat ke <strong>Space</strong> Anda untuk mengedit asisten bersama-sama. <br><small>Cocok untuk tim MGMP atau Koordinator Level.</small></p>
+                <h4>🔑 Kata Kunci: "Berbasis Data Nyata"</h4>
+                <p>Artinya: AI "dilandasi" oleh data Anda. Ia tidak akan mengarang jawaban dari internet.
+                    Setiap klaim ditautkan ke halaman/paragraf asli.</p>
             </div>
             <div class="card">
-                <h4>Publishing Control:</h4>
-                <p>Anda bisa menentukan asisten hanya untuk penggunaan pribadi, terbatas tim sekolah, atau dipublikasikan secara global di Library.</p>
+                <h4>🎓 Untuk Guru & Dosen</h4>
+                <p>Unggah kurikulum, silabus, jurnal, atau buku teks — dan AI akan menjadi "asisten ahli"
+                    yang hanya bicara berdasarkan dokumen resmi Anda.</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 17: Tips Mengelola Library Asisten -->
+    <!-- Slide 5: Fitur 1 — Sources (Sumber Dokumen) -->
     <div class="slide">
-        <div class="watermark">MANAGEMENT</div>
-        <h2><i class="fas fa-folder-tree"></i> Mengelola Perpustakaan Asisten</h2>
-        <p>Semakin banyak Anda bereksperimen, semakin banyak "alat" yang Anda miliki.</p>
-        <div class="grid-2">
-            <div class="card" style="border-top:10px solid var(--blue)">
-                <h4>Kit Admin Harian:</h4>
+        <div class="watermark">FITUR 1</div>
+        <h2><i class="fas fa-folder-open"></i> Fitur 1: Sumber Data (Sumber Dokumen)</h2>
+        <p>Sumber Data adalah "makanan" bagi otak AI di NotebookLM. Semakin kaya sumber, semakin pintar AI Anda.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid #f97316;">
+                <h4 style="color:#f97316"><i class="fas fa-file-pdf"></i> PDF & Teks</h4>
+                <p>Unggah modul ajar, buku pegangan, silabus, atau dokumen kebijakan sekolah/kampus.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color:var(--blue)"><i class="fab fa-google-drive"></i> Google Docs & Slides</h4>
+                <p>Hubungkan langsung dari Google Drive. Materi presentasi dan dokumen kolaboratif langsung terbaca.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color:var(--purple)"><i class="fas fa-globe"></i> Tautan Situs Web & YouTube</h4>
+                <p>Paste link website atau video YouTube — NotebookLM akan mengekstrak dan membaca kontennya.</p>
+            </div>
+        </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <p><strong>📊 Kapasitas:</strong> Hingga <strong>50 sumber</strong> per Notebook, masing-masing hingga
+                <strong>500.000 kata</strong>. Setara dengan ~25 buku teks!
+            </p>
+        </div>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card">
+                <h4>💡 Contoh untuk Guru:</h4>
                 <ul>
-                    <li>Asisten Raport</li>
-                    <li>Asisten Agenda WA</li>
-                    <li>Asisten Notulensi Rapat</li>
+                    <li>Capaian Pembelajaran (Capaian Pembelajaran) Kurikulum Merdeka</li>
+                    <li>Alur Tujuan Pembelajaran (Alur Tujuan Pembelajaran)</li>
+                    <li>Buku Siswa & Buku Guru</li>
+                    <li>Panduan Projek Penguatan Profil Pelajar Pancasila (Projek Penguatan Profil Pelajar Pancasila)</li>
                 </ul>
             </div>
-            <div class="card" style="border-top:10px solid var(--primary)">
-                <h4>Kit Pengajaran:</h4>
+            <div class="card">
+                <h4>💡 Contoh untuk Dosen:</h4>
                 <ul>
-                    <li>Asisten Pembuat Kuis</li>
-                    <li>Asisten Ide Proyek P5</li>
-                    <li>Asisten Penjelasan Analogi</li>
+                    <li>Rencana Pembelajaran Semester (Rencana Pembelajaran Semester)</li>
+                    <li>Jurnal-jurnal penelitian terkait</li>
+                    <li>Buku Referensi Utama Mata Kuliah</li>
+                    <li>Dokumen pelaksanaan MBKM</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Slide 18: Link Referensi Sesi 3 (Lengkap) -->
+    <!-- Slide 6: Fitur 2 — Grounded Chat -->
     <div class="slide">
-        <div class="watermark">REFERENSI</div>
-        <h2><i class="fas fa-book-bookmark"></i> Referensi & Sumber Belajar Sesi 3</h2>
+        <div class="watermark">FITUR 2</div>
+        <h2><i class="fas fa-comments"></i> Fitur 2: Obrolan Berbasis Data</h2>
+        <p>Bertanya kepada AI yang <strong>hanya menjawab berdasarkan data Anda</strong>. Setiap jawaban
+            disertai <strong>kutipan klik</strong> ke dokumen sumber.</p>
+        <div class="grid-2">
+            <div class="card" style="border-left: 10px solid var(--primary);">
+                <h4>Cara Kerja:</h4>
+                <ol style="font-size: 19px;">
+                    <li>Ketik pertanyaan di kotak chat</li>
+                    <li>AI mencari jawaban di dalam Sumber Data Anda</li>
+                    <li>Jawaban muncul dengan angka superscript <sup>[1]</sup><sup>[2]</sup></li>
+                    <li>Klik angka tersebut → langsung menuju paragraf sumber</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h4>💡 Contoh Pertanyaan Guru:</h4>
+                <ul style="font-size: 18px;">
+                    <li>"Buatkan Rencana Pelaksanaan Pembelajaran tentang ekosistem berdasarkan Alur Tujuan Pembelajaran ini."</li>
+                    <li>"Apa saja indikator Capaian Pembelajaran Fase D untuk Bahasa Indonesia?"</li>
+                    <li>"Bandingkan Capaian Pembelajaran Fase E dan Fase F untuk Matematika."</li>
+                </ul>
+                <h4 style="margin-top: 25px;">💡 Contoh Pertanyaan Dosen:</h4>
+                <ul style="font-size: 18px;">
+                    <li>"Bandingkan metodologi penelitian dari jurnal A dan B."</li>
+                    <li>"Apa gap penelitian yang belum dibahas?"</li>
+                    <li>"Buatkan ringkasan state of the art dari 5 jurnal ini."</li>
+                </ul>
+            </div>
+        </div>
+        <div class="workshop-box" style="background:#fefce8; border-color:#fef08a;">
+            <p><strong>⚠️ Penting:</strong> Jika jawaban tidak ditemukan di Sumber Data, NotebookLM akan mengatakan
+                <em>"Informasi ini tidak tersedia dalam sumber Anda"</em> — bukan mengarang!
+            </p>
+        </div>
+    </div>
+
+    <!-- Slide 7: Fitur 3 — Audio Overview (Podcast AI) -->
+    <div class="slide">
+        <div class="watermark">FITUR 3</div>
+        <h2><i class="fas fa-headphones"></i> Fitur 3: Ringkasan Audio (Siaran Audio AI)</h2>
+        <p>Fitur paling revolusioner! Ubah dokumen tebal menjadi <strong>obrolan siaran audio dua host</strong>
+            yang menjelaskan konten secara natural dan menarik.</p>
+        <div class="node-canvas">
+            <div class="flow-node" style="border-color: #f97316;">
+                <strong>📂 UPLOAD:</strong> Modul Ajar / Jurnal / Silabus
+            </div>
+            <div class="flow-node" style="border-color: var(--purple);">
+                <strong>🎙️ GENERATE:</strong> Klik "Ringkasan Audio"
+            </div>
+            <div class="flow-node" style="border-color: var(--primary);">
+                <strong>🎧 OUTPUT:</strong> Diskusi Siaran Audio 5-15 Menit
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 40px;">
+            <div class="card">
+                <h4>🎯 Manfaat untuk Pengajar:</h4>
+                <ul>
+                    <li>Siswa auditori bisa "mendengarkan" materi bab</li>
+                    <li>Dosen bisa review ringkasan jurnal sambil berkendara</li>
+                    <li>Buat konten siaran audio edukatif tanpa rekaman manual</li>
+                    <li>Bagikan audio ke siswa sebagai bahan belajar mandiri</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>⚙️ Kustomisasi Audio:</h4>
+                <ul>
+                    <li>Atur fokus: "Fokus pada bab 3 tentang fotosintesis"</li>
+                    <li>Atur gaya: "Jelaskan untuk siswa SMP"</li>
+                    <li>Atur durasi: Pendek (5 menit) atau panjang (15 menit)</li>
+                    <li>Unduh sebagai file audio untuk dibagikan</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Fitur 4 — Notes & Citations -->
+    <div class="slide">
+        <div class="watermark">FITUR 4</div>
+        <h2><i class="fas fa-sticky-note"></i> Fitur 4: Catatan & Sistem Kutipan</h2>
+        <p>Simpan jawaban terbaik, kutipan penting, dan catatan pribadi di satu tempat terpadu.</p>
         <div class="grid-2">
             <div class="card">
-                <h4>Eksplorasi Teknologi:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://opal.google.com" target="_blank" class="source-link">Mulai Membangun di Opal Google</a></li>
-                    <li><a href="https://blog.google/technology/ai/google-labs-opal/" target="_blank" class="source-link">Google Blog: Introducing Opal Labs</a></li>
-                    <li><a href="https://vertexai.google/" target="_blank" class="source-link">Vertex AI Documentation</a></li>
+                <h3>📝 Catatan (Catatan)</h3>
+                <p>Setiap jawaban chat yang bagus bisa disimpan ke <strong>Catatan</strong> dengan satu klik.
+                    Catatan ini menjadi "papan ide" Anda:</p>
+                <ul>
+                    <li>Simpan draf Rencana Pelaksanaan Pembelajaran yang dihasilkan AI</li>
+                    <li>Kumpulkan kutipan penting dari berbagai sumber</li>
+                    <li>Tulis catatan pribadi dan gabungkan dengan output AI</li>
+                    <li>Atur Catatan menjadi outline laporan/proposal</li>
                 </ul>
             </div>
             <div class="card">
-                <h4>Inspirasi Guru:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://www.youtube.com/results?search_query=google+opal+ai+for+teachers" target="_blank" class="source-link">Daftar Putar Tutorial Opal (YouTube)</a></li>
-                    <li><a href="https://ikhwanfathulloh.netlify.app/" target="_blank" class="source-link">Bimbingan Teknis Pribadi: Ikhwan Fathulloh</a></li>
+                <h3>🔗 Kutipan Rujukan (Kutipan Cerdas)</h3>
+                <p>Setiap jawaban AI dilengkapi nomor kutipan yang bisa diklik:</p>
+                <div style="background:#fff; padding:20px; border-radius:12px; border:1px solid #ddd; margin-top:15px;">
+                    <p style="font-size:18px; line-height:1.8;">
+                        "Fotosintesis menghasilkan glukosa dan oksigen <sup
+                            style="color:var(--blue); cursor:pointer;">[1]</sup>
+                        melalui proses yang membutuhkan klorofil <sup
+                            style="color:var(--blue); cursor:pointer;">[2]</sup>..."
+                    </p>
+                    <small style="color:var(--text-light);">Klik [1] → langsung ke halaman 45 Buku Guru IPA</small>
+                </div>
+                <p style="margin-top:15px;"><strong>Manfaat:</strong> Guru & dosen bisa percaya diri menyajikan data
+                    ke kepala sekolah atau jurnal reviewer karena sumber tertera jelas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Fitur 5 — Study Guide & FAQ Otomatis -->
+    <div class="slide">
+        <div class="watermark">FITUR 5</div>
+        <h2><i class="fas fa-book-open"></i> Fitur 5: Panduan Belajar & Pertanyaan Umum Otomatis</h2>
+        <p>NotebookLM bisa men-generate berbagai format output terstruktur hanya dengan satu klik.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid var(--primary);">
+                <h4 style="color:var(--primary)"><i class="fas fa-graduation-cap"></i> Panduan Belajar</h4>
+                <p>Panduan belajar otomatis berisi ringkasan per topik, poin kunci, dan pertanyaan review — sempurna
+                    untuk bahan ulangan siswa.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color:var(--blue)"><i class="fas fa-question-circle"></i> Pertanyaan Umum</h4>
+                <p>Daftar pertanyaan yang sering ditanyakan (dan jawabannya) yang otomatis dirumuskan dari dokumen
+                    sumber Anda.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color:var(--purple)"><i class="fas fa-clock"></i> Garis Waktu Peristiwa</h4>
+                <p>Urutan kronologis peristiwa/konsep penting yang diambil dari materi — cocok untuk mata pelajaran
+                    Sejarah atau perjalanan penelitian.</p>
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card">
+                <h4>🏫 Skenario Guru:</h4>
+                <p>Unggah 3 bab buku IPA → Klik "Panduan Belajar" → Langsung dapatkan ringkasan per bab
+                    dengan 10 soal review untuk ujian harian.</p>
+            </div>
+            <div class="card">
+                <h4>🎓 Skenario Dosen:</h4>
+                <p>Unggah 10 jurnal → Klik "Pertanyaan Umum" → Dapatkan 20 pertanyaan kritis beserta jawabannya
+                    untuk bahan diskusi mahasiswa di kelas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Fitur 6 — Briefing Doc -->
+    <div class="slide">
+        <div class="watermark">FITUR 6</div>
+        <h2><i class="fas fa-file-contract"></i> Fitur 6: Dokumen Rangkuman Eksekutif</h2>
+        <p>Hasilkan <strong>ringkasan eksekutif multi-sumber</strong> yang membandingkan dan menyintesis
+            informasi dari seluruh dokumen yang diunggah.</p>
+        <div class="card" style="margin-top: 30px;">
+            <h4>Apa itu Dokumen Rangkuman Eksekutif?</h4>
+            <p>Bayangkan Anda upload 5 dokumen berbeda — Dokumen Rangkuman Eksekutif akan menghasilkan satu dokumen
+                ringkas yang:</p>
+            <ul>
+                <li>Merangkum <strong>tema utama</strong> dari semua sumber</li>
+                <li>Mengidentifikasi <strong>persamaan dan perbedaan</strong> antar dokumen</li>
+                <li>Menyoroti <strong>poin kunci</strong> yang perlu diperhatikan</li>
+                <li>Menyertakan <strong>kutipan langsung</strong> dari masing-masing sumber</li>
+            </ul>
+        </div>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card" style="border-left:10px solid #f97316;">
+                <h4>🏫 Untuk Guru:</h4>
+                <p>Unggah Capaian Pembelajaran, Alur Tujuan Pembelajaran, dan Panduan Projek Penguatan Profil Pelajar Pancasila → Hasilkan Dokumen Rangkuman Eksekutif →
+                    Dapatkan <em>satu dokumen</em> yang menghubungkan ketiganya untuk menyusun Modul Ajar terpadu.</p>
+            </div>
+            <div class="card" style="border-left:10px solid var(--purple);">
+                <h4>🎓 Untuk Dosen:</h4>
+                <p>Unggah 10 jurnal → Hasilkan Dokumen Rangkuman Eksekutif →
+                    Dapatkan <em>literature review draft</em> yang membandingkan metodologi, temuan,
+                    dan gap penelitian.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Studi Kasus Guru -->
+    <div class="slide">
+        <div class="watermark">STUDI KASUS</div>
+        <h2><i class="fas fa-chalkboard-teacher"></i> Studi Kasus: Guru</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>📖 Kasus 1: Asisten Rencana Pelaksanaan Pembelajaran</h3>
+                <p><strong>Masalah:</strong> Menyusun Rencana Pelaksanaan Pembelajaran yang selaras dengan Capaian Pembelajaran Kurikulum Merdeka memakan waktu 3-4
+                    jam.</p>
+                <h4>Solusi NotebookLM:</h4>
+                <ol>
+                    <li>Unggah Capaian Pembelajaran, Alur Tujuan Pembelajaran, dan Buku Guru ke Notebook</li>
+                    <li>Chat: "Buatkan Rencana Pelaksanaan Pembelajaran 2 pertemuan tentang ekosistem untuk kelas 7"</li>
+                    <li>AI menghasilkan Rencana Pelaksanaan Pembelajaran lengkap dengan kutipan ke Capaian Pembelajaran asli</li>
+                    <li>Simpan ke Catatan, edit sesuai kebutuhan</li>
+                </ol>
+                <p style="margin-top:15px;"><strong>⏱️ Waktu:</strong> 15 menit vs 3 jam manual</p>
+            </div>
+            <div class="card">
+                <h3>📝 Kasus 2: Bank Soal Kemampuan Berpikir Tingkat Tinggi</h3>
+                <p><strong>Masalah:</strong> Membuat soal level C4-C6 Bloom yang valid dan sesuai materi sulit.</p>
+                <h4>Solusi NotebookLM:</h4>
+                <ol>
+                    <li>Unggah materi bab + contoh soal UN terdahulu</li>
+                    <li>Chat: "Buatkan 10 soal analisis (C4) dan evaluasi (C5) berdasarkan materi ini"</li>
+                    <li>AI membuat soal + kunci jawaban dengan rujukan halaman</li>
+                    <li>Hasilkan Ringkasan Audio untuk siswa sebagai bahan review</li>
+                </ol>
+                <p style="margin-top:15px;"><strong>⏱️ Waktu:</strong> 20 menit vs 2 jam manual</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Studi Kasus Dosen -->
+    <div class="slide">
+        <div class="watermark">STUDI KASUS</div>
+        <h2><i class="fas fa-user-graduate"></i> Studi Kasus: Dosen</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>📚 Kasus 1: Tinjauan Pustaka</h3>
+                <p><strong>Masalah:</strong> Membaca dan menyintesis 20+ jurnal untuk proposal penelitian sangat
+                    melelahkan.</p>
+                <h4>Solusi NotebookLM:</h4>
+                <ol>
+                    <li>Unggah 10-20 jurnal (PDF) ke satu Notebook</li>
+                    <li>Hasilkan Dokumen Rangkuman Eksekutif untuk ringkasan sintetis</li>
+                    <li>Chat: "Apa gap penelitian yang belum diisi oleh jurnal-jurnal ini?"</li>
+                    <li>Chat: "Bandingkan metodologi kuantitatif vs kualitatif dari sumber-sumber ini"</li>
+                    <li>Simpan semua jawaban ke Catatan sebagai draf Bab 2</li>
+                </ol>
+                <p style="margin-top:15px;"><strong>⏱️ Waktu:</strong> 2 jam vs 2 minggu manual</p>
+            </div>
+            <div class="card">
+                <h3>📋 Kasus 2: Asisten Rencana Pembelajaran Semester & Asesmen</h3>
+                <p><strong>Masalah:</strong> Menyusun Rencana Pembelajaran Semester dengan CPMK yang terukur dan konsisten sulit.</p>
+                <h4>Solusi NotebookLM:</h4>
+                <ol>
+                    <li>Unggah Kurikulum Prodi, Profil Lulusan, dan referensi utama</li>
+                    <li>Chat: "Buatkan 14 pertemuan Rencana Pembelajaran Semester untuk Mata Kuliah X berdasarkan kurikulum ini"</li>
+                    <li>Chat: "Selaraskan CPMK dengan CPL yang ada di dokumen kurikulum"</li>
+                    <li>Hasilkan Panduan Belajar per pertemuan untuk mahasiswa</li>
+                </ol>
+                <p style="margin-top:15px;"><strong>⏱️ Waktu:</strong> 30 menit vs 1 hari manual</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Semua Fitur NotebookLM (Rangkuman) -->
+    <div class="slide">
+        <div class="watermark">RANGKUMAN</div>
+        <h2><i class="fas fa-layer-group"></i> Rangkuman: Semua Fitur NotebookLM</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
+            <div class="card" style="border-top: 8px solid #f97316;">
+                <h4 style="color:#f97316;">📂 Sumber Data</h4>
+                <ul style="font-size: 16px; padding-left: 20px;">
+                    <li>PDF, Google Docs, Slides</li>
+                    <li>Tautan Situs Web Website & YouTube</li>
+                    <li>Teks copy-paste</li>
+                    <li>Hingga 50 sumber / Notebook</li>
+                    <li>500.000 kata / sumber</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color:var(--blue);">💬 Analisis & Chat</h4>
+                <ul style="font-size: 16px; padding-left: 20px;">
+                    <li>Obrolan Berbasis Data (tanya jawab)</li>
+                    <li>Kutipan klik (Kutipan Rujukan)</li>
+                    <li>Panduan Belajar otomatis</li>
+                    <li>Pertanyaan Umum otomatis</li>
+                    <li>Dokumen Rangkuman Eksekutif multi-sumber</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color:var(--purple);">🎧 Hasil Keluaran Multimodal</h4>
+                <ul style="font-size: 16px; padding-left: 20px;">
+                    <li>Ringkasan Audio (Siaran Audio AI)</li>
+                    <li>Catatan (Catatan tersimpan)</li>
+                    <li>Garis Waktu Peristiwa kronologis</li>
+                    <li>Glosarium istilah</li>
+                    <li>Ekspor & sharing</li>
                 </ul>
             </div>
         </div>
-    </div>
-
-    <!-- Slide 19: Tanya Jawab & Persiapan Sesi 4 -->
-    <div class="slide">
-        <div class="watermark">Q&A</div>
-        <h2><i class="fas fa-question-circle"></i> Diskusi & Tanya Jawab</h2>
-        <div class="card" style="text-align:center; padding:40px">
-            <p><strong>Coba pikirkan:</strong> Satu proses administrasi apa yang paling membosankan dan ingin Anda buatkan "Asisten Otomatis"-nya besok?</p>
-            <div style="margin-top:30px">
-                <a href="https://www.linkedin.com/in/muhammad-ikhwan-fathulloh/" target="_blank" class="tag-pill" style="text-decoration:none"><i class="fab fa-linkedin"></i> Konsultasikan Ide Asisten Anda di LinkedIn</a>
-            </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <p><strong>🔒 Privasi & Keamanan:</strong> Data yang Anda unggah ke NotebookLM <strong>tidak digunakan
+                    untuk melatih model AI Google</strong>. Dokumen Anda tetap privat dan aman.</p>
         </div>
     </div>
 
-    <!-- Slide 20: Kesimpulan & Sesi Berikutnya -->
+    <!-- Slide 14: Interaktif: Persona Builder -->
+    <div class="slide">
+        <div class="watermark">PRAKTEK</div>
+        <h2><i class="fas fa-user-plus"></i> Lokakarya: Rancang Notebook Anda</h2>
+        <p>Pilih skenario penggunaan NotebookLM yang paling relevan untuk Anda:</p>
+        <div class="grid-2">
+            <div class="option-card"
+                onclick="selectPersona(this, 'Notebook: Asisten Kurikulum Merdeka — Upload CP, ATP, Panduan P5, lalu tanya AI untuk merancang modul ajar.')">
+                <h3>🏫 Asisten Kurikulum</h3>
+                <p>Untuk guru yang ingin menyusun Rencana Pelaksanaan Pembelajaran dan modul ajar sesuai Kurikulum Merdeka.</p>
+            </div>
+            <div class="option-card"
+                onclick="selectPersona(this, 'Notebook: Asisten Literatur Review — Upload jurnal-jurnal, lalu minta AI bandingkan metodologi dan temukan gap penelitian.')">
+                <h3>📚 Asisten Riset</h3>
+                <p>Untuk dosen yang ingin melakukan literature review untuk proposal penelitian.</p>
+            </div>
+            <div class="option-card"
+                onclick="selectPersona(this, 'Notebook: Bank Soal Cerdas — Upload materi bab, lalu minta AI buatkan soal HOTS Bloom dengan kunci jawaban.')">
+                <h3>📝 Generator Soal</h3>
+                <p>Untuk guru & dosen yang ingin membuat bank soal berbasis materi resmi.</p>
+            </div>
+            <div class="option-card"
+                onclick="selectPersona(this, 'Notebook: Podcast Edukatif — Upload modul pelajaran, lalu generate Audio Overview untuk siswa/mahasiswa.')">
+                <h3>🎙️ Siaran Audio Edukatif</h3>
+                <p>Untuk pengajar yang ingin mengubah materi tertulis menjadi audio belajar mandiri.</p>
+            </div>
+        </div>
+        <div id="personaFeedback" class="card"
+            style="margin-top:30px; display:none; border-color:var(--primary); background:#ecfdf5">
+            <p id="personaText"></p>
+        </div>
+    </div>
+
+    <!-- Slide 15: Tips & Best Practices -->
+    <div class="slide">
+        <div class="watermark">TIPS</div>
+        <h2><i class="fas fa-wand-magic-sparkles"></i> Tips & Best Practices</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h4>✅ Lakukan:</h4>
+                <ul>
+                    <li>Unggah dokumen yang <strong>spesifik & berkualitas</strong> (bukan seluruh buku sekaligus)</li>
+                    <li>Buat Notebook terpisah per <strong>topik/mata pelajaran</strong></li>
+                    <li>Gunakan pertanyaan yang <strong>spesifik</strong> untuk hasil optimal</li>
+                    <li>Simpan jawaban terbaik ke <strong>Catatan</strong> secara teratur</li>
+                    <li>Manfaatkan <strong>Ringkasan Audio</strong> untuk materi yang panjang</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>❌ Hindari:</h4>
+                <ul>
+                    <li>Unggah file yang <strong>tidak relevan</strong> (mencemari konteks AI)</li>
+                    <li>Bertanya hal <strong>di luar cakupan</strong> Sumber Data yang diunggah</li>
+                    <li>Mengandalkan AI 100% <strong>tanpa verifikasi</strong> manual</li>
+                    <li>Mencampur <strong>terlalu banyak topik</strong> dalam satu Notebook</li>
+                    <li>Unggah file <strong>scan/gambar</strong> yang tidak bisa dibaca teks (gunakan OCR dulu)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="workshop-box" style="background:#e0f2fe; border-color:#0ea5e9;">
+            <p><strong>💡 Pro Tip:</strong> Semakin <strong>spesifik</strong> pertanyaan Anda, semakin akurat
+                jawaban AI. Daripada "Jelaskan fotosintesis", lebih baik bertanya
+                "Jelaskan fase terang fotosintesis berdasarkan buku siswa halaman 45-50".</p>
+        </div>
+    </div>
+
+    <!-- Slide 16: Penutup & CTA -->
     <div class="slide">
         <div class="watermark">PENUTUP</div>
-        <h2><i class="fas fa-flag-checkered"></i> Selesai Sesi 3</h2>
-        <div class="card" style="text-align:center; padding:60px; background:var(--secondary); color:white">
-            <h3>Besok Sesi Terakhir:</h3>
-            <h1>Sesi 4: Membangun Kit Mengajar Otomatis</h1>
-            <p style="font-size:24px; color:#cbd5e1; margin-top:20px">Menyatukan seluruh asisten spesialis menjadi satu sistem "Pabrik Content" untuk RPP, Penilaian, dan Raport.</p>
+        <h2><i class="fas fa-rocket"></i> Siap Praktek!</h2>
+        <div class="card" style="text-align: center; padding: 60px;">
+            <i class="fas fa-book-bookmark fa-5x" style="color: var(--primary); margin-bottom: 30px;"></i>
+            <h3 style="font-size: 36px;">Saatnya Membuat Notebook Pertama Anda</h3>
+            <p style="font-size: 22px; max-width: 700px; margin: 20px auto;">
+                Anda telah mempelajari semua fitur NotebookLM. Sekarang, buka panduan praktek
+                untuk merakit Notebook pertama Anda langkah demi langkah.
+            </p>
+            <div style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="Session3_HandsOn.html"
+                    style="display:inline-block; padding:18px 40px; background:var(--primary); color:white; border-radius:50px; text-decoration:none; font-weight:700; font-size:20px;">
+                    <i class="fas fa-laptop-code"></i> Mulai Praktek Sesi 3
+                </a>
+                <a href="OneDayIntensive.html"
+                    style="display:inline-block; padding:18px 40px; background:var(--secondary); color:white; border-radius:50px; text-decoration:none; font-weight:700; font-size:20px;">
+                    <i class="fas fa-home"></i> Kembali ke Hub
+                </a>
+            </div>
         </div>
-        <div class="footer">
-            <span>Sesi 3: Selesai</span>
-            <span>Koalawan x BINUS Center</span>
-        </div>
+        <span class="source-tag" style="text-align:center; margin-top:20px;">
+            Akses NotebookLM: <a href="https://notebooklm.google.com" target="_blank"
+                class="source-link">notebooklm.google.com</a>
+        </span>
     </div>
 
     <script>
         function selectPersona(el, text) {
-            const cards = document.querySelectorAll('.option-card');
-            cards.forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
-
-            const res = document.getElementById('personaFeedback');
-            const txt = document.getElementById('personaText');
-            res.style.display = "block";
-            txt.innerHTML = "<i class='fas fa-id-badge'></i> <strong>Karakter Terpilih: " + text + "</strong>. Ini akan menjadi identitas permanen asisten Anda di Opal Google.";
-        }
-
-        let currentStep = 0;
-        function addFlow(s, text) {
-            if (s === currentStep + 1) {
-                currentStep = s;
-                const items = document.querySelectorAll('#flowItems .option-card');
-                items[s-1].classList.add('active');
-                if(currentStep === 5) {
-                    const res = document.getElementById('flowFeedback');
-                    res.innerHTML = "<i class='fas fa-check-circle'></i> Rantai Logika Sempurna! Asisten Anda kini siap meluncur.";
-                    res.style.display = "block";
-                }
-            }
+            document.getElementById('personaFeedback').style.display = 'block';
+            document.getElementById('personaText').innerHTML = '<strong>Rekomendasi:</strong> ' + text;
         }
     </script>
+
 </body>
 
 </html>

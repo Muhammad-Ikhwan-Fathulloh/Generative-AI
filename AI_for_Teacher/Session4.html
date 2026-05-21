@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 4 - Membangun Kit Mengajar Otomatis Comprensive - Koalawan</title>
+    <title>Sesi 4 - Opal: Membangun Aplikasi AI Tanpa Kode - Koalawan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -21,9 +21,10 @@
             --bg-accent: #f8fafc;
             --danger: #e63946;
             --blue: #3b82f6;
-            --teal: #14b8a6;
-            --pink: #db2777;
+            --yellow: #f59e0b;
+            --purple: #8b5cf6;
             --indigo: #4338ca;
+            --orange: #f97316;
         }
 
         * {
@@ -32,29 +33,30 @@
         }
 
         body {
-            background-color: #e2e8f0;
+            background-color: var(--bg-slide);
             display: flex;
             flex-direction: column;
-            gap: 120px;
+            gap: 0;
             margin: 0;
-            padding: 100px 0;
+            padding: 0 20px;
             align-items: center;
             font-family: 'Inter', sans-serif;
         }
 
         .slide {
-            width: 1400px;
-            height: 800px;
-            background: var(--bg-slide);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 1200px;
+            min-height: auto;
+            background: transparent;
+            box-shadow: none;
             position: relative;
             display: flex;
             flex-direction: column;
-            padding: 50px 120px;
+            padding: 50px 80px;
             color: var(--text-main);
             flex-shrink: 0;
-            border-radius: 8px;
-            overflow: hidden;
+            border-radius: 0;
+            overflow: visible;
         }
 
         .slide::before {
@@ -140,7 +142,13 @@
             font-weight: 600;
         }
 
-        /* Ensure contrast in dark cards */
+        .source-tag {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
         .card[style*="background"] h1,
         .card[style*="background"] h2,
         .card[style*="background"] h3,
@@ -169,49 +177,101 @@
             font-weight: 600;
         }
 
-        /* Interactive Kit Components */
-        .trait-pill {
-            display: inline-block;
-            padding: 15px 30px;
+        .node-canvas {
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            border-radius: 30px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .flow-node {
             background: #fff;
-            border: 3px solid #e2e8f0;
-            border-radius: 50px;
-            margin: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 3px solid var(--blue);
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
 
-        .trait-pill.active {
-            border-color: var(--pink);
-            background: #fdf2f8;
-            color: var(--pink);
-            transform: scale(1.05);
+        .flow-node::after {
+            content: '↓';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: var(--blue);
         }
 
-        .generator-display {
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            border: 3px dashed var(--blue);
-            min-height: 200px;
+        .flow-node:last-child::after {
+            display: none;
+        }
+
+        .workshop-box {
+            background: #ecfdf5;
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px 30px;
             margin-top: 30px;
         }
 
-        .maturity-step {
-            padding: 20px;
-            margin-bottom: 15px;
-            background: #f8fafc;
-            border-radius: 16px;
-            border-left: 10px solid #ddd;
-            display: flex;
-            align-items: center;
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
+            margin-top: 30px;
         }
 
-        .maturity-step.active {
-            border-left-color: var(--primary);
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: var(--secondary);
+            color: white;
+            padding: 18px 25px;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        .comparison-table td {
+            padding: 16px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 18px;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        .option-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-card:hover,
+        .option-card.active {
+            border-color: var(--primary);
             background: #ecfdf5;
+            transform: translateY(-5px);
         }
     </style>
 </head>
@@ -220,439 +280,553 @@
 
     <!-- Slide 1: Welcome -->
     <div class="slide">
-        <div class="watermark">KOALAWAN X BINUS CENTER</div>
+        <div class="watermark">KOALAWAN</div>
         <div style="margin-top: auto; margin-bottom: auto;">
             <div class="tag-pill" style="width: fit-content; margin-bottom: 30px;">FULL CURRICULUM: SESSION 4</div>
-            <h1>Automasi Kit Mengajar:<br>Penerapan di Kelas & Sekolah</h1>
+            <h1>Google Opal:<br>Bangun Aplikasi AI Tanpa Kode</h1>
             <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
-                Sesi puncak! Merakit semua asisten spesialis menjadi satu sistem "Pabrik Konten" yang mendukung Kurikulum Merdeka, P5, dan Pelaporan Hasil Belajar.
+                Sesi puncak! Pelajari cara membangun, mempersonalisasi, dan membagikan
+                "mini-app AI" menggunakan Google Opal — platform no-code revolusioner dari Google Labs.
             </p>
         </div>
         <div class="footer">
-            <span>Pelatihan Komprehensif Guru (3 Jam)</span>
+            <span>Pelatihan Komprehensif Guru & Dosen (3 Jam)</span>
             <span>By Muhammad Ikhwan Fathulloh</span>
         </div>
     </div>
 
-    <!-- Slide 2: Agenda Sesi 4 -->
+    <!-- Slide 2: Agenda -->
     <div class="slide">
-        <div class="watermark">AGENDA</div>
+        <div class="watermark">RENCANA BELAJAR</div>
         <h2><i class="fas fa-list-check"></i> Rencana Pembelajaran Sesi 4</h2>
         <div class="grid-2">
             <div class="card">
                 <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 1:</strong> Automasi Differentiated Instruction</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 2:</strong> Engine Asesmen & Rubrik Berbasis Bloom</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 3:</strong> Master Narasi Raport & Komunikasi Ortu</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 4:</strong> Integrasi Opal ke Google Workspace</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Final:</strong> AI-Ready School Maturity Model</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 1:</strong> Apa itu Opal & Mengapa Tanpa Penulisan Kode?
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 2:</strong> Arsitektur: Kanvas Visual, Basis Pengetahuan & Ruang Kerja
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 3:</strong> Katalog Kartu Visual: Masukan Data, Hasilkan & Logic
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 4:</strong> Pola Dasar, Sharing & Kolaborasi
+                    </li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle" style="color:var(--primary)"></i>
+                        <strong>Modul 5:</strong> Studi Kasus Guru & Dosen
+                    </li>
                 </ul>
             </div>
-            <div class="card" style="background: var(--pink); color: white;">
-                <h4>Output Akhir:</h4>
-                <p>Memiliki Roadmap 30 hari implementasi AI di sekolah dan satu 'Kit Mengajar' yang sudah terautomasi penuh.</p>
+            <div class="card" style="background: var(--secondary); color: white;">
+                <h3 style="color: var(--primary)">🎯 Target Sesi Ini</h3>
+                <p>Setelah sesi ini, Anda mampu:</p>
+                <ol>
+                    <li>Membangun aplikasi AI mini tanpa menulis kode</li>
+                    <li>Merangkai alur kerja visual (workflow) di Kanvas Visual</li>
+                    <li>Mengunggah Basis Pengetahuan agar AI menjadi spesialis</li>
+                    <li>Menggunakan Pola Dasar dan memodifikasinya</li>
+                    <li>Membagikan aplikasi lewat link ke siswa/mahasiswa</li>
+                </ol>
             </div>
         </div>
     </div>
 
-    <!-- Slide 3: Goal: Differentiated Instruction at Scale -->
+    <!-- Slide 3: Mengapa Opal? -->
     <div class="slide">
-        <div class="watermark">PEDAGOGI</div>
-        <h2><i class="fas fa-users-rectangle"></i> Memecahkan Masalah Diferensiasi</h2>
-        <div class="grid-2">
-            <div>
-                <p>Menerapkan pengajaran berdiferensiasi secara manual hampir mustahil untuk 40 murid per kelas. AI hadir sebagai solusinya.</p>
-                <div class="card" style="margin-top:30px">
-                    <h4>Asas Diferensiasi AI:</h4>
-                    <ul>
-                        <li><strong>Diferensiasi Konten:</strong> Satu materi, tiga tingkat kesulitan (Scaffolding).</li>
-                        <li><strong>Diferensiasi Proses:</strong> AI menyarankan aktivitas kinestetik vs visual untuk materi yang sama.</li>
-                        <li><strong>Diferensiasi Produk:</strong> Memberikan opsi tugas beragam berdasarkan minat siswa.</li>
+        <div class="watermark">FUNDAMENTAL</div>
+        <h2><i class="fas fa-lightbulb"></i> Mengapa Google Opal?</h2>
+        <p>Di sesi sebelumnya, Anda belajar <strong>bertanya ke AI</strong> (Gemini) dan <strong>mengarahkan AI</strong>
+            (Seni Membuat Instruksi). Sekarang, saatnya <strong>membangun aplikasi AI</strong> Anda sendiri — tanpa kode!</p>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card" style="border-left: 10px solid var(--orange);">
+                <h4>🔧 Masalah Lama:</h4>
+                <ul>
+                    <li>Setiap kali ingin hasil spesifik, harus ketik prompt panjang ulang</li>
+                    <li>Tidak bisa membagikan "resep prompt" ke rekan guru/dosen</li>
+                    <li>Tidak ada alur kerja otomatis — semua manual</li>
+                    <li>Siswa/mahasiswa tidak bisa pakai tanpa pelatihan prompting</li>
+                </ul>
+            </div>
+            <div class="card" style="border-left: 10px solid var(--primary);">
+                <h4>✅ Solusi Opal:</h4>
+                <ul>
+                    <li>Buat aplikasi sekali, pakai berulang kali</li>
+                    <li>Bagikan lewat <strong>link</strong> — siapapun bisa pakai</li>
+                    <li>Alur kerja otomatis: Masukan Data → AI proses → Hasil Keluaran terstruktur</li>
+                    <li>Siswa tinggal isi form, AI yang bekerja di belakang layar</li>
+                </ul>
+            </div>
+        </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <strong>Analogi:</strong> Jika Gemini adalah "mesin mobil", maka Opal adalah
+            <strong>"bengkel di mana Anda merakit mobil sendiri"</strong> — lengkap dengan dashboard, tombol,
+            dan instruksi bagi penumpang.
+        </div>
+    </div>
+
+    <!-- Slide 4: Arsitektur Opal -->
+    <div class="slide">
+        <div class="watermark">ARSITEKTUR</div>
+        <h2><i class="fas fa-sitemap"></i> Arsitektur Ekosistem Opal</h2>
+        <p>Opal terdiri dari 3 komponen utama:</p>
+        <div class="node-canvas">
+            <div class="flow-node" style="border-color: var(--orange);">
+                <strong>🎨 THE CANVAS</strong><br>
+                <small>Tempat merangkai logika AI menggunakan Kartu Visual (kotak-kotak visual)</small>
+            </div>
+            <div class="flow-node" style="border-color: var(--purple);">
+                <strong>📚 THE KNOWLEDGE</strong><br>
+                <small>Tempat mengunggah dokumen agar AI menjadi ahli di bidang spesifik</small>
+            </div>
+            <div class="flow-node" style="border-color: var(--primary);">
+                <strong>🏢 THE SPACE</strong><br>
+                <small>Lingkungan kerja untuk mengelompokkan apps berdasarkan mapel/MK</small>
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 40px;">
+            <div class="card">
+                <h4>🔑 Kata Kunci: "Tanpa Penulisan Kode"</h4>
+                <p>Anda tidak menulis kode apapun. Cukup <strong>deskripsikan</strong> apa yang ingin Anda buat
+                    menggunakan bahasa sehari-hari, dan Opal akan membuatkan alur kerjanya.</p>
+            </div>
+            <div class="card">
+                <h4>🎓 Untuk Guru & Dosen</h4>
+                <p>Bayangkan membuat "robot asisten" yang bisa Anda bagikan ke seluruh siswa/mahasiswa
+                    lewat link — mereka tinggal pakai, tanpa harus belajar prompting.</p>
+            </div>
+        </div>
+        <span class="source-tag">Akses Opal: <a href="https://opal.google.com" target="_blank"
+                class="source-link">opal.google.com</a></span>
+    </div>
+
+    <!-- Slide 5: Fitur 1 — Natural Language Build -->
+    <div class="slide">
+        <div class="watermark">FITUR 1</div>
+        <h2><i class="fas fa-wand-magic-sparkles"></i> Fitur 1: Describe, Don't Code</h2>
+        <p>Cukup <strong>deskripsikan</strong> apa yang Anda inginkan, dan Opal akan membuatkan alur kerja otomatis.</p>
+        <div class="card" style="margin-top: 30px;">
+            <h4>Cara Kerja:</h4>
+            <div style="display: flex; gap: 30px; align-items: center; margin-top: 20px;">
+                <div
+                    style="flex: 1; background: #1e293b; color: #e2e8f0; padding: 25px; border-radius: 16px; font-family: monospace; font-size: 17px; line-height: 1.8;">
+                    "Buatkan aplikasi yang menerima teks materi pelajaran, lalu menghasilkan 5 soal pilihan ganda
+                    dan 3 soal essay dengan kunci jawaban."
+                </div>
+                <div style="font-size: 48px; color: var(--primary);">→</div>
+                <div style="flex: 1; background: #ecfdf5; padding: 25px; border-radius: 16px;">
+                    <p><strong>Opal membuatkan:</strong></p>
+                    <ul style="font-size: 17px;">
+                        <li>Kartu Visual Masukan Data (Text Area)</li>
+                        <li>Kartu Visual Hasilkan (Gemini)</li>
+                        <li>Kartu Visual Hasil Keluaran (Format Soal)</li>
                     </ul>
                 </div>
             </div>
-            <div class="card" style="text-align:center">
-                <i class="fas fa-layer-group fa-10x" style="color:var(--primary); opacity:0.1"></i>
-                <p style="font-style:italic; margin-top:20px">"AI memungkinkan setiap murid memiliki 'bahan ajar' yang sesuai dengan kecepatan belajarnya masing-masing."</p>
-            </div>
+        </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <strong>💡 Makin detail deskripsi Anda, makin presisi aplikasi yang dihasilkan.</strong>
+            Teknik prompting dari Sesi 2 sangat berguna di sini!
         </div>
     </div>
 
-    <!-- Slide 4: Strategic Kit 1: RPP Automator (Deep Dive) -->
+    <!-- Slide 6: Fitur 2 — Visual Workflow Canvas -->
     <div class="slide">
-        <div class="watermark">KIT 1</div>
-        <h2><i class="fas fa-file-invoice"></i> Kit 1: Automasi RPP & Modul</h2>
-        <p>Bukan sekadar salin-tempel draf, tapi menyesuaikan dengan konteks <strong>P5 (Proyek Penguatan Profil Pelajar Pancasila)</strong>.</p>
+        <div class="watermark">FITUR 2</div>
+        <h2><i class="fas fa-diagram-project"></i> Fitur 2: Visual Alur Kerja Kanvas Visual</h2>
+        <p>Setelah Opal membuat alur awal, Anda bisa mengedit secara visual dengan <strong>drag & drop</strong>.</p>
         <div class="grid-2">
-            <div class="card" style="border-left:10px solid var(--blue)">
-                <h4>Elemen yang Diotomasi:</h4>
+            <div class="card">
+                <h4>🎨 Kanvas Visual = Kanvas Logika</h4>
+                <p>Setiap kotak di canvas disebut <strong>"Kartu Visual"</strong>. Data mengalir dari kiri ke kanan
+                    (atau atas ke bawah):</p>
+                <div class="node-canvas" style="margin-top: 15px; padding: 15px;">
+                    <div class="flow-node" style="width: 250px; border-color: var(--orange); padding: 12px;">
+                        <small><strong>INPUT</strong><br>Teks/File dari Pengguna</small>
+                    </div>
+                    <div class="flow-node" style="width: 250px; border-color: var(--blue); padding: 12px;">
+                        <small><strong>GENERATE</strong><br>Gemini memproses</small>
+                    </div>
+                    <div class="flow-node" style="width: 250px; border-color: var(--primary); padding: 12px;">
+                        <small><strong>OUTPUT</strong><br>Hasil terformat</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h4>✏️ Edit dengan Mudah</h4>
                 <ul>
-                    <li>Pemetaan CP ke Tujuan Pembelajaran (TP).</li>
-                    <li>Perancangan Alur Tujuan Pembelajaran (ATP).</li>
-                    <li>Pembuatan Skenario Pembelajaran Berbasis Masalah (PBL).</li>
+                    <li><strong>Klik Kartu Visual</strong> → Edit prompt/instruksi di dalamnya</li>
+                    <li><strong>Tarik garis</strong> → Hubungkan antar Kartu Visual</li>
+                    <li><strong>Tambah Kartu Visual</strong> → Tambahkan langkah baru</li>
+                    <li><strong>Hapus Kartu Visual</strong> → Buang langkah yang tak perlu</li>
+                    <li><strong>Pratinjau</strong> → Uji Coba aplikasi langsung di browser</li>
                 </ul>
-            </div>
-            <div class="card">
-                <h4>Workshop Kit RPP:</h4>
-                <p style="font-size:18px">"Asisten ini mengintegrasikan tema-tema kearifan lokal ke dalam Modul Ajar tanpa perlu riset manual berjam-jam."</p>
-                <span class="source-tag">Inspirasi: <a href="https://kurikulum.kemdikbud.go.id/kurikulum-merdeka/" target="_blank" class="source-link">Pusat Kurikulum Merdeka</a></span>
+                <p style="margin-top: 15px;"><strong>Tidak perlu memahami kode!</strong> Semua visual.</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 5: Strategic Kit 2: Assessment & Rubric Engine -->
+    <!-- Slide 7: Fitur 3 — Katalog Cards: Input -->
     <div class="slide">
-        <div class="watermark">KIT 2</div>
-        <h2><i class="fas fa-vials"></i> Kit 2: Engine Asesmen & Rubrik</h2>
+        <div class="watermark">KATALOG</div>
+        <h2><i class="fas fa-inbox"></i> Katalog Kartu Visual: Masukan Data</h2>
+        <p>Kartu Visual Masukan Data menentukan <strong>apa yang bisa dimasukkan pengguna</strong> ke dalam aplikasi Anda.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid var(--orange);">
+                <h4 style="color: var(--orange);"><i class="fas fa-keyboard"></i> Text Masukan Data</h4>
+                <p>Kotak teks standar. Pengguna mengetik pertanyaan, topik, atau materi pendek.</p>
+                <small style="color:var(--text-light);">Contoh: "Masukkan topik pelajaran"</small>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--orange);">
+                <h4 style="color: var(--orange);"><i class="fas fa-file-upload"></i> File Unggah</h4>
+                <p>Unggah PDF, Dokumen, atau gambar. AI membaca konten file tersebut.</p>
+                <small style="color:var(--text-light);">Contoh: "Unggah materi bab untuk dianalisis"</small>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--orange);">
+                <h4 style="color: var(--orange);"><i class="fab fa-youtube"></i> Video Masukan Data</h4>
+                <p>Masukkan link YouTube. AI mengekstrak transkrip video dan memprosesnya.</p>
+                <small style="color:var(--text-light);">Contoh: "Paste link video pembelajaran"</small>
+            </div>
+        </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <strong>🏫 Skenario:</strong> Buat app di mana guru tinggal <strong>upload PDF bab</strong>
+            → AI otomatis membuat rangkuman + kuis. Siswa tinggal klik link!
+        </div>
+    </div>
+
+    <!-- Slide 8: Fitur 4 — Katalog Cards: Generate -->
+    <div class="slide">
+        <div class="watermark">KATALOG</div>
+        <h2><i class="fas fa-robot"></i> Katalog Kartu Visual: Hasilkan</h2>
+        <p>Kartu Visual Hasilkan adalah <strong>"otak AI"</strong> yang memproses data dari Masukan Data Kartu Visual.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color: var(--blue);"><i class="fas fa-brain"></i> Gemini</h4>
+                <p>Mesin teks utama. Tulis instruksi/prompt untuk memproses data input.</p>
+                <small style="color:var(--text-light);">Contoh: "Analisis materi dan buat 5 soal Kemampuan Berpikir Tingkat Tinggi"</small>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color: var(--blue);"><i class="fas fa-image"></i> Imagen</h4>
+                <p>Hasilkan gambar visual dari deskripsi teks. Cocok untuk ilustrasi materi.</p>
+                <small style="color:var(--text-light);">Contoh: "Buat diagram siklus air"</small>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color: var(--blue);"><i class="fas fa-compress-arrows-alt"></i> Summarize</h4>
+                <p>Meringkas teks panjang menjadi poin-poin utama secara otomatis.</p>
+                <small style="color:var(--text-light);">Contoh: "Ringkas jurnal 20 halaman jadi 5 poin"</small>
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 30px;">
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color: var(--blue);"><i class="fas fa-video"></i> Veo</h4>
+                <p>Hasilkan video pendek dari deskripsi teks. Cocok untuk konten visual menarik.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h4 style="color: var(--blue);"><i class="fas fa-exchange-alt"></i> Transform</h4>
+                <p>Ubah format data — dari teks ke tabel, terjemahkan bahasa, atau ubah gaya penulisan.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Fitur 5 — Katalog Cards: Logic -->
+    <div class="slide">
+        <div class="watermark">KATALOG</div>
+        <h2><i class="fas fa-code-branch"></i> Katalog Kartu Visual: Logic</h2>
+        <p>Kartu Visual Logic mengontrol <strong>alur dan validasi</strong> sebelum hasil dikirim ke pengguna.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color: var(--purple);"><i class="fas fa-code-branch"></i> Percabangan</h4>
+                <p>Percabangan JIKA-MAKA. Contoh: Jika level = "SMP" → buat soal mudah. Jika "SMA" → soal
+                    susah.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color: var(--purple);"><i class="fas fa-user-check"></i> Peninjau</h4>
+                <p>Jeda di mana guru/dosen mereview output AI sebelum dikirim ke siswa. <strong>Human in the
+                        loop!</strong></p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h4 style="color: var(--purple);"><i class="fas fa-download"></i> Hasil Keluaran & Ekspor</h4>
+                <p>Tampilkan hasil akhir ke pengguna atau simpan otomatis ke Google Drive.</p>
+            </div>
+        </div>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <strong>Aturan Emas Alur Opal:</strong> Data mengalir dari <strong>Masukan Data</strong> → diproses di
+            <strong>Hasilkan</strong> → divalidasi di <strong>Logic</strong> → ditampilkan di <strong>Hasil Keluaran</strong>.
+        </div>
+    </div>
+
+    <!-- Slide 10: Fitur 6 — Knowledge Base -->
+    <div class="slide">
+        <div class="watermark">FITUR 6</div>
+        <h2><i class="fas fa-database"></i> Fitur 6: Basis Pengetahuan</h2>
+        <p>Jadikan AI Anda <strong>spesialis</strong> dengan mengunggah dokumen ke Basis Pengetahuan.</p>
         <div class="grid-2">
+            <div class="card" style="border-left: 10px solid var(--primary);">
+                <h4>📋 Cara Kerja:</h4>
+                <ol>
+                    <li>Buka pengaturan aplikasi Opal Anda</li>
+                    <li>Masuk ke tab <strong>"Basis Pengetahuan"</strong></li>
+                    <li>Unggah PDF/dokumen referensi</li>
+                    <li>AI akan merujuk Basis Pengetahuan sebelum menggunakan pengetahuan umum</li>
+                </ol>
+            </div>
             <div class="card">
-                <h3>Rubrik Spesifik (HOTS)</h3>
-                <p>AI merancang rubrik penilaian berdasarkan indikator keberhasilan yang Anda tentukan.</p>
+                <h4>💡 Contoh Penggunaan:</h4>
                 <ul>
-                    <li>Skala 1-4 dengan deskriptor yang jelas.</li>
-                    <li>Fokus pada keterampilan berpikir kritis (C4-C6).</li>
-                </ul>
-            </div>
-            <div class="card" style="background:#ecfdf5; border-color:var(--primary)">
-                <h4>Feedback Generator:</h4>
-                <p>"Berdasarkan rubrik ini, berikan komentar motivatif untuk siswa yang mendapatkan nilai 2 pada aspek kerjasama kelompok."</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 6: Taksonomi Bloom dalam Prompting -->
-    <div class="slide">
-        <div class="watermark">APLIKASI TEORI</div>
-        <h2><i class="fas fa-brain"></i> Scaffolding dengan <strong>Taksonomi Bloom</strong></h2>
-        <p>Pastikan asisten AI Anda membuat soal yang menyasar tingkat kognitif yang tepat.</p>
-        <div style="display:flex; justify-content:space-between; margin-top:50px">
-            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid #ddd">
-                <strong>LOTS (C1-C2)</strong><br><small>Definisikan, Sebutkan</small>
-            </div>
-            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid var(--blue)">
-                <strong>MOTS (C3-C4)</strong><br><small>Terapkan, Analisis</small>
-            </div>
-            <div class="card" style="width:250px; text-align:center; border-bottom:10px solid var(--primary)">
-                <strong>HOTS (C5-C6)</strong><br><small>Evaluasi, Ciptakan</small>
-            </div>
-        </div>
-        <div class="workshop-box" style="margin-top:60px">
-            <strong>Misi Anda:</strong> Perintahkan AI untuk menjaga rasio soal (Misal: 30% LOTS, 40% MOTS, 30% HOTS) guna menjaga standar kualitas ujian.
-        </div>
-    </div>
-
-    <!-- Slide 7: Strategic Kit 3: Master Narasi Raport -->
-    <div class="slide">
-        <div class="watermark">KIT 3</div>
-        <h2><i class="fas fa-comments"></i> Kit 3: Master Narasi Raport</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Psikologi Umpan Balik:</h4>
-                <p>AI dilatih untuk menggunakan metode <strong>Sandwich Feedback</strong>: <br>1. Pujian (Pencapaian) <br>2. Konstruktif (Perbaikan) <br>3. Harapan (Motivasi Masa Depan).</p>
-            </div>
-            <div class="card" style="border-left:10px solid var(--indigo)">
-                <h4>Anonymization Kit:</h4>
-                <p>Materi di Sesi 1 diterapkan di sini. Masukkan data draf secara anonim, biarkan AI merapikan narasinya, lalu guru melakukan verifikasi akhir.</p>
-            </div>
-        </div>
-        <p style="margin-top:40px; text-align:center; font-weight:700">"Output AI harus tetap terasa hangat dan manusiawi, jangan sampai ortu merasa sedang berbicara dengan mesin."</p>
-    </div>
-
-    <!-- Slide 8: Strategic Kit 4: Parent-Teacher Communication -->
-    <div class="slide">
-        <div class="watermark">KIT 4</div>
-        <h2><i class="fas fa-user-group"></i> Kit 4: Vault Komunikasi Ortu</h2>
-        <p>Mengelola krisis komunikasi dan menjaga transparansi kegiatan sekolah.</p>
-        <div class="grid-2">
-            <div class="card">
-                <h3>Drafting Pengumuman</h3>
-                <ul>
-                    <li>Undangan Perayaan Hari Besar.</li>
-                    <li>SOP Study Tour & Persetujuan Ortu.</li>
-                    <li>Informasi mendadak (Perubahan jadwal).</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h3>Crisis Management</h3>
-                <p>"Bantu saya menyusun draf WA untuk wali murid mengenai kejadian [Kejadian] dengan nada yang menenangkan namun tetap tegas secara kebijakan."</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 9: Automasi Link: Opal ke Google Workspace -->
-    <div class="slide">
-        <div class="watermark">TEKNIKAL</div>
-        <h2><i class="fas fa-link"></i> Menghubungkan Opal ke Dunia Nyata</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>The "Export" Button</h4>
-                <p>Segala hasil dari asisten Opal (RPP, Soal, Narasi) bisa Anda simpan langsung ke:</p>
-                <ul>
-                    <li><strong>Google Docs:</strong> Untuk draf dokumen resmi.</li>
-                    <li><strong>Google Sheets:</strong> Untuk database soal dan nilai.</li>
-                    <li><strong>Google Slides:</strong> Untuk bahan presentasi esok pagi.</li>
-                </ul>
-            </div>
-            <div class="card" style="text-align:center">
-                <i class="fab fa-google fa-10x" style="color:var(--danger); opacity:0.1"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 10: Mengelola Library AI Sekolah (Knowledge Sharing) -->
-    <div class="slide">
-        <div class="watermark">MANAGEMENT</div>
-        <h2><i class="fas fa-boxes-stacked"></i> Library AI Tingkat Sekolah</h2>
-        <p>Jangan menyimpan kemajuan ini sendirian. Bangunlah <strong>Aset Pengetahuan Sekolah</strong>.</p>
-        <div class="grid-2">
-            <div class="card">
-                <h4>AI Champion Team:</h4>
-                <p>3-5 guru yang bertugas mengkurasi link asisten Opal sekolah agar bisa digunakan oleh seluruh guru lain di unit tersebut.</p>
-            </div>
-            <div class="card" style="border-top:10px solid var(--secondary)">
-                <h4>Standardisasi:</h4>
-                <p>Memastikan seluruh guru menggunakan asisten yang memiliki "Knowledge Base" (Aturan) yang sama agar output raport seragam gayanya.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 11: Interactive: Differentiated Instruction Builder -->
-    <div class="slide">
-        <div class="watermark">PRAKTEK</div>
-        <h2><i class="fas fa-wand-magic-sparkles"></i> Praktik: Diferensiasi Konten</h2>
-        <p>Lihat bagaimana satu topik diubah menjadi 3 tingkat Scaffolding secara instan.</p>
-        
-        <label style="font-weight:700">Pilih Topik Pembelajaran:</label>
-        <div style="margin-top:15px">
-            <div class="trait-pill" onclick="genDiff(this, 'Ekosistem Hutan')">Ekosistem Hutan</div>
-            <div class="trait-pill" onclick="genDiff(this, 'Hukum Newton')">Hukum Newton</div>
-            <div class="trait-pill" onclick="genDiff(this, 'Puisi Kontemporer')">Puisi Kontemporer</div>
-        </div>
-
-        <div id="diffDisplay" class="generator-display">
-            <p style="color:var(--text-light)">Pilih topik untuk memulai...</p>
-        </div>
-    </div>
-
-    <!-- Slide 12: Interactive: Maturity Model AI (Self-Test) -->
-    <div class="slide">
-        <div class="watermark">SELF-ASSESSMENT</div>
-        <h2><i class="fas fa-ranking-star"></i> AI-Ready School Maturity Model</h2>
-        <p>Di tahap mana posisi Anda dan sekolah Anda saat ini?</p>
-        
-        <div id="maturityTest">
-            <div class="maturity-step" onclick="checkMaturity(this, 1)">
-                <div style="font-size:32px; font-weight:800; color:var(--text-light)">1</div>
-                <div><strong>Tahap Ad-hoc:</strong> Guru menggunakan AI secara sembunyi-sembunyi dan individual.</div>
-            </div>
-            <div class="maturity-step" onclick="checkMaturity(this, 2)">
-                <div style="font-size:32px; font-weight:800; color:var(--text-light)">2</div>
-                <div><strong>Tahap Integrasi:</strong> Sekolah mulai melatih guru dan memiliki kebijakan AI tertulis.</div>
-            </div>
-            <div class="maturity-step" onclick="checkMaturity(this, 3)">
-                <div style="font-size:32px; font-weight:800; color:var(--text-light)">3</div>
-                <div><strong>Tahap Transformasi:</strong> AI menjadi bagian dari ekosistem (Opal Spaces) dan kurikulum adaptif.</div>
-            </div>
-        </div>
-        <div id="maturityFeedback" style="margin-top:20px; font-weight:700; color:var(--primary); display:none"></div>
-    </div>
-
-    <!-- Slide 13: Ethics Check: Checklist Verifikasi Terakhir -->
-    <div class="slide">
-        <div class="watermark">ETHICS CHECK</div>
-        <h2><i class="fas fa-shield-halved"></i> Audit Terakhir Sebelum Publish</h2>
-        <div class="grid-2">
-            <div class="card" style="border-left:10px solid var(--danger)">
-                <h4>Red Flags (Hentikan Jika):</h4>
-                <ul>
-                    <li>[ ] Ada nama asli siswa yang terkirim ke server publik.</li>
-                    <li>[ ] AI memberikan jawaban bias yang menyinggung kelompok tertentu.</li>
-                    <li>[ ] Hasil hitungan matematika belum saya hitung ulang manual.</li>
-                </ul>
-            </div>
-            <div class="card" style="border-left:10px solid var(--primary)">
-                <h4>Green Flags (Lanjutkan Jika):</h4>
-                <ul>
-                    <li>[ ] Saya sudah mengedit minimal 30% dari teks asli AI.</li>
-                    <li>[ ] Referensi draf tersebut sudah saya verifikasi di Google Scholar.</li>
-                    <li>[ ] Hasil ini mempermudah pemahaman siswa, bukan hanya tugas saya.</li>
+                    <li><strong>Guru:</strong> Unggah rubrik penilaian → AI selalu menggunakan rubrik Anda saat
+                        mengoreksi</li>
+                    <li><strong>Dosen:</strong> Unggah Rencana Pembelajaran Semester → AI selalu merujuk CPMK dan CPL saat membuat instrumen
+                        asesmen</li>
+                    <li><strong>Admin:</strong> Unggah SOP sekolah → AI menjawab pertanyaan prosedural dengan benar</li>
                 </ul>
             </div>
         </div>
-    </div>
-
-    <!-- Slide 14: Roadmap: 30 Hari Menuju AI-Fluent Teacher -->
-    <div class="slide">
-        <div class="watermark">ROADMAP</div>
-        <h2><i class="fas fa-map-location-dot"></i> Rencana Aksi 30 Hari</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Minggu 1-2: Eksplorasi Bersih</h4>
-                <p>Menggunakan AI hanya untuk brainstroming ide dan merapikan anonymized raport.</p>
-            </div>
-            <div class="card">
-                <h4>Minggu 3-4: Spesialisasi Opal</h4>
-                <p>Membangun satu asisten khusus untuk mata pelajaran Anda sendiri di Opal.</p>
-            </div>
-            <div class="card" style="grid-column: span 2; background:var(--secondary); color:white">
-                <h4>Bulan ke-2: Kolaborasi Tim</h4>
-                <p>Membagikan asisten tersebut ke rekan sejawat dan melakukan evaluasi efektivitas waktu kerja.</p>
-            </div>
+        <div class="workshop-box" style="background:#e0f2fe; border-color:#0ea5e9;">
+            <p><strong>🔗 Integrasi Google Drive:</strong> File di Drive yang terhubung akan <strong>otomatis
+                    terupdate</strong> — jika Anda edit file di Drive, asisten otomatis menyesuaikan ilmunya.</p>
         </div>
     </div>
 
-    <!-- Slide 15: Case Study: Membedah RPP Draf AI vs Manual -->
+    <!-- Slide 11: Fitur 7 — Templates & Remix -->
+    <div class="slide">
+        <div class="watermark">FITUR 7</div>
+        <h2><i class="fas fa-clone"></i> Fitur 7: Pola Dasar & Modifikasi</h2>
+        <p>Tidak perlu mulai dari nol! Opal menyediakan <strong>galeri template</strong> yang bisa Anda gunakan
+            dan modifikasi.</p>
+        <div class="feature-grid">
+            <div class="card" style="border-top: 8px solid var(--yellow);">
+                <h4 style="color: var(--yellow);">📝 Blog Post Writer</h4>
+                <p>Pola Dasar untuk menulis artikel dari topik. Modifikasi untuk membuat ringkasan materi ajar.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--yellow);">
+                <h4 style="color: var(--yellow);">🎯 Quiz Generator</h4>
+                <p>Pola Dasar pembuat kuis interaktif. Modifikasi level soal sesuai Bloom Taxonomy.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--yellow);">
+                <h4 style="color: var(--yellow);">📊 Business Profiler</h4>
+                <p>Pola Dasar analisis data. Modifikasi untuk analisis data siswa atau evaluasi program belajar.</p>
+            </div>
+        </div>
+        <div class="card" style="margin-top: 30px;">
+            <h4>🔄 Apa itu "Modifikasi"?</h4>
+            <p>Modifikasi = <strong>modifikasi template orang lain</strong> menjadi milik Anda. Langkah:</p>
+            <ol>
+                <li>Buka template dari galeri atau link yang dibagikan rekan kerja</li>
+                <li>Klik <strong>"Modifikasi"</strong> → template tercopy ke akun Anda</li>
+                <li>Edit prompt, ubah Basis Pengetahuan, dan sesuaikan alur</li>
+                <li>Publikasikan sebagai app baru milik Anda</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Slide 12: Fitur 8 — Sharing & Publishing -->
+    <div class="slide">
+        <div class="watermark">FITUR 8</div>
+        <h2><i class="fas fa-share-nodes"></i> Fitur 8: Publikasikan & Bagikan</h2>
+        <p>Setelah aplikasi selesai, <strong>bagikan ke siapapun lewat link</strong> — tanpa perlu instalasi.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h4>🚀 Cara Publikasikan:</h4>
+                <ol>
+                    <li>Klik <strong>"Pratinjau"</strong> untuk uji coba aplikasi Anda</li>
+                    <li>Perbaiki jika ada masalah</li>
+                    <li>Klik <strong>"Bagikan"</strong> → dapatkan link</li>
+                    <li>Bagikan link lewat WhatsApp, Classroom, atau email</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h4>👥 Kolaborasi:</h4>
+                <ul>
+                    <li><strong>Ruang Kerja:</strong> Kelompokkan app berdasarkan Mapel/MK</li>
+                    <li><strong>Team:</strong> Undang rekan guru/dosen MGMP untuk mengedit bersama</li>
+                    <li><strong>Modifikasi:</strong> Siswa/mahasiswa bisa memodifikasi app Anda</li>
+                    <li>Kontrol akses: Siapa yang bisa melihat/edit</li>
+                </ul>
+            </div>
+        </div>
+        <div class="workshop-box" style="background:#fefce8; border-color:#fef08a;">
+            <strong>🏫 Skenario:</strong> Guru membuat app "Asisten Pembuat Rangkuman". Bagikan linknya di
+            Google Classroom. Siswa tinggal paste materi → langsung dapat rangkuman terstruktur!
+        </div>
+    </div>
+
+    <!-- Slide 13: Studi Kasus Guru -->
     <div class="slide">
         <div class="watermark">STUDI KASUS</div>
-        <h2><i class="fas fa-magnifying-glass-chart"></i> Bedah Kasus: RPP AI vs Manual</h2>
+        <h2><i class="fas fa-chalkboard-teacher"></i> Studi Kasus: Guru</h2>
         <div class="grid-2">
             <div class="card">
-                <h3>RPP Manual (2 Jam)</h3>
-                <p>Sangat akurat dengan konteks sekolah, namun biasanya "statis" dan sulit diubah-ubah dengan cepat jika siswa merasa bosan.</p>
+                <h3>📝 Auto-Umpan Balik Essay</h3>
+                <p><strong>Masalah:</strong> Mengoreksi 40 essay siswa memakan 4 jam. Komentar jadi seragam karena
+                    kelelahan.</p>
+                <h4>Solusi Opal:</h4>
+                <ol>
+                    <li>Unggah <strong>Rubrik Penilaian</strong> ke Basis Pengetahuan</li>
+                    <li>Kartu Visual Masukan Data: Siswa paste essay mereka</li>
+                    <li>Kartu Visual Gemini: "Analisis essay berdasarkan rubrik, beri umpan balik per paragraf"</li>
+                    <li>Kartu Visual Peninjau: <strong>Guru mereview</strong> sebelum dikirim balik</li>
+                    <li>Kartu Visual Hasil Keluaran: Umpan Balik spesifik per paragraf + skor</li>
+                </ol>
+                <p style="margin-top:15px;"><strong>⏱️ Waktu:</strong> 30 menit (review) vs 4 jam (manual)</p>
             </div>
-            <div class="card" style="border-color:var(--primary)">
-                <h3>RPP AI-Augmented (20 Menit)</h3>
-                <p>Kaya akan variasi aktivitas kreatif. Membutuhkan verifikasi konteks lokal dari guru, namun sangat "dinamis" dan mudah di-remix.</p>
+            <div class="card">
+                <h3>🎯 Asisten Diferensiasi Belajar</h3>
+                <p><strong>Masalah:</strong> Menyiapkan materi untuk 3 level siswa (rendah, sedang, tinggi) di satu
+                    kelas.</p>
+                <h4>Solusi Opal:</h4>
+                <ol>
+                    <li>Kartu Visual Masukan Data: Guru masukkan topik + file materi</li>
+                    <li>Kartu Visual Percabangan: Percabangan berdasarkan level</li>
+                    <li>Kartu Visual Gemini 1: Materi level dasar (penjelasan sederhana)</li>
+                    <li>Kartu Visual Gemini 2: Materi level menengah (analisis)</li>
+                    <li>Kartu Visual Gemini 3: Materi level lanjut (evaluasi & kreasi)</li>
+                    <li>Kartu Visual Hasil Keluaran: 3 versi materi siap pakai</li>
+                </ol>
             </div>
-        </div>
-        <div class="workshop-box" style="text-align:center">
-            "Guru yang menang adalah yang mengambil keakuratan Manual dan menggabungkannya dengan kreativitas AI."
         </div>
     </div>
 
-    <!-- Slide 16: P5 & Merdeka Learning dalam Genggaman AI -->
+    <!-- Slide 14: Studi Kasus Dosen -->
     <div class="slide">
-        <div class="watermark">KURIKULUM</div>
-        <h2><i class="fas fa-star"></i> AI untuk Sukseskan P5</h2>
-        <p>Proyek Penguatan Profil Pelajar Pancasila membutuhkan kreativitas tinggi dalam perencanaan tema.</p>
+        <div class="watermark">STUDI KASUS</div>
+        <h2><i class="fas fa-user-graduate"></i> Studi Kasus: Dosen</h2>
         <div class="grid-2">
             <div class="card">
-                <h4>Tema: Gaya Hidup Berkelanjutan</h4>
-                <p>AI menyarankan ide: "Audit Sampah Plastik di Kantin Sekolah" lengkap dengan instrumen pengumpulan datanya.</p>
+                <h3>📋 Generator Rubrik OBE</h3>
+                <p><strong>Masalah:</strong> Menyusun rubrik asesmen yang selaras dengan CPMK/CPL memakan waktu
+                    dan sering inkonsisten.</p>
+                <h4>Solusi Opal:</h4>
+                <ol>
+                    <li>Unggah Rencana Pembelajaran Semester dan dokumen kurikulum ke Basis Pengetahuan</li>
+                    <li>Kartu Visual Masukan Data: Dosen pilih CPMK dan jenis asesmen</li>
+                    <li>Kartu Visual Gemini: "Buatkan rubrik penilaian 4 level berdasarkan CPMK yang dipilih"</li>
+                    <li>Kartu Visual Transform: Format ke tabel rubrik standar</li>
+                    <li>Kartu Visual Ekspor: Simpan ke Google Drive</li>
+                </ol>
             </div>
             <div class="card">
-                <h4>Tema: Bangunlah Jiwa & Raganya</h4>
-                <p>AI menyarankan ide: "Kampanye Kesehatan Mental Digital Siswa" berupa pembuatan konten edukasi di TikTok kelas.</p>
+                <h3>🔬 Asisten Bimbingan Skripsi</h3>
+                <p><strong>Masalah:</strong> Memberikan umpan balik awal pada draf mahasiswa sangat repetitif.</p>
+                <h4>Solusi Opal:</h4>
+                <ol>
+                    <li>Unggah template skripsi dan rubrik penilaian ke Basis Pengetahuan</li>
+                    <li>Kartu Visual Masukan Data: Mahasiswa upload draf bab (File Unggah)</li>
+                    <li>Kartu Visual Gemini 1: "Cek kesesuaian format dengan template"</li>
+                    <li>Kartu Visual Gemini 2: "Evaluasi substansi berdasarkan rubrik"</li>
+                    <li>Kartu Visual Peninjau: <strong>Dosen memvalidasi</strong></li>
+                    <li>Kartu Visual Hasil Keluaran: Daftar revisi terstruktur per sub-bab</li>
+                </ol>
             </div>
         </div>
     </div>
 
-    <!-- Slide 17: Persiapan Menghadapi Masa Depan (AI in 2030) -->
+    <!-- Slide 15: Context Injection & Variable System -->
     <div class="slide">
-        <div class="watermark">FUTURE SHOCK</div>
-        <h2><i class="fas fa-forward"></i> Mengintip Pendidikan Tahun 2030</h2>
+        <div class="watermark">ADVANCED</div>
+        <h2><i class="fas fa-syringe"></i> Teknik Lanjutan: Context Injection</h2>
         <div class="grid-2">
-            <div>
-                <p>Kurikulum akan menjadi <strong>Adaptive</strong>. AI akan menyesuaikan tingkat kesulitan soal secara real-time berdasarkan jawaban siswa detik itu juga.</p>
+            <div class="card">
+                <h4>Apa itu Context Injection?</h4>
+                <p>Memasukkan data dari Kartu Visual sebelumnya ke dalam prompt Kartu Visual berikutnya menggunakan
+                    <strong>Variable</strong>:
+                </p>
+                <div
+                    style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 12px; font-family: monospace; margin-top: 15px; font-size: 15px;">
+                    Analisis teks berikut:<br>
+                    {{user_input}}<br><br>
+                    Berdasarkan rubrik ini:<br>
+                    {{knowledge_base}}<br><br>
+                    Berikan umpan balik per paragraf.
+                </div>
             </div>
-            <div class="card" style="background:#f1f5f9">
-                <h4>Peran Guru Mendatang:</h4>
+            <div class="card">
+                <h4>Manfaat:</h4>
                 <ul>
-                    <li>Mentor Emosional & Moral.</li>
-                    <li>Kurator Konten AI.</li>
-                    <li>Fasilitator Projek Dunia Nyata.</li>
-                    <li>Validator Kebenaran Informasi.</li>
+                    <li>AI bekerja dengan input yang <strong>terfokus dan bersih</strong></li>
+                    <li>Mengurangi halusinasi karena konteks sudah jelas</li>
+                    <li>Memungkinkan <strong>Instruksi Chaining</strong> — Hasil Keluaran Kartu Visual 1 menjadi Masukan Data Kartu Visual 2</li>
                 </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 18: Link Referensi Sesi 4 (The Mega List) -->
-    <div class="slide">
-        <div class="watermark">REFERENSI</div>
-        <h2><i class="fas fa-book-bookmark"></i> Referensi & Sumber Belajar Sesi 4</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Daftar Tools Unggulan:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://opal.google.com" target="_blank" class="source-link">Opal Google (Workflow Builder)</a></li>
-                    <li><a href="https://www.canva.com/education/" target="_blank" class="source-link">Canva for Education AI Tools</a></li>
-                    <li><a href="https://www.briskteaching.com/" target="_blank" class="source-link">Brisk Teaching (Chrome Extension)</a></li>
-                </ul>
-            </div>
-            <div class="card">
-                <h4>Komunitas & Framework:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://www.iste.org/areas-of-focus/AI-in-education" target="_blank" class="source-link">ISTE: AI in Education Guides</a></li>
-                    <li><a href="https://www.edutopia.org/article/using-ai-teachers-planning" target="_blank" class="source-link">Edutopia: AI Planning for Teachers</a></li>
-                    <li><a href="https://ikhwanfathulloh.netlify.app/" target="_blank" class="source-link">Layanan Konsultasi: Ikhwan Fathulloh</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 19: Pesan Penutup & Motivasi -->
-    <div class="slide">
-        <div class="watermark">FAREWELL</div>
-        <h2><i class="fas fa-heart"></i> Pesan Untuk Seluruh Guru Hebat</h2>
-        <div style="margin-top: auto; margin-bottom: auto; text-align:center">
-            <h1 style="font-size: 100px; color:var(--primary); opacity:0.1; position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); width:100%; pointer-events:none">TERIMA KASIH</h1>
-            <p style="font-size:32px; font-weight:700; color:var(--secondary); position:relative; z-index:2">
-                "AI tidak akan pernah memiliki empati, kasih sayang, dan naluri kebapakan/keibuan yang Anda berikan kepada siswa setiap hari."
-            </p>
-            <p style="font-size:24px; color:var(--text-light); margin-top:30px; position:relative; z-index:2">
-                Gunakan teknologi ini untuk memperpanjang jangkauan pelayanan Anda, bukan untuk menggantikan kehadiran Anda.
-            </p>
-        </div>
-    </div>
-
-    <!-- Slide 20: Kontak & Selesai -->
-    <div class="slide">
-        <div class="watermark">CONTACT</div>
-        <h2><i class="fas fa-flag-checkered"></i> Selesai Seluruh Sesi Pelatihan</h2>
-        <div class="grid-2" style="margin-top:auto; margin-bottom:auto">
-            <div class="card">
-                <h3>Mari Tetap Terhubung!</h3>
-                <p>Saya Muhammad Ikhwan Fathulloh, siap membantu Anda dalam perjalanan transformasi AI ini.</p>
-                <div style="display:flex; gap:30px; margin-top:20px">
-                    <a href="https://www.linkedin.com/in/muhammad-ikhwan-fathulloh/" target="_blank" style="color:var(--blue); font-size:40px"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://ikhwanfathulloh.netlify.app/" target="_blank" style="color:var(--text-main); font-size:40px"><i class="fas fa-globe"></i></a>
+                <div class="workshop-box" style="margin: 20px 0 0 0; background:#fff;">
+                    <strong>Ini rahasia mengapa asisten Opal terasa lebih pintar daripada chat Gemini biasa.</strong>
                 </div>
             </div>
-            <div class="card" style="background:var(--secondary); color:white">
-                <h4>Program Lanjutan?</h4>
-                <p>Tersedia workshop teknis intensif membangun "School AI Portal" menggunakan Opal Google secara kustom untuk institusi Anda.</p>
-                <p class="small">Hubungi melalui LinkedIn untuk detail lebih lanjut.</p>
-            </div>
-        </div>
-        <div class="footer">
-            <span>Kurikulum Komprehensif AI untuk Guru v2.0</span>
-            <span>By Ikhwan Fathulloh - Koalawan</span>
         </div>
     </div>
 
-    <script>
-        function genDiff(el, topic) {
-            const pills = document.querySelectorAll('.trait-pill');
-            pills.forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
+    <!-- Slide 16: Perbandingan NotebookLM vs Opal -->
+    <div class="slide">
+        <div class="watermark">PERBANDINGAN</div>
+        <h2><i class="fas fa-scale-balanced"></i> NotebookLM vs Opal: Kapan Pakai Yang Mana?</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspek</th>
+                    <th>NotebookLM (Sesi 3)</th>
+                    <th>Opal (Sesi 4)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tujuan Utama</td>
+                    <td>Riset & Analisis Dokumen</td>
+                    <td>Bangun Aplikasi AI</td>
+                </tr>
+                <tr>
+                    <td>Cara Kerja</td>
+                    <td>Unggah → Chat → Hasil Keluaran</td>
+                    <td>Design → Build → Bagikan</td>
+                </tr>
+                <tr>
+                    <td>Outputnya</td>
+                    <td>Jawaban, Siaran Audio, Panduan Belajar</td>
+                    <td>Aplikasi yang bisa dibagikan</td>
+                </tr>
+                <tr>
+                    <td>Cocok untuk</td>
+                    <td>Riset pribadi & persiapan mengajar</td>
+                    <td>Tool mandiri yang dipakai siswa/mahasiswa</td>
+                </tr>
+                <tr>
+                    <td>Kekuatan</td>
+                    <td>Akurasi & kutipan sumber</td>
+                    <td>Automasi & skalabilitas</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="workshop-box" style="margin-top: 30px;">
+            <strong>💡 Gunakan keduanya:</strong> NotebookLM untuk riset & persiapan →
+            Opal untuk membuat tool yang bisa dipakai berulang oleh siswa/mahasiswa/rekan kerja.
+        </div>
+    </div>
 
-            const disp = document.getElementById('diffDisplay');
-            disp.innerHTML = `
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                    <div class="card" style="font-size:16px"><strong>Dasar:</strong> Penjelasan video singkat & kuis mencocokkan istilah.</div>
-                    <div class="card" style="font-size:16px; border-color:var(--blue)"><strong>Menengah:</strong> Analisis teks & membuat mind-map digital.</div>
-                    <div class="card" style="font-size:16px; border-color:var(--primary)"><strong>Tinggi:</strong> Mini-riset & membuat poster kampanye solusi.</div>
-                </div>
-                <p style="margin-top:20px; font-weight:700; color:var(--indigo)">Hasil Diferensiasi untuk topik "${topic}" telah siap di draf RPP Anda!</p>
-            `;
-        }
+    <!-- Slide 17: Penutup -->
+    <div class="slide">
+        <div class="watermark">PENUTUP</div>
+        <h2><i class="fas fa-rocket"></i> Siap Membangun!</h2>
+        <div class="card" style="text-align: center; padding: 60px;">
+            <i class="fas fa-microchip fa-5x" style="color: var(--primary); margin-bottom: 30px;"></i>
+            <h3 style="font-size: 36px;">Saatnya Merakit Aplikasi AI Pertama Anda</h3>
+            <p style="font-size: 22px; max-width: 700px; margin: 20px auto;">
+                Anda telah mempelajari semua fitur Google Opal. Sekarang, buka panduan praktek untuk
+                membangun aplikasi AI pertama Anda langkah demi langkah.
+            </p>
+            <div style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="Session4_HandsOn.html"
+                    style="display:inline-block; padding:18px 40px; background:var(--primary); color:white; border-radius:50px; text-decoration:none; font-weight:700; font-size:20px;">
+                    <i class="fas fa-laptop-code"></i> Mulai Praktek Sesi 4
+                </a>
+                <a href="OneDayIntensive.html"
+                    style="display:inline-block; padding:18px 40px; background:var(--secondary); color:white; border-radius:50px; text-decoration:none; font-weight:700; font-size:20px;">
+                    <i class="fas fa-home"></i> Kembali ke Hub
+                </a>
+            </div>
+        </div>
+        <span class="source-tag" style="text-align:center; margin-top:20px;">
+            Akses Opal: <a href="https://opal.google.com" target="_blank" class="source-link">opal.google.com</a>
+        </span>
+    </div>
 
-        function checkMaturity(el, level) {
-            const steps = document.querySelectorAll('.maturity-step');
-            steps.forEach(s => s.classList.remove('active'));
-            el.classList.add('active');
-
-            const fed = document.getElementById('maturityFeedback');
-            fed.style.display = "block";
-            const advice = [
-                "Saran: Mulailah membuat kebijakan 'AI Code of Conduct' di kelas.",
-                "Saran: Inilah saat yang tepat untuk membangun Library Asisten bersama di Opal.",
-                "Saran: Bagikan praktik baik sekolah Anda ke komunitas guru yang lebih luas!"
-            ];
-            fed.innerHTML = `<i class="fas fa-lightbulb"></i> Anda di Level ${level}. ${advice[level-1]}`;
-        }
-    </script>
 </body>
 
 </html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 3: NotebookLM — Praktek Langsung | Koalawan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --bg: #ffffff;
+            --text: #1e293b;
+            --dim: #64748b;
+            --border: #e2e8f0;
+            --green: #10b981;
+            --purple: #8b5cf6;
+            --orange: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .slide {
+            width: 85vw;
+            max-width: 1100px;
+            min-height: 80vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            left: 80px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-mini {
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+            color: var(--dim);
+        }
+
+        .btn-mini:hover {
+            background: #f8fafc;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .step-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .case-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .case-guru {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .case-dosen {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .case-both {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .handson-container {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .instruction-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 4px;
+            font-size: 0.95rem;
+        }
+
+        .step-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .btn-nav {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 40px;
+            align-self: flex-start;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateX(5px);
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-top: 25px;
+        }
+
+        .result-box {
+            background: #ecfdf5;
+            border: 2px solid var(--green);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-top: 25px;
+        }
+
+        .prompt-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 25px;
+            font-family: monospace;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 15px 0;
+            white-space: pre-wrap;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Hero -->
+    <div class="slide">
+        <div class="top-nav">
+            <a href="Session3.html" class="btn-mini"><i class="fas fa-book"></i> Kembali ke Teori</a>
+            <a href="OneDayIntensive.html" class="btn-mini"><i class="fas fa-home"></i> Hub</a>
+        </div>
+        <div class="step-badge">SESI 03: PRAKTEK</div>
+        <h1>Praktek NotebookLM</h1>
+        <p style="font-size: 1.5rem; color: var(--dim);">Panduan langkah demi langkah menggunakan
+            <strong>NotebookLM</strong> untuk 3 studi kasus nyata: Guru, Dosen, dan Gabungan.
+        </p>
+        <a href="#case1" class="btn-nav">Mulai Studi Kasus 1 <i class="fas fa-arrow-down"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 1: GURU — ASISTEN RPP ===== -->
+
+    <div id="case1" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h2>Asisten Rencana Pelaksanaan Pembelajaran Kurikulum Merdeka</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Membuat Rencana Pelaksanaan Pembelajaran yang selaras dengan Capaian Pembelajaran & Alur Tujuan Pembelajaran secara otomatis menggunakan NotebookLM.
+        </p>
+        <div class="handson-container">
+            <h3>Langkah 1: Buat Notebook Baru</h3>
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buka <strong>notebooklm.google.com</strong> dan login dengan akun Google Anda.
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Klik tombol <strong>"+ New Notebook"</strong> di halaman utama.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Beri judul: <strong>"Asisten Rencana Pelaksanaan Pembelajaran - [Nama Mapel] - [Kelas]"</strong>.
+                    <br><small style="color:var(--dim);">Contoh: "Asisten Rencana Pelaksanaan Pembelajaran - IPA - Kelas 7"</small>
+                </div>
+            </div>
+        </div>
+        <a href="#case1-step2" class="btn-nav">Lanjut: Unggah Sumber <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step2" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 2: Unggah Sumber Dokumen</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik <strong>"+ Add Source"</strong> di panel kiri.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Unggah <strong>Capaian Pembelajaran (Capaian Pembelajaran)</strong> mata pelajaran Anda (PDF dari
+                    Kemdikbud).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Unggah <strong>Alur Tujuan Pembelajaran (Alur Tujuan Pembelajaran)</strong> yang sudah disusun
+                    sekolah.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Unggah <strong>Buku Guru</strong> (PDF) untuk bab yang akan diajarkan.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">5</div>
+                <div class="step-text">(Opsional) Unggah <strong>Panduan Projek Penguatan Profil Pelajar Pancasila</strong> jika Rencana Pelaksanaan Pembelajaran terkait projek profil
+                    pelajar Pancasila.</div>
+            </div>
+        </div>
+        <div class="tip-box">
+            <strong>💡 Tips:</strong> Pastikan file PDF bukan hasil scan gambar. NotebookLM membutuhkan teks
+            yang bisa dibaca. Jika file Anda scan, konversi dulu menggunakan Google Docs (buka PDF → otomatis OCR).
+        </div>
+        <a href="#case1-step3" class="btn-nav">Lanjut: Chat dengan AI <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step3" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 3: Chat untuk Hasilkan Rencana Pelaksanaan Pembelajaran</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Di kotak chat, ketik prompt berikut:</div>
+            </div>
+            <div class="prompt-box">Buatkan Rencana Pelaksanaan Pembelajaran untuk 2 pertemuan (masing-masing 2x40 menit) tentang topik "Ekosistem
+                dan Interaksi Makhluk Hidup" untuk kelas 7 SMP.
+
+                Gunakan format:
+                - Tujuan Pembelajaran (sesuai Alur Tujuan Pembelajaran yang diunggah)
+                - Langkah Pembelajaran (Pendahuluan, Inti, Penutup)
+                - Asesmen (formatif & sumatif)
+                - Sumber Belajar
+
+                Pastikan selaras dengan Capaian Pembelajaran yang ada di dokumen sumber.</div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Perhatikan jawaban AI — setiap klaim akan memiliki angka superscript
+                    <sup>[1]</sup><sup>[2]</sup> yang bisa diklik.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Klik angka kutipan untuk <strong>memverifikasi</strong> bahwa Rencana Pelaksanaan Pembelajaran benar-benar
+                    sesuai dengan Capaian Pembelajaran asli.</div>
+            </div>
+        </div>
+        <a href="#case1-step4" class="btn-nav">Lanjut: Simpan & Audio <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case1-step4" class="slide">
+        <div class="case-badge case-guru">🏫 STUDI KASUS 1 — GURU</div>
+        <h3>Langkah 4: Simpan ke Catatan & Buat Audio</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik ikon <strong>"Save to Catatan"</strong> pada jawaban Rencana Pelaksanaan Pembelajaran yang dihasilkan AI.
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Edit Catatan jika perlu — tambahkan catatan pribadi atau modifikasi.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Klik <strong>"Ringkasan Audio"</strong> di panel Notebook Guide untuk mengubah
+                    materi bab ini menjadi siaran audio AI.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Tunggu 1-2 menit hingga audio selesai di-generate. Mainkan atau download untuk
+                    dibagikan ke siswa.</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Anda kini memiliki Rencana Pelaksanaan Pembelajaran yang terverifikasi oleh dokumen kurikulum resmi,
+            plus audio siaran audio untuk siswa belajar mandiri — semua dalam 15 menit!
+        </div>
+        <a href="#case2" class="btn-nav" style="background: var(--purple);">Lanjut ke Studi Kasus 2 (Dosen) <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 2: DOSEN — LITERATURE REVIEW ===== -->
+
+    <div id="case2" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h2>Asisten Tinjauan Pustaka</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Menyintesis dan membandingkan jurnal penelitian untuk proposal/skripsi/tesis.
+        </p>
+        <div class="handson-container">
+            <h3>Langkah 1: Siapkan Notebook Riset</h3>
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buat Notebook baru dengan judul: <strong>"Tinjauan Pustaka - [Topik
+                        Penelitian]"</strong>.
+                    <br><small style="color:var(--dim);">Contoh: "Tinjauan Pustaka - Pembelajaran Berbasis Proyek di Perguruan
+                        Tinggi"</small>
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Unggah <strong>5-10 jurnal PDF</strong> yang relevan dengan topik penelitian
+                    Anda.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">(Opsional) Tambahkan <strong>Tautan Situs Web artikel</strong> atau <strong>link
+                        YouTube</strong> konferensi/seminar terkait.</div>
+            </div>
+        </div>
+        <a href="#case2-step2" class="btn-nav" style="background: var(--purple);">Lanjut: Analisis Jurnal <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step2" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 2: Hasilkan Dokumen Rangkuman Eksekutif</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Di panel <strong>Notebook Guide</strong> (kanan atas), klik <strong>"Briefing
+                        Doc"</strong>.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">NotebookLM akan menghasilkan ringkasan eksekutif yang membandingkan semua jurnal
+                    Anda.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Simpan Dokumen Rangkuman Eksekutif ke <strong>Catatan</strong> sebagai kerangka awal Bab 2
+                    (Tinjauan Pustaka).</div>
+            </div>
+        </div>
+        <a href="#case2-step3" class="btn-nav" style="background: var(--purple);">Lanjut: Chat Analisis <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step3" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 3: Chat untuk Analisis Mendalam</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Gunakan prompt berikut untuk perbandingan metodologi:</div>
+            </div>
+            <div class="prompt-box">Bandingkan metodologi penelitian yang digunakan oleh semua jurnal yang diunggah.
+
+                Buat tabel dengan kolom:
+                - Judul Jurnal
+                - Metode (kuantitatif/kualitatif/mix)
+                - Sampel (jumlah & karakteristik)
+                - Instrumen Pengumpulan Data
+                - Teknik Analisis Data
+                - Temuan Utama</div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Lanjutkan dengan prompt untuk mencari gap:</div>
+            </div>
+            <div class="prompt-box">Berdasarkan semua jurnal yang diunggah, identifikasi:
+                1. Aspek apa yang sudah banyak diteliti?
+                2. Gap atau celah penelitian apa yang belum diisi?
+                3. Rekomendasi topik penelitian baru berdasarkan gap tersebut.</div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Simpan setiap jawaban ke <strong>Catatan</strong> — ini menjadi draf literature
+                    review Anda.</div>
+            </div>
+        </div>
+        <a href="#case2-step4" class="btn-nav" style="background: var(--purple);">Lanjut: Finalisasi <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case2-step4" class="slide">
+        <div class="case-badge case-dosen">🎓 STUDI KASUS 2 — DOSEN</div>
+        <h3>Langkah 4: Hasilkan Panduan Belajar & Audio</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Klik <strong>"Panduan Belajar"</strong> di Notebook Guide untuk membuat panduan
+                    belajar otomatis dari semua jurnal.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Bagikan Panduan Belajar ke <strong>mahasiswa bimbingan</strong> sebagai bahan bacaan
+                    wajib.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Hasilkan <strong>Ringkasan Audio</strong> untuk mendiskusikan temuan-temuan kunci
+                    secara audio — cocok untuk review cepat.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Klik <strong>"Pertanyaan Umum"</strong> untuk menghasilkan daftar pertanyaan kritis yang bisa
+                    digunakan untuk seminar proposal.</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Anda memiliki draf literature review, tabel perbandingan metodologi,
+            identifikasi gap penelitian, study guide untuk mahasiswa, dan audio ringkasan — semua dari satu Notebook!
+        </div>
+        <a href="#case3" class="btn-nav" style="background: var(--orange);">Lanjut ke Studi Kasus 3 <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ===== STUDI KASUS 3: GURU & DOSEN — BANK SOAL ===== -->
+
+    <div id="case3" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h2>Generator Bank Soal Kemampuan Berpikir Tingkat Tinggi</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 10px;">
+            Membuat soal tingkat tinggi (C4-C6 Bloom) yang valid dan berdasarkan materi resmi.
+        </p>
+        <div class="handson-container">
+            <h3>Langkah 1: Siapkan Notebook Asesmen</h3>
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Buat Notebook baru: <strong>"Bank Soal - [Mapel/MK] - [Kelas/Semester]"</strong>.
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Unggah <strong>materi bab</strong> yang akan diujikan (PDF buku teks/modul).
+                </div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Unggah <strong>contoh soal</strong> ujian terdahulu (UN/UAS/UTS) sebagai
+                    referensi format.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">(Opsional) Unggah <strong>rubrik penilaian</strong> yang digunakan
+                    sekolah/kampus.</div>
+            </div>
+        </div>
+        <a href="#case3-step2" class="btn-nav" style="background: var(--orange);">Lanjut: Hasilkan Soal <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case3-step2" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h3>Langkah 2: Chat untuk Hasilkan Soal</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Gunakan prompt berikut untuk soal pilihan ganda Kemampuan Berpikir Tingkat Tinggi:</div>
+            </div>
+            <div class="prompt-box">Berdasarkan materi yang diunggah, buatkan 10 soal pilihan ganda tingkat Kemampuan Berpikir Tingkat Tinggi (Higher
+                Order Thinking Skills) dengan ketentuan:
+
+                - 4 soal level Analisis (C4)
+                - 3 soal level Evaluasi (C5)
+                - 3 soal level Kreasi (C6)
+
+                Untuk setiap soal:
+                - Berikan stimulus/konteks kasus
+                - 5 pilihan jawaban (A-E)
+                - Kunci jawaban dengan penjelasan
+                - Rujukan halaman/paragraf dari materi sumber</div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Untuk soal essay, gunakan prompt ini:</div>
+            </div>
+            <div class="prompt-box">Buatkan 5 soal essay berbasis kasus (case-based) berdasarkan materi yang diunggah.
+
+                Untuk setiap soal:
+                - Berikan skenario/kasus kontekstual
+                - Pertanyaan yang membutuhkan analisis kritis
+                - Rubrik penilaian (skor 1-4) dengan deskriptor per level
+                - Contoh jawaban ideal
+
+                Sesuaikan bahasa untuk siswa SMP/SMA (atau: mahasiswa S1).</div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Verifikasi setiap soal — klik kutipan untuk memastikan soal sesuai dengan materi
+                    yang diajarkan.</div>
+            </div>
+        </div>
+        <a href="#case3-step3" class="btn-nav" style="background: var(--orange);">Lanjut: Finalisasi <i
+                class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div id="case3-step3" class="slide">
+        <div class="case-badge case-both">📝 STUDI KASUS 3 — GURU & DOSEN</div>
+        <h3>Langkah 3: Finalisasi & Distribusi</h3>
+        <div class="handson-container">
+            <div class="instruction-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Simpan soal-soal terbaik ke <strong>Catatan</strong> — satu Catatan per tipe soal (PG,
+                    Essay).</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Minta AI untuk membuat <strong>kisi-kisi</strong>:</div>
+            </div>
+            <div class="prompt-box">Buatkan kisi-kisi ujian dalam format tabel berdasarkan soal-soal yang sudah dibuat.
+
+                Kolom tabel:
+                - No Soal
+                - Indikator/Tujuan Pembelajaran
+                - Level Bloom
+                - Bentuk Soal (PG/Essay)
+                - Bobot Nilai</div>
+            <div class="instruction-step">
+                <div class="step-num">3</div>
+                <div class="step-text">Hasilkan <strong>Ringkasan Audio</strong> dari materi bab untuk dijadikan bahan
+                    belajar siswa/mahasiswa menjelang ujian.</div>
+            </div>
+            <div class="instruction-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Copy-paste soal dari Catatan ke <strong>Google Docs</strong> atau <strong>Google
+                        Form</strong> untuk distribusi.</div>
+            </div>
+        </div>
+        <div class="result-box">
+            <strong>✅ Hasil:</strong> Bank soal Kemampuan Berpikir Tingkat Tinggi (PG + Essay) dengan kunci jawaban, rubrik penilaian,
+            kisi-kisi ujian, dan audio review materi — semua terverifikasi dari sumber resmi!
+        </div>
+    </div>
+
+    
+    <!-- Slide Penutup -->
+    <div class="slide"
+    <div class="slide"
+    <!-- ALAT BANTU SESI 3 -->
+    <div id="tools-sesi3" class="slide" style="margin-bottom: 20px;">
+        <div class="case-badge case-both">🛠️ ALAT BANTU (MULTIPART)</div>
+        <h2>Koleksi Alat Bantu Riset (NotebookLM)</h2>
+        <p style="font-size: 1.2rem; color: var(--dim); margin-bottom: 30px;">Terkadang Anda butuh rangkuman, sekaligus soal evaluasi, dan pencarian kesenjangan dari sumber yang sama. Gabungkan semuanya di sini!</p>
+        
+        <!-- Tool 1: Panduan Belajar -->
+        <div style="background: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">1. Komponen Panduan Belajar & Ringkasan</h3>
+            <input type="text" id="t3-topic" placeholder="Fokus Utama (Cth: Keseluruhan tentang Perang Dunia II)" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px;">
+            <button onclick="genT3a()" class="btn-nav" style="margin-top:0; padding:10px 20px; font-size:1rem;"><i class="fas fa-plus"></i> Tambahkan ke Super Prompt</button>
+        </div>
+
+        <!-- Tool 2: Soal HOTS -->
+        <div style="background: #fffbeb; padding: 30px; border-radius: 16px; border: 1px solid #fde68a; width: 100%; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #d97706;">2. Pendukung Pembuatan Evaluasi Khusus</h3>
+            <select id="t3-level" style="width:100%; padding:10px; border-radius:8px; border:1px solid #fcd34d; margin-bottom:15px;">
+                <option value="C4 (Analisis)">Soal Evaluasi C4 (Kemampuan Analisis Informasi Tambahan)</option>
+                <option value="C5 (Evaluasi)">Soal Evaluasi C5 (Kemampuan Evaluasi/Kritik Data)</option>
+                <option value="C6 (Mencipta)">Soal Evaluasi C6 (Sintesis Opini Baru Berbasis Bukti)</option>
+            </select>
+            <button onclick="genT3b()" class="btn-nav" style="margin-top:0; padding:10px 20px; background:#f59e0b; font-size:1rem;"><i class="fas fa-plus"></i> Sertakan Pembuatan Soal</button>
+        </div>
+
+        <!-- Tool 3: Gap Analysis -->
+        <div style="background: #eff6ff; padding: 30px; border-radius: 16px; border: 1px solid #bfdbfe; width: 100%;">
+            <h3 style="margin-bottom: 15px; color: #3b82f6;">3. Pendukung Riset Literatur Lanjut</h3>
+            <input type="text" id="t3-gap" placeholder="Area Jurnal/Materi yang ingin dikupas tuntas" style="width:100%; padding:10px; border-radius:8px; border:1px solid #93c5fd; margin-bottom:15px;">
+            <button onclick="genT3c()" class="btn-nav" style="margin-top:0; padding:10px 20px; background:#3b82f6; font-size:1rem;"><i class="fas fa-plus"></i> Sertakan Evaluasi Metodologi/Gap</button>
+        </div>
+        
+        <script>
+            function genT3a() {
+                const t=document.getElementById("t3-topic").value;
+                appendToMaster(`Berdasarkan informasi konklusif dari seluruh dokumen yang difilter, buatkan ringkasan inti yang mudah dipahami tentang: ${t}. Fokus pada penyajian data pokok.`);
+            }
+            function genT3b() {
+                const l=document.getElementById("t3-level").value;
+                appendToMaster(`Selain pemaparan ringkasan, saya juga meminta Anda merumuskan 5 skenario studi kasus (soal level ${l}) beserta kunci rujukan kutipannya untuk menguji pendalaman konsep tersebut.`);
+            }
+            function genT3c() {
+                const t=document.getElementById("t3-gap").value;
+                appendToMaster(`Penting: Berikan analisis komparatif antar literatur terkait ${t}, temukan kontradiksi atau kesenjangan (gap) informasi yang masih memerlukan kajian lanjutan. Berikan selalu kutipan klik untuk klaim Anda.`);
+            }
+        </script>
+
+        <!-- MASTER PROMPT -->
+        <div style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; margin-top: 30px;">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fas fa-layer-group"></i> Instruksi Terpadu (Super Prompt)</h3>
+            <p style="font-size: 1rem; color: #94a3b8; margin-bottom: 15px;">Kumpulan instruksi dari alat bantu di atas akan digabungkan di sini menjadi satu *prompt* yang sangat kuat (powerful).</p>
+            <textarea id="master-res" rows="6" placeholder="Hasil instruksi gabungan akan muncul di sini..." style="width:100%; padding:15px; border-radius:12px; border:2px solid #38bdf8; font-size:1.1rem; font-family:monospace; background: #0f172a; color: #f8fafc;"></textarea>
+            <div style="margin-top:15px; display: flex; gap: 10px;">
+                <button onclick="copyMaster('master-res')" style="padding:12px 25px; background:#38bdf8; color:#0f172a; border:none; border-radius:8px; cursor:pointer; font-weight:700; flex-grow:1;"><i class="fas fa-copy"></i> Salin Super Prompt</button>
+                <button onclick="clearMaster()" style="padding:12px 25px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-trash"></i> Bersihkan</button>
+            </div>
+        </div>
+        <script>
+            function appendToMaster(text) {
+                const master = document.getElementById("master-res");
+                if(master.value.trim() !== '') {
+                    master.value += '\n\n' + text;
+                } else {
+                    master.value = text;
+                }
+            }
+            function clearMaster() {
+                document.getElementById("master-res").value = '';
+            }
+            function copyMaster(id) {
+                const ta = document.getElementById(id);
+                if (!ta.value) return alert('Prompt masih kosong!');
+                ta.select();
+                document.execCommand('copy');
+                alert('Super Prompt berhasil disalin!');
+            }
+        </script>
+    </div>
+
+    <div class="slide" style="text-align: center;">
+        <i class="fas fa-book-bookmark fa-5x" style="color: var(--primary); margin-bottom: 30px;"></i>
+        <h2>Praktek Sesi 3 Selesai!</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 20px;">Luar biasa! Anda telah menguasai <strong>NotebookLM</strong>
+            untuk 3 skenario nyata.</p>
+        <p style="font-size: 1.1rem; color: var(--dim); margin-bottom: 40px;">
+            Anda kini bisa: membuat Rencana Pelaksanaan Pembelajaran terverifikasi, melakukan literature review, dan menghasilkan bank soal Kemampuan Berpikir Tingkat Tinggi
+            — semua grounded 100% dari dokumen Anda sendiri.
+        </p>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="OneDayIntensive.html" class="btn-nav" style="margin-top: 0; background: #64748b;">Ke Hub</a>
+            <a href="Session4.html" class="btn-nav" style="margin-top: 0; background: var(--green);">Lanjut ke Sesi 4:
+                Opal <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>

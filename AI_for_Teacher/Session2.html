@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 2 - Seni Instruksi (Prompting) Comprensive - Koalawan</title>
+    <title>Hari 2 - Seni Instruksi (Prompting) Komprehensif - Koalawan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -31,29 +31,30 @@
         }
 
         body {
-            background-color: #e2e8f0;
+            background-color: var(--bg-slide);
             display: flex;
             flex-direction: column;
-            gap: 120px;
+            gap: 0;
             margin: 0;
-            padding: 100px 0;
+            padding: 0 20px;
             align-items: center;
             font-family: 'Inter', sans-serif;
         }
 
         .slide {
-            width: 1400px;
-            height: 800px;
-            background: var(--bg-slide);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 1200px;
+            min-height: auto;
+            background: transparent;
+            box-shadow: none;
             position: relative;
             display: flex;
             flex-direction: column;
-            padding: 60px 120px;
+            padding: 50px 80px;
             color: var(--text-main);
             flex-shrink: 0;
-            border-radius: 8px;
-            overflow: hidden;
+            border-radius: 0;
+            overflow: visible;
         }
 
         .slide::before {
@@ -146,8 +147,14 @@
         .card[style*="background"] h4,
         .card[style*="background"] p,
         .card[style*="background"] li,
-        .good-prompt h1, .good-prompt h2, .good-prompt h3, .good-prompt h4,
-        .bad-prompt h1, .bad-prompt h2, .bad-prompt h3, .bad-prompt h4 {
+        .good-prompt h1,
+        .good-prompt h2,
+        .good-prompt h3,
+        .good-prompt h4,
+        .bad-prompt h1,
+        .bad-prompt h2,
+        .bad-prompt h3,
+        .bad-prompt h4 {
             color: inherit !important;
         }
 
@@ -170,7 +177,7 @@
             font-weight: 600;
         }
 
-        /* Workshop specific styles */
+        /* Lokakarya specific styles */
         .prompt-box {
             background: #1e293b;
             color: #fff;
@@ -204,12 +211,13 @@
 
     <!-- Slide 1: Welcome -->
     <div class="slide">
-        <div class="watermark">KOALAWAN X BINUS CENTER</div>
+        <div class="watermark">KOALAWAN</div>
         <div style="margin-top: auto; margin-bottom: auto;">
             <div class="tag-pill" style="width: fit-content; margin-bottom: 30px;">FULL CURRICULUM: SESSION 2</div>
             <h1>Seni Memberi Instruksi:<br>Prompting untuk Pendidik</h1>
             <p style="font-size: 32px; color: var(--text-light); max-width: 900px; margin-top: 30px;">
-                Mengubah "Prompt Engineering" menjadi teknik pengarahan guru yang presisi, kreatif, dan berorientasi hasil.
+                Mengubah "Prompt Engineering" menjadi teknik pengarahan guru yang presisi, kreatif, dan berorientasi
+                hasil.
             </p>
         </div>
         <div class="footer">
@@ -220,32 +228,40 @@
 
     <!-- Slide 2: Agenda Sesi 2 -->
     <div class="slide">
-        <div class="watermark">AGENDA</div>
+        <div class="watermark">RENCANA BELAJAR</div>
         <h2><i class="fas fa-list-check"></i> Rencana Pembelajaran Sesi 2</h2>
         <div class="grid-2">
             <div class="card">
                 <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 1:</strong> Psikologi Prompting (K-T-F & Konteks)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 2:</strong> Parameter Sains (Temperature & Top-P)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 3:</strong> Teknik Lanjut (Few-Shot & Chaining)</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul 4:</strong> Perancangan Persona Guru Digital</li>
-                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Workshop:</strong> Membangun Bank Prompt Sekolah</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul
+                            1:</strong> Psikologi Prompting (K-T-F & Konteks)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul
+                            2:</strong> Parameter Sains (Temperature & Top-P)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul
+                            3:</strong> Teknik Lanjut (Few-Shot & Chaining)</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i> <strong>Modul
+                            4:</strong> Perancangan Persona Guru Digital</li>
+                    <li style="margin-bottom: 20px;"><i class="fas fa-check-circle text-primary me-3"></i>
+                        <strong>Lokakarya:</strong> Membangun Bank Prompt Sekolah
+                    </li>
                 </ul>
             </div>
             <div class="card" style="background: var(--primary); color: white;">
                 <h4>Goal Utama:</h4>
-                <p>Mampu menulis instruksi yang meminimalkan "halusinasi" AI dan memaksimalkan kualitas konten pedagogis.</p>
+                <p>Mampu menulis instruksi yang meminimalkan "halusinasi" AI dan memaksimalkan kualitas konten
+                    pedagogis.</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 3: Psikologi Prompting -->
+    <!-- Slide 3: Studi Kasus - Perbandingan Output -->
     <div class="slide">
         <div class="watermark">FILOSOFI</div>
         <h2><i class="fas fa-brain"></i> Prompting Sebagai Komunikasi</h2>
         <div class="grid-2">
             <div>
-                <p>Prompting bukan pemrograman kode kaku. Ini adalah <strong>seni berkomunikasi</strong> dengan asisten yang sangat cerdas namun tidak memiliki inisiatif sendiri.</p>
+                <p>Prompting bukan pemrograman kode kaku. Ini adalah <strong>seni berkomunikasi</strong> dengan asisten
+                    yang sangat cerdas namun tidak memiliki inisiatif sendiri.</p>
                 <div class="card" style="margin-top:30px">
                     <h4>Kesamaan dengan Pengajaran:</h4>
                     <ul>
@@ -257,15 +273,71 @@
             </div>
             <div class="card" style="text-align:center">
                 <i class="fas fa-comments fa-10x" style="color:var(--primary); opacity:0.1"></i>
-                <p style="font-style:italic; margin-top:20px">"AI akan memberikan hasil sebaik Anda memberikan instruksi. Kualitas output adalah cermin kualitas input."</p>
+                <p style="font-style:italic; margin-top:20px">"AI akan memberikan hasil sebaik Anda memberikan
+                    instruksi. Kualitas output adalah cermin kualitas input."</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 4: Anatomi K-T-F (Deep Dive Konteks) -->
+    <!-- Slide 4: Anatomi Instruksi PTCF -->
+    <div class="slide">
+        <div class="watermark">KRITERIA EMAS</div>
+        <h2><i class="fas fa-microscope"></i> Framework PTCF: Rahasia Gemini</h2>
+        <p>Agar Gemini bekerja maksimal, gunakan standar industri dari <em>promptingguide.ai</em>:</p>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px;">
+            <div class="card" style="border-top: 8px solid var(--blue);">
+                <h3 style="font-size: 24px;">1. Persona</h3>
+                <p style="font-size: 16px;">Siapa AI ini? (Contoh: "Anda adalah pakar Kurikulum Merdeka"). Menetapkan
+                    nada & keahlian.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--primary);">
+                <h3 style="font-size: 24px;">2. Task (Tugas)</h3>
+                <p style="font-size: 16px;">Apa yang harus dilakukan? Gunakan kata kerja aktif (Buat, Rangkum,
+                    Bandingkan).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--yellow);">
+                <h3 style="font-size: 24px;">3. Context</h3>
+                <p style="font-size: 16px;">Latar belakang: Siapa audiensnya? Apa batasan datanya? Apa tujuannya?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--purple);">
+                <h3 style="font-size: 24px;">4. Format</h3>
+                <p style="font-size: 16px;">Bagaimana hasilnya harus terlihat? (Tabel, Daftar poin, Email, atau Kode
+                    HTML).</p>
+            </div>
+        </div>
+        <div class="prompt-box" style="font-size: 14px; margin-top: 40px;">
+            "Bertindaklah sebagai <strong>[Persona]</strong>, tolong kerjakan <strong>[Task]</strong> dengan
+            mempertimbangkan <strong>[Context]</strong> ini. Berikan hasil dalam bentuk <strong>[Format]</strong>."
+        </div>
+    </div>
+
+    <!-- Slide 4b: Teknik Grounding & Mentions -->
+    <div class="slide">
+        <div class="watermark">TEKNIK G-WORKSPACE</div>
+        <h2><i class="fas fa-at"></i> Grounding: Menghubungkan Data</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Kekuatan @-Mention</h3>
+                <p>Gemini bisa langsung membaca file Anda tanpa copy-paste. Cukup ketik "@" dan pilih file:</p>
+                <div class="prompt-box" style="font-size:18px">
+                    "Buatkan ringkasan dari @Draf_RPP_Mingguan dan buatkan 3 soal kuis di @Google_Docs."
+                </div>
+            </div>
+            <div class="card" style="background:var(--bg-accent)">
+                <h4>Manfaat untuk Guru:</h4>
+                <ul>
+                    <li><strong>Akurasi:</strong> AI tidak mengarang karena ia melihat data asli Anda.</li>
+                    <li><strong>Efisiensi:</strong> Tidak perlu bolak-balik antar tab.</li>
+                    <li><strong>Privasi:</strong> Data tetap aman dalam ekosistem sekolah Anda.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Lokakarya - Bedah Tuntas Kerangka K-T-F -->
     <div class="slide">
         <div class="watermark">FRAMEWORK</div>
-        <h2><i class="fas fa-user-tie"></i> Komponen 1: Konteks (Role)</h2>
+        <h2><i class="fas fa-balance-scale"></i> Studi Kasus: Kontras Kualitas</h2>
         <div class="grid-2">
             <div class="card">
                 <h3>The Power of "Act As"</h3>
@@ -276,139 +348,106 @@
             </div>
             <div class="card">
                 <h4>Mengapa Harus Detail?</h4>
-                <p>Jika Anda hanya bilang "Guru", AI akan mengambil rata-rata guru di dunia. Jika Anda bilang "Guru Matematika Kreatif Kurikulum Merdeka", AI akan mempersempit pencariannya pada gaya tersebut.</p>
+                <p>Jika Anda hanya bilang "Guru", AI akan mengambil rata-rata guru di dunia. Jika Anda bilang "Guru
+                    Matematika Kreatif Kurikulum Merdeka", AI akan mempersempit pencariannya pada gaya tersebut.</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 5: Anatomi K-T-F (Tujuan & Format) -->
+    <!-- Slide 6: Teknik 1 - Instruksi dengan Contoh (Few-Shot) -->
     <div class="slide">
-        <div class="watermark">FRAMEWORK</div>
-        <h2><i class="fas fa-bullseye"></i> Komponen 2 & 3: Tujuan & Format</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>Tujuan (The Precise Mission)</h3>
-                <p>Gunakan kata kerja operasional (KKO) yang jelas.</p>
-                <ul>
-                    <li><strong class="text-danger">Buruk:</strong> "Bahas tentang air."</li>
-                    <li><strong class="text-primary">Baik:</strong> "Bandingkan siklus air di hutan hujan vs gurun."</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h3>Format (Physical Output)</h3>
-                <p>Beri tahu AI bagaimana hasil harus terlihat.</p>
-                <ul style="font-size:18px">
-                    <li>"Tabel dengan 3 kolom: Topik, Penjelasan, Contoh."</li>
-                    <li>"Daftar poin (bullet points) maksimal 5 item."</li>
-                    <li>"Narasi paragraf dengan gaya bahasa bercerita."</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 6: Contextual Anchoring (Mencegah Jawaban General) -->
-    <div class="slide">
-        <div class="watermark">TEKNIK LANJUT</div>
-        <h2><i class="fas fa-anchor"></i> Contextual Anchoring</h2>
-        <p>Teknik mengunci AI agar tidak keluar dari batasan yang Anda inginkan.</p>
+        <div class="watermark">TEKNIK 1</div>
+        <h2><i class="fas fa-vial"></i> Instruksi dengan Contoh (Few-Shot)</h2>
+        <p>Memberikan contoh spesifik agar AI memahami gaya bahasa dan format yang Anda inginkan.</p>
         <div class="grid-2">
             <div class="card">
                 <h4>1. Batasan Sumber (Constraint)</h4>
-                <p>"Gunakan hanya informasi dari dokumen yang saya unggah ini, jangan gunakan pengetahuan umum Anda."</p>
+                <p>"Gunakan hanya informasi dari dokumen yang saya unggah ini, jangan gunakan pengetahuan umum Anda."
+                </p>
             </div>
             <div class="card">
                 <h4>2. Audience Anchoring</h4>
                 <p>"Jelaskan konsep ini kepada anak usia 7 tahun yang sangat menyukai robot."</p>
             </div>
         </div>
-        <div class="workshop-box" style="background:#e0f2fe; border-color:#0ea5e9">
-            <p><strong>Tips:</strong> Semakin Anda "mengunci" AI dengan konteks unik, semakin sulit bagi AI untuk berhalusinasi.</p>
+        <div class="Lokakarya-box" style="background:#e0f2fe; border-color:#0ea5e9">
+            <p><strong>Tips:</strong> Semakin Anda "mengunci" AI dengan konteks unik, semakin sulit bagi AI untuk
+                berhalusinasi.</p>
         </div>
     </div>
 
-    <!-- Slide 7: Sains di Balik AI: Temperature & Top-P -->
+    <!-- Slide 7: Umpan Balik - Memperbaiki Instruksi Buruk -->
     <div class="slide">
-        <div class="watermark">PARAMETER</div>
-        <h2><i class="fas fa-sliders"></i> Memahami Temperature AI</h2>
+        <div class="watermark">UMPAN BALIK</div>
+        <h2><i class="fas fa-comments-dollar"></i> Memperbaiki Instruksi Buruk</h2>
         <p>Parameter yang mengatur tingkat kreativitas atau "keacakan" jawaban AI.</p>
         <div class="grid-2">
             <div class="card" style="border-top:10px solid var(--blue)">
                 <h4>Suhu Rendah (0.1 - 0.3)</h4>
-                <p>Faktual, Konsisten, Kaku. <br><br><strong>Gunakan untuk:</strong> Membuat soal matematika, merangkum regulasi, mengecek ejaan.</p>
+                <p>Faktual, Konsisten, Kaku. <br><br><strong>Gunakan untuk:</strong> Membuat soal matematika, merangkum
+                    regulasi, mengecek ejaan.</p>
             </div>
             <div class="card" style="border-top:10px solid var(--danger)">
                 <h4>Suhu Tinggi (0.7 - 1.0)</h4>
-                <p>Kreatif, Variatif, Imajinatif. <br><br><strong>Gunakan untuk:</strong> Menulis cerita anak, membuat ide ice breaking, brainstorming proyek seni.</p>
+                <p>Kreatif, Variatif, Imajinatif. <br><br><strong>Gunakan untuk:</strong> Menulis cerita anak, membuat
+                    ide ice breaking, brainstorming proyek seni.</p>
             </div>
         </div>
         <div style="margin-top:30px; line-height:1.2; font-size:16px; color:var(--text-light)">
-            *Note: Anda bisa memerintahkan lewat teks: "Tanggapi dengan sangat kreatif dan tidak biasa" untuk memicu suhu tinggi secara otomatis.
+            *Note: Anda bisa memerintahkan lewat teks: "Tanggapi dengan sangat kreatif dan tidak biasa" untuk memicu
+            suhu tinggi secara otomatis.
         </div>
     </div>
 
-    <!-- Slide 8: Teknik Lanjut 1: Zero-Shot vs Few-Shot -->
+    <!-- Slide 8: Teknik Lanjut: CoT & XML Delimiters -->
     <div class="slide">
-        <div class="watermark">LOGIKA PROMPT</div>
-        <h2><i class="fas fa-vial"></i> Kemuatan Contoh (Few-Shot)</h2>
-        <p>Cara tercepat mengajari AI "selera" Anda adalah dengan memberikan contoh.</p>
+        <div class="watermark">TEKNIK PRO</div>
+        <h2><i class="fas fa-brain"></i> Berpikir Langkah-demi-Langkah</h2>
         <div class="grid-2">
             <div class="card">
-                <h4>Zero-Shot (Tanpa Contoh)</h4>
-                <p style="font-size:18px; color:var(--text-light)">"Tulis narasi raport siswa yang rajin."</p>
-                <div style="background:#fff; padding:10px; margin-top:10px">Hasil: AI memberikan jawaban generic yang mungkin tidak cocok dengan gaya sekolah Anda.</div>
-            </div>
-            <div class="card" style="border-color:var(--primary)">
-                <h4>Few-Shot (Dengan 1-3 Contoh)</h4>
-                <p style="font-size:18px; color:var(--text-light)">"Berikut contoh narasi raport saya: [Contoh]. Sekarang tulis untuk siswa bernama Andi..."</p>
-                <div style="background:#ecfdf5; padding:10px; margin-top:10px">Hasil: AI akan menyamai struktur, kosakata, dan nada bicara dari contoh yang Anda berikan.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 9: Teknik Lanjut 2: Chain-of-Thought (CoT) -->
-    <div class="slide">
-        <div class="watermark">LOGIKA PROMPT</div>
-        <h2><i class="fas fa-brain"></i> Chain-of-Thought (Langkah Berpikir)</h2>
-        <p>Meminta AI untuk <strong>berpikir secara eksplisit</strong> sebelum memberikan jawaban akhir.</p>
-        <div class="card" style="border-left:10px solid var(--purple)">
-            <h4>Internal Monologue:</h4>
-            <p>"Mari kita selesaikan ini langkah demi langkah. Pertama, identifikasi masalah utama. Kedua, cari 3 solusi. Terakhir, pilih yang terbaik."</p>
-        </div>
-        <div class="grid-2" style="margin-top:30px">
-            <div>
-                <p>Teknik ini mengurangi kesalahan logika secara drastis, terutama untuk soal hitungan atau perancangan strategi pembelajaran yang kompleks.</p>
+                <h3>1. Chain of Thought (CoT)</h3>
+                <p>Tambahkan kalimat: <em>"Mari kita selesaikan ini langkah demi langkah"</em>.</p>
+                <div style="background:#fff; padding:15px; border-radius:10px; margin-top:10px">
+                    AI akan mengurai logika internalnya sebelum memberi jawaban, mengurangi kesalahan fatal.
+                </div>
             </div>
             <div class="card">
-                <p><strong>Mantra Ajaib:</strong> Cukup tambahkan kalimat <strong>"Let's think step by step"</strong> di akhir instruksi Anda.</p>
+                <h3>2. XML Delimiters (Pemisah)</h3>
+                <p>Gunakan tag untuk memisahkan data agar AI tidak bingung antara instruksi dan materi.</p>
+                <div class="prompt-box" style="font-size:16px">
+                    &lt;materi&gt; [Teks Berita] &lt;/materi&gt;<br>
+                    Tolong rangkum teks di dalam tag materi di atas.
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Slide 10: Teknik Lanjut 3: Prompt Chaining (Berantai) -->
+    <!-- Slide 8b: Teknik Multimodal (Teks + Gambar/Video) -->
     <div class="slide">
-        <div class="watermark">WORKFLOW</div>
-        <h2><i class="fas fa-link"></i> Prompt Chaining (Sesi Berantai)</h2>
-        <p>Jangan meminta satu tugas raksasa sekaligus. Pecah menjadi rangkaian instruksi kecil.</p>
-        <div style="display:flex; justify-content:space-between; margin-top:40px">
-            <div class="card" style="width:300px">
-                <strong>Sesi 1:</strong><br><small>"Analisis silabus IPA kls 7 ini."</small>
+        <div class="watermark">MULTI-MODAL</div>
+        <h2><i class="fas fa-icons"></i> Berkomunikasi Lewat Media</h2>
+        <p>Gemini mampu memahami lebih dari sekadar teks. Manfaatkan input visual & audio.</p>
+        <div class="grid-2">
+            <div class="card">
+                <h4>Analisis Gambar:</h4>
+                <p>"Lihat foto coretan papan tulis ini, pindahkan menjadi poin-poin rapi di Google Docs."</p>
             </div>
-            <div class="flow-arrow"></div>
-            <div class="card" style="width:300px">
-                <strong>Sesi 2:</strong><br><small>"Berdasarkan analisis tadi, buat 5 tujuan belajar."</small>
-            </div>
-            <div class="flow-arrow"></div>
-            <div class="card" style="width:300px; border-color:var(--primary)">
-                <strong>Sesi 3:</strong><br><small>"Buatkan 1 draf soal untuk setiap tujuan tadi."</small>
+            <div class="card" style="border-color:var(--blue)">
+                <h4>Ringkasan Video:</h4>
+                <p>"Analisis video YouTube tentang sejarah ini, buatkan 5 soal pilihan ganda dari menit ke-5 sampai
+                    menit ke-10."</p>
             </div>
         </div>
-        <p style="margin-top:40px; font-weight:700">Manfaat: Akurasi meningkat karena AI hanya fokus pada satu tugas kecil dalam satu waktu.</p>
+        <div class="workshop-box">
+            <strong>Praktek Terbaik:</strong> Berikan instruksi spesifik pada media tersebut. Jangan hanya kirim gambar
+            tanpa teks pendukung.
+        </div>
     </div>
 
-    <!-- Slide 11: Workshop 1: Prompt Refiner (Before & After) -->
+    <!-- Slide 9: Lokakarya - Menulis Instruksi Pertama Anda -->
     <div class="slide">
-        <div class="watermark">WORKSHOP</div>
-        <h2><i class="fas fa-magic"></i> Perbaiki Instruksi Anda</h2>
+        <div class="watermark">LOKAKARYA</div>
+        <h2><i class="fas fa-tools"></i> Bedah Tuntas Kerangka K-T-F</h2>
         <div class="grid-2">
             <div class="bad-prompt">
                 <h4>INSTRUKSI AWAL:</h4>
@@ -416,15 +455,18 @@
             </div>
             <div class="good-prompt">
                 <h4>INSTRUKSI SUPER:</h4>
-                <p>"Bertindaklah sebagai Guru Matematika kreatif. Buatkan 5 soal cerita bertema petualangan luar angkasa untuk kelas 4 SD. Fokus pada operasi perkalian 2 digit. Sajikan dalam tabel beserta kunci jawaban dan penjelasan caranya."</p>
+                <p>"Bertindaklah sebagai Guru Matematika kreatif. Buatkan 5 soal cerita bertema petualangan luar angkasa
+                    untuk kelas 4 SD. Fokus pada operasi perkalian 2 digit. Sajikan dalam tabel beserta kunci jawaban
+                    dan penjelasan caranya."</p>
             </div>
         </div>
-        <div class="workshop-box">
-            <p><strong>Analisis:</strong> Apa saja komponen yang ditambahkan? (Role, Tema, Spesifisitas Materi, Format tabel, Meta-data cara pengerjaan).</p>
+        <div class="Lokakarya-box">
+            <p><strong>Analisis:</strong> Apa saja komponen yang ditambahkan? (Role, Tema, Spesifisitas Materi, Format
+                tabel, Meta-data cara pengerjaan).</p>
         </div>
     </div>
 
-    <!-- Slide 12: Membangun Persona "Guru Spesialis" -->
+    <!-- Slide 10: Mendesain Asisten Digital -->
     <div class="slide">
         <div class="watermark">PERSONA</div>
         <h2><i class="fas fa-user-gear"></i> Mendesain Asisten Digital Anda</h2>
@@ -432,12 +474,16 @@
         <div class="card">
             <h4>Template Mega-Persona:</h4>
             <div class="prompt-box" style="font-size:16px">
-                "Nama Anda adalah <strong>[Nama AI]</strong>. Anda adalah pakar dalam <strong>[Subjek]</strong> untuk jenjang <strong>[Jenjang]</strong>. Karakter Anda adalah <strong>[Sifat: Sabar, Humoris, Tegas]</strong>. Anda selalu memberikan jawaban yang <strong>[Kriteria: Singkat, Berbasis Riset, Mudah dipahami anak]</strong>. Saat memberikan tugas, Anda selalu menyertakan <strong>[Elemen Tambahan: Rubrik/Contoh]</strong>."
+                "Nama Anda adalah <strong>[Nama AI]</strong>. Anda adalah pakar dalam <strong>[Subjek]</strong> untuk
+                jenjang <strong>[Jenjang]</strong>. Karakter Anda adalah <strong>[Sifat: Sabar, Humoris,
+                    Tegas]</strong>. Anda selalu memberikan jawaban yang <strong>[Kriteria: Singkat, Berbasis Riset,
+                    Mudah dipahami anak]</strong>. Saat memberikan tugas, Anda selalu menyertakan <strong>[Elemen
+                    Tambahan: Rubrik/Contoh]</strong>."
             </div>
         </div>
     </div>
 
-    <!-- Slide 13: Iterative Refinement (Feedback Loops) -->
+    <!-- Slide 11: Iterative Refinement (Feedback Loops) -->
     <div class="slide">
         <div class="watermark">FEEDBACK</div>
         <h2><i class="fas fa-rotate"></i> Jangan Berhenti di Hasil Pertama</h2>
@@ -453,34 +499,38 @@
             </div>
             <div class="card" style="text-align:center">
                 <i class="fas fa-comments-dollar fa-8x" style="color:var(--primary); opacity:0.1"></i>
-                <p>Berdialog dengan AI adalah proses memahat. Anda mulai dengan bongkahan besar (Output 1) dan merapikannya hingga jadi mahakarya (Output Final).</p>
+                <p>Berdialog dengan AI adalah proses memahat. Anda mulai dengan bongkahan besar (Output 1) dan
+                    merapikannya hingga jadi mahakarya (Output Final).</p>
             </div>
         </div>
     </div>
 
-    <!-- Slide 14: Workshop 2: Membuat Bank Soal Komprehensif -->
+    <!-- Slide 12: Lokakarya - Scaffolding Bank Soal -->
     <div class="slide">
-        <div class="watermark">WORKSHOP</div>
+        <div class="watermark">LOKAKARYA</div>
         <h2><i class="fas fa-vial"></i> Praktik: Scaffolding Bank Soal</h2>
         <div class="card">
             <ol style="font-size:18px">
                 <li><strong>Tahap 1:</strong> Masukkan materi (PDF/Teks).</li>
                 <li><strong>Tahap 2:</strong> Minta AI mengidentifikasi konsep kunci.</li>
                 <li><strong>Tahap 3:</strong> Minta AI membuat soal bertingkat (5 C1-C2, 3 C3-C4, 2 C5-C6).</li>
-                <li><strong>Tahap 4:</strong> Minta AI membuat <strong>"Distractor Analysis"</strong> (penjelasan mengapa pilihan jawaban salah itu salah).</li>
+                <li><strong>Tahap 4:</strong> Minta AI membuat <strong>"Distractor Analysis"</strong> (penjelasan
+                    mengapa pilihan jawaban salah itu salah).</li>
             </ol>
         </div>
-        <div class="workshop-box" style="background:#f0fdf4; border-color:var(--primary)">
-            <p><strong>Hasil:</strong> Anda tidak hanya dapat soal, tapi juga alat bantu belajar bagi siswa untuk memahami kesalahan mereka.</p>
+        <div class="Lokakarya-box" style="background:#f0fdf4; border-color:var(--primary)">
+            <p><strong>Hasil:</strong> Anda tidak hanya dapat soal, tapi juga alat bantu belajar bagi siswa untuk
+                memahami kesalahan mereka.</p>
         </div>
     </div>
 
-    <!-- Slide 15: Parameter Scaffolding untuk RPP -->
+    <!-- Slide 13: Template Prompt RPP -->
     <div class="slide">
         <div class="watermark">RPP BOOSTER</div>
         <h2><i class="fas fa-file-pen"></i> Template Prompt RPP Padat</h2>
         <div class="prompt-box" style="font-size:16px">
-            "Bantu saya menyusun RPP Diferensiasi untuk topik <strong>[Topik]</strong> di Kelas <strong>[Kelas]</strong>. <br><br>
+            "Bantu saya menyusun RPP Diferensiasi untuk topik <strong>[Topik]</strong> di Kelas
+            <strong>[Kelas]</strong>. <br><br>
             Akomodasi 3 profil belajar: Visual, Auditori, dan Kinestetik. <br>
             Sertakan: <br>
             1. Tujuan Pembelajaran (ABCD format). <br>
@@ -490,7 +540,7 @@
         </div>
     </div>
 
-    <!-- Slide 16: Checklist "Instruksi Emas" -->
+    <!-- Slide 14: Checklist Instruksi Emas -->
     <div class="slide">
         <div class="watermark">VALIDASI</div>
         <h2><i class="fas fa-clipboard-check"></i> Checklist Instruksi Emas</h2>
@@ -511,44 +561,23 @@
         </div>
     </div>
 
-    <!-- Slide 17: Link Referensi Sesi 2 (Lengkap) -->
+    <!-- Slide 16: Penutup -->
     <div class="slide">
-        <div class="watermark">REFERENSI</div>
-        <h2><i class="fas fa-book-bookmark"></i> Referensi & Sumber Belajar Sesi 2</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h4>Komunitas & Database:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://www.promptingguide.ai/" target="_blank" class="source-link">PromptingGuide.ai (Academic Source)</a></li>
-                    <li><a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" class="source-link">Awesome Prompts Repository</a></li>
-                    <li><a href="https://www.anthropic.com/index/prompting-101" target="_blank" class="source-link">Anthropic's Prompting 101</a></li>
-                </ul>
-            </div>
-            <div class="card">
-                <h4>Tool Pendukung:</h4>
-                <ul style="font-size: 18px;">
-                    <li><a href="https://visualstudiocode.com/" target="_blank" class="source-link">Markdown Editor (Untuk merapikan prompt)</a></li>
-                    <li><a href="https://ikhwanfathulloh.netlify.app/" target="_blank" class="source-link">Pelatihan Lanjut: Ikhwan Fathulloh</a></li>
-                </ul>
-            </div>
-        </div>
-        <div style="margin-top:50px; text-align:center">
-            <p><strong>Tugas Mandiri:</strong> Pilih 1 adminstrasi tersulit Anda hari ini, susun 'Instruksi Emas', dan lihat perubahannya!</p>
-        </div>
-    </div>
-
-    <!-- Slide 18: Ringkasan & Agenda Besok -->
-    <div class="slide">
-        <div class="watermark">PENUTUP</div>
+        <div class="watermark">STUDI KASUS</div>
         <h2><i class="fas fa-flag-checkered"></i> Selesai Sesi 2</h2>
         <div class="card" style="text-align:center; padding:60px">
-            <h3 style="color:var(--secondary)">Besok Kita Akan Membahas:</h3>
-            <h1>Sesi 3: Menjadikan AI Sebagi Asisten Spesialis (Opal)</h1>
-            <p style="font-size:24px; color:var(--text-light); margin-top:20px">Melangkah lebih jauh dari sekadar chat—membangun asisten digital permanen yang mengerti kurikulum sekolah Anda.</p>
+            <h3 style="color:var(--secondary)">Selanjutnya Kita Akan Membahas:</h3>
+            <h1>Sesi 3: NotebookLM:
+                Asisten Riset Terpadu Anda</h1>
+            <p style="font-size:24px; color:var(--text-light); margin-top:20px">Melangkah lebih jauh dari sekadar
+                chat—membangun asisten digital permanen yang mengerti kurikulum sekolah Anda.</p>
         </div>
         <div class="footer">
             <span>Sesi 2: Selesai</span>
-            <span>Koalawan x BINUS Center</span>
+            <a href="Session2_HandsOn.html"
+                style="background: var(--primary); color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;">Lanjut
+                ke Praktek <i class="fas fa-arrow-right"></i></a>
+            <span>Koalawan</span>
         </div>
     </div>
 
