@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi 1 — Foundations of Generative AI & Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f1ece1; --paper-dark: #e8e1d0; --paper-darker: #d9d1bd;
+  --ink: #0a0908; --ink-soft: #2a2826; --ink-mute: #6b6864;
+  --orange: #ff5a1f; --orange-soft: #ffd4c2;
+  --cyan: #00b8d9; --cyan-soft: #c8ecf5;
+  --red: #e63946; --green: #2a9d3f; --mustard: #d4a017;
+  --chatgpt: #10a37f; --gemini: #4285f4; --claude: #d97757; --aistudio: #8b5cf6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100vh; width: 100vw; overflow: hidden; font-family: 'Space Grotesk', sans-serif; background: var(--ink); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.presentation { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.08); z-index: 100; }
+.progress-fill { height: 100%; background: var(--orange); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.slides { position: relative; width: 100%; height: 100%; }
+.slide { position: absolute; inset: 0; padding: 40px 56px 72px; opacity: 0; transform: translateX(50px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; overflow-y: auto; overflow-x: hidden; background: var(--paper); }
+.slide.dark { background: var(--ink); color: var(--paper); }
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+.slide::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"); opacity: 0.08; mix-blend-mode: multiply; }
+.slide.dark::after { opacity: 0.15; mix-blend-mode: overlay; }
+.slide > * { position: relative; z-index: 1; }
+
+.slide-header { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; color: var(--ink-mute); padding-bottom: 12px; border-bottom: 1px solid rgba(10, 9, 8, 0.08); }
+.slide.dark .slide-header { color: rgba(241, 236, 225, 0.5); border-bottom-color: rgba(241, 236, 225, 0.1); }
+.slide-section { display: flex; align-items: center; gap: 12px; }
+.slide-section::before { content: ''; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; animation: pulse 2s ease infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+.nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; z-index: 100; background: rgba(10, 9, 8, 0.92); padding: 8px 14px; border-radius: 100px; backdrop-filter: blur(20px); border: 1px solid rgba(241, 236, 225, 0.1); }
+.nav-btn { background: transparent; border: 1px solid rgba(241, 236, 225, 0.25); color: var(--paper); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; transition: all 0.2s; }
+.nav-btn:hover:not(:disabled) { background: var(--orange); border-color: var(--orange); transform: scale(1.1); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.dots { display: flex; gap: 5px; max-width: 460px; flex-wrap: wrap; justify-content: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(241, 236, 225, 0.3); cursor: pointer; transition: all 0.3s; }
+.dot.active { background: var(--orange); width: 18px; border-radius: 3px; }
+.counter { position: fixed; top: 14px; right: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--ink-mute); z-index: 100; background: rgba(241, 236, 225, 0.7); padding: 5px 11px; border-radius: 100px; backdrop-filter: blur(10px); transition: all 0.3s; }
+.counter.dark { color: rgba(241, 236, 225, 0.7); background: rgba(10, 9, 8, 0.6); }
+.help-hint { position: fixed; bottom: 20px; left: 22px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: var(--ink-mute); z-index: 100; display: flex; align-items: center; gap: 6px; }
+.help-hint kbd { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 6px; border: 1px solid currentColor; border-radius: 3px; background: rgba(241, 236, 225, 0.5); }
+.help-hint.dark { color: rgba(241, 236, 225, 0.5); }
+.help-hint.dark kbd { background: rgba(10, 9, 8, 0.5); }
+
+.eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--orange); }
+.h-section { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 20px; }
+.h-section em { font-style: italic; font-weight: 300; color: var(--orange); }
+
+.slide.active .reveal { animation: revealUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards; }
+.slide.active .reveal-1 { animation-delay: 0.1s; }
+.slide.active .reveal-2 { animation-delay: 0.2s; }
+.slide.active .reveal-3 { animation-delay: 0.3s; }
+.slide.active .reveal-4 { animation-delay: 0.4s; }
+@keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.slide.active .stagger > * { animation: staggerIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards; }
+.slide.active .stagger > *:nth-child(1) { animation-delay: 0.15s; }
+.slide.active .stagger > *:nth-child(2) { animation-delay: 0.25s; }
+.slide.active .stagger > *:nth-child(3) { animation-delay: 0.35s; }
+.slide.active .stagger > *:nth-child(4) { animation-delay: 0.45s; }
+.slide.active .stagger > *:nth-child(5) { animation-delay: 0.55s; }
+.slide.active .stagger > *:nth-child(6) { animation-delay: 0.65s; }
+@keyframes staggerIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* COVER */
+.cover { display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: relative; }
+.cover-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(241, 236, 225, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(241, 236, 225, 0.04) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); }
+.token-rain { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.token { position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(0, 184, 217, 0.5); white-space: nowrap; animation: floatToken linear infinite; padding: 2px 6px; border: 1px solid rgba(0, 184, 217, 0.2); border-radius: 3px; }
+@keyframes floatToken { 0% { transform: translateY(-50px) rotate(0deg); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(calc(100vh + 50px)) rotate(8deg); opacity: 0; } }
+.cover-top { display: flex; justify-content: space-between; align-items: flex-start; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(241, 236, 225, 0.6); z-index: 2; position: relative; }
+.cover-main { z-index: 2; position: relative; max-width: 1200px; }
+.cover-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 22px; display: flex; align-items: center; gap: 12px; }
+.cover-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--orange); }
+.cover-title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(48px, 6.5vw, 100px); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 22px; }
+.cover-title em { font-style: italic; font-weight: 300; color: var(--orange); display: inline-block; animation: glowPulse 3s ease-in-out infinite; }
+@keyframes glowPulse { 0%, 100% { text-shadow: 0 0 10px rgba(255, 90, 31, 0.3); } 50% { text-shadow: 0 0 30px rgba(255, 90, 31, 0.6); } }
+.cover-title .heavy { font-weight: 600; font-style: normal; color: var(--paper); }
+.cover-sub { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(17px, 1.5vw, 22px); color: rgba(241, 236, 225, 0.7); max-width: 700px; line-height: 1.4; }
+.cover-bottom { z-index: 2; position: relative; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+.cover-meta { display: flex; gap: 44px; }
+.cover-meta-item { display: flex; flex-direction: column; gap: 4px; }
+.cover-meta-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(241, 236, 225, 0.4); }
+.cover-meta-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400; color: var(--paper); }
+
+/* TOOLS */
+.tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+.tool-card { background: var(--paper-dark); padding: 24px 20px; border-radius: 8px; transition: all 0.3s; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; border: 1px solid transparent; text-decoration: none; color: inherit; }
+.tool-card:hover { transform: translateY(-8px); background: var(--ink); color: var(--paper); border-color: var(--orange); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+.tool-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: white; margin-bottom: 16px; }
+.tool-name { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; margin-bottom: 6px; }
+.tool-desc { font-size: 12px; line-height: 1.5; opacity: 0.8; margin-bottom: 16px; }
+.tool-link { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+.tool-card:hover .tool-link { gap: 10px; }
+
+/* TRANSITION */
+.transition-wrap { display: flex; flex-direction: column; justify-content: center; height: 100%; position: relative; z-index: 2; }
+.transition-num { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(100px, 12vw, 180px); line-height: 0.8; color: var(--orange); margin-bottom: 12px; opacity: 0.9; animation: slideRight 0.8s ease backwards; }
+@keyframes slideRight { from { opacity: 0; transform: translateX(-50px); } to { opacity: 0.9; transform: translateX(0); } }
+.transition-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(241, 236, 225, 0.6); margin-bottom: 20px; animation: revealUp 0.8s 0.2s ease backwards; }
+.transition-title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(36px, 4.5vw, 64px); line-height: 1; letter-spacing: -0.03em; color: var(--paper); max-width: 900px; animation: revealUp 0.8s 0.4s ease backwards; }
+.transition-title em { font-style: italic; color: var(--orange); }
+
+/* EVOLUTION DIAGRAM */
+.evolution-wrap { display: flex; flex-direction: column; gap: 24px; margin-top: 10px; }
+.evolution-diagram { display: flex; align-items: flex-end; justify-content: center; gap: 0; position: relative; padding: 20px 0; }
+.evo-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; transition: all 0.3s; cursor: pointer; }
+.evo-step:hover { transform: translateY(-6px); }
+.evo-circle { width: 100%; max-width: 140px; aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; margin-bottom: 12px; border: 2px solid; transition: all 0.3s; position: relative; }
+.evo-step:nth-child(1) .evo-circle { background: rgba(0, 184, 217, 0.1); border-color: var(--cyan); }
+.evo-step:nth-child(2) .evo-circle { background: rgba(42, 157, 63, 0.1); border-color: var(--green); }
+.evo-step:nth-child(3) .evo-circle { background: rgba(212, 160, 23, 0.1); border-color: var(--mustard); }
+.evo-step:nth-child(4) .evo-circle { background: rgba(255, 90, 31, 0.1); border-color: var(--orange); }
+.evo-step:nth-child(5) .evo-circle { background: rgba(230, 57, 70, 0.1); border-color: var(--red); }
+.evo-step:hover .evo-circle { transform: scale(1.08); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.evo-acronym { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 2px; }
+.evo-step:nth-child(1) .evo-acronym { color: var(--cyan); }
+.evo-step:nth-child(2) .evo-acronym { color: var(--green); }
+.evo-step:nth-child(3) .evo-acronym { color: var(--mustard); }
+.evo-step:nth-child(4) .evo-acronym { color: var(--orange); }
+.evo-step:nth-child(5) .evo-acronym { color: var(--red); }
+.evo-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mute); }
+.evo-full { font-family: 'Fraunces', serif; font-size: 12px; font-weight: 500; margin-bottom: 8px; text-align: center; line-height: 1.2; }
+.evo-desc { font-size: 10.5px; line-height: 1.4; color: var(--ink-soft); text-align: center; padding: 0 8px; }
+.evo-connector { position: absolute; top: 50%; left: 50%; width: 100%; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--green), var(--mustard), var(--orange), var(--red)); z-index: -1; opacity: 0.2; transform: translateY(-30px); }
+.evo-arrow { position: absolute; top: 50%; right: -12px; transform: translateY(-50%); color: var(--ink-mute); font-size: 18px; z-index: 2; background: var(--paper); padding: 0 4px; }
+
+/* TOKEN VISUAL */
+.token-explain { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; height: calc(100vh - 220px); align-items: center; }
+.token-visual-box { background: var(--paper-dark); padding: 36px; border-radius: 12px; border: 1px solid rgba(10,9,8,0.08); min-height: 280px; display: flex; flex-direction: column; justify-content: center; gap: 20px; transition: transform 0.3s; }
+.token-visual-box:hover { transform: scale(1.02); }
+.token-sentence { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400; line-height: 1.4; text-align: center; margin-bottom: 8px; color: var(--ink); }
+.token-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; }
+.token-piece-big { background: var(--cyan-soft); padding: 10px 18px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 18px; color: var(--ink); border: 1px solid var(--cyan); display: inline-block; animation: bounceToken 2s ease-in-out infinite; }
+.token-piece-big:nth-child(2) { animation-delay: 0.2s; }
+.token-piece-big:nth-child(3) { animation-delay: 0.4s; }
+.token-piece-big:nth-child(4) { animation-delay: 0.6s; }
+.token-piece-big:nth-child(5) { animation-delay: 0.8s; }
+.token-piece-big:nth-child(6) { animation-delay: 1.0s; }
+@keyframes bounceToken { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.token-count { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--ink-mute); padding-top: 12px; border-top: 1px dashed rgba(10,9,8,0.1); }
+.token-count strong { color: var(--orange); font-size: 24px; font-weight: 700; }
+
+/* TOKEN CHECKER */
+.checker-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
+.checker-left { display: flex; flex-direction: column; gap: 16px; }
+.checker-step { background: var(--paper-dark); padding: 16px 20px; border-radius: 6px; border-left: 3px solid var(--aistudio); transition: all 0.3s; }
+.checker-step:hover { transform: translateX(6px); }
+.checker-step-num { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 28px; color: var(--aistudio); line-height: 1; margin-bottom: 6px; }
+.checker-step-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.checker-step-desc { font-size: 12.5px; line-height: 1.45; color: var(--ink-soft); }
+.checker-right { background: var(--ink); color: var(--paper); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; }
+.checker-right::before { content: ''; position: absolute; top: 0; right: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 70%); pointer-events: none; }
+.checker-browser-bar { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid rgba(241,236,225,0.1); }
+.checker-dot { width: 10px; height: 10px; border-radius: 50%; }
+.checker-url { flex: 1; background: rgba(241,236,225,0.1); padding: 4px 12px; border-radius: 100px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(241,236,225,0.6); }
+.checker-input { background: rgba(241,236,225,0.05); border: 1px solid rgba(241,236,225,0.15); border-radius: 6px; padding: 14px; font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.5; }
+.checker-input-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--aistudio); margin-bottom: 6px; }
+.checker-tokens { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.checker-token { background: rgba(139, 92, 246, 0.2); border: 1px solid var(--aistudio); padding: 3px 8px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--paper); }
+.checker-result { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(255, 90, 31, 0.1); border-radius: 6px; border: 1px solid var(--orange); }
+.checker-result-num { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 600; color: var(--orange); line-height: 1; }
+.checker-result-label { font-size: 12px; line-height: 1.3; color: rgba(241,236,225,0.7); }
+
+/* DEFINITION CARDS */
+.def-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+.def-card { background: var(--paper-dark); padding: 22px; border-radius: 6px; border-left: 3px solid var(--orange); transition: all 0.3s; }
+.def-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.def-icon { font-family: 'Fraunces', serif; font-size: 32px; font-style: italic; font-weight: 300; color: var(--orange); line-height: 1; margin-bottom: 8px; }
+.def-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.def-text { font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+.def-text strong { color: var(--ink); font-weight: 600; }
+
+/* COMPARISON SPLIT */
+.compare-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 220px); position: relative; }
+.compare-side { padding: 28px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s; }
+.compare-side.left { background: var(--paper-dark); }
+.compare-side.right { background: var(--ink); color: var(--paper); }
+.compare-side:hover { transform: scale(1.01); z-index: 2; }
+.compare-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--orange); z-index: 5; }
+.compare-divider::before { content: 'VS'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--paper); color: var(--orange); font-family: 'Fraunces', serif; font-style: italic; font-weight: 500; font-size: 18px; border: 1px solid var(--orange); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; animation: spinVS 10s linear infinite; }
+@keyframes spinVS { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* LLM FULL */
+.llm-full { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; height: calc(100vh - 220px); align-items: center; }
+.llm-visual-large { background: var(--paper-dark); padding: 30px; border-radius: 8px; border: 1px solid rgba(10, 9, 8, 0.08); font-family: 'JetBrains Mono', monospace; font-size: 14px; min-height: 260px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+.llm-visual-large:hover { transform: rotate(-1deg) scale(1.02); }
+
+/* CAP CARDS */
+.cap-full-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 16px; }
+.cap-full-card { background: var(--paper-dark); padding: 22px; border-radius: 4px; border-top: 3px solid; min-height: 220px; transition: all 0.3s; }
+.cap-full-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+.cap-full-card.strong { border-color: var(--green); }
+.cap-full-card.weak { border-color: var(--red); }
+.cap-callout { margin-top: 24px; background: var(--ink); color: var(--paper); padding: 18px 26px; display: flex; align-items: center; gap: 16px; border-radius: 4px; }
+
+/* RISIKO */
+.risiko-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 20px; }
+.risiko-card { perspective: 1200px; cursor: pointer; min-height: 300px; }
+.risiko-card-inner { position: relative; width: 100%; height: 100%; min-height: 300px; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+.risiko-card.flipped .risiko-card-inner { transform: rotateY(180deg); }
+.risiko-card-front, .risiko-card-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 20px 18px; border-radius: 4px; display: flex; flex-direction: column; }
+.risiko-card-front { background: rgba(241, 236, 225, 0.05); border: 1px solid rgba(241, 236, 225, 0.15); transition: all 0.3s; }
+.risiko-card:hover .risiko-card-front { background: rgba(241, 236, 225, 0.08); border-color: var(--orange); transform: translateY(-4px); }
+.risiko-card-back { transform: rotateY(180deg); background: var(--orange); color: var(--ink); }
+
+/* PRINCIPLES & POLICY */
+.principles-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+.principle { padding: 24px; background: var(--paper-dark); border-radius: 4px; transition: all 0.3s; cursor: pointer; }
+.principle:hover { background: var(--ink); color: var(--paper); transform: translateY(-6px) rotate(-1deg); }
+.traffic-light { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+.tl-card { padding: 24px; border-radius: 4px; position: relative; display: flex; flex-direction: column; gap: 10px; transition: transform 0.3s; }
+.tl-card:hover { transform: scale(1.03); }
+.tl-light { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 0 16px currentColor; animation: blinkLight 2s ease infinite; }
+@keyframes blinkLight { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; margin-top: 10px; }
+.policy-item { display: grid; grid-template-columns: 50px 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(10, 9, 8, 0.08); align-items: baseline; transition: all 0.2s; }
+.policy-item:hover { padding-left: 8px; border-color: var(--orange); }
+
+/* USECASE */
+.usecase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+.usecase-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.usecase-card { background: var(--paper-dark); padding: 20px 18px; border-radius: 4px; border-top: 3px solid var(--orange); transition: all 0.3s; cursor: pointer; min-height: 180px; display: flex; flex-direction: column; }
+.usecase-card:hover { background: var(--ink); color: var(--paper); transform: translateY(-4px) rotate(1deg); }
+
+/* SIMPLE PROMPTS */
+.prompt-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+.prompt-card { background: var(--paper-dark); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(10,9,8,0.05); transition: all 0.3s; min-height: 300px; }
+.prompt-card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: var(--orange); }
+.prompt-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px dashed rgba(10,9,8,0.1); }
+.prompt-division { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); font-weight: 600; }
+.prompt-task { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; line-height: 1.1; }
+.prompt-box { background: var(--ink); border-radius: 6px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.5; color: var(--paper); position: relative; flex: 1; }
+.prompt-box::before { content: '>'; position: absolute; top: 14px; left: 12px; color: var(--orange); font-weight: 700; }
+.prompt-text { padding-left: 14px; }
+.prompt-copy-btn { background: var(--orange); color: white; border: none; padding: 8px 14px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: all 0.2s; align-self: flex-start; }
+.prompt-copy-btn:hover { background: var(--cyan); }
+.prompt-copy-btn.copied { background: var(--green); }
+
+/* LATIHAN */
+.latihan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 20px; }
+.latihan-card { background: rgba(241, 236, 225, 0.05); border: 1px solid rgba(241, 236, 225, 0.15); padding: 22px 18px; border-radius: 4px; display: flex; flex-direction: column; position: relative; min-height: 340px; transition: all 0.3s; }
+.latihan-card:hover { background: rgba(255, 90, 31, 0.08); border-color: var(--orange); transform: translateY(-6px); }
+
+/* CASE */
+.case-wrap { display: grid; grid-template-rows: auto 1fr; gap: 22px; height: calc(100vh - 200px); }
+.case-story { background: var(--ink); color: var(--paper); padding: 22px 26px; border-radius: 4px; border-left: 3px solid var(--orange); }
+.case-q { background: var(--paper-dark); border-radius: 4px; overflow: hidden; transition: all 0.3s; }
+.case-q.open { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.case-q-header { padding: 14px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; }
+.case-q-toggle { font-family: 'JetBrains Mono', monospace; font-size: 20px; color: var(--ink-mute); transition: transform 0.3s; width: 24px; text-align: center; }
+.case-q.open .case-q-toggle { transform: rotate(45deg); color: var(--orange); }
+.case-q-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.case-q.open .case-q-body { max-height: 200px; }
+
+/* QUIZ */
+.quiz-wrap { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+.quiz-q { background: var(--paper-dark); padding: 16px 20px; border-radius: 4px; transition: all 0.2s; }
+.quiz-q:hover { background: var(--paper-darker); }
+.quiz-option { padding: 10px 14px; border: 1px solid rgba(10, 9, 8, 0.12); background: var(--paper); border-radius: 3px; cursor: pointer; font-size: 12.5px; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
+.quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--orange); background: rgba(255, 90, 31, 0.05); transform: translateX(5px); }
+
+/* SOURCES */
+.source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+.source-card { background: var(--paper-dark); padding: 18px 20px; border-radius: 6px; border-left: 3px solid var(--cyan); transition: all 0.3s; }
+.source-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+.source-cat { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 8px; }
+.source-item { font-size: 12px; line-height: 1.5; color: var(--ink-soft); margin-bottom: 6px; padding-left: 12px; position: relative; }
+.source-item::before { content: '→'; position: absolute; left: 0; color: var(--orange); }
+.source-item strong { color: var(--ink); font-weight: 600; }
+.source-item a { color: var(--cyan); text-decoration: none; word-break: break-all; }
+.source-item a:hover { text-decoration: underline; }
+
+/* CLOSING */
+.closing-title { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(50px, 6.5vw, 96px); line-height: 0.9; letter-spacing: -0.03em; margin-bottom: 22px; }
+.closing-title em { font-style: italic; color: var(--orange); }
+.closing-takeaways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+.takeaway { border-top: 1px solid rgba(241, 236, 225, 0.2); padding-top: 16px; transition: all 0.3s; }
+.takeaway:hover { border-color: var(--orange); padding-left: 10px; }
+
+/* OBJ */
+.obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+.obj-card { background: var(--paper-dark); padding: 24px; border-radius: 4px; border-left: 3px solid var(--orange); transition: all 0.3s; }
+.obj-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+/* RUNDOWN */
+.rundown-wrap { display: flex; flex-direction: column; height: calc(100vh - 170px); gap: 20px; }
+.rundown-legend { display: flex; gap: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+.timeline { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.timeline-track { position: relative; height: 52px; display: flex; background: var(--paper-dark); border-radius: 4px; overflow: hidden; border: 1px solid rgba(10, 9, 8, 0.1); }
+.timeline-segment { height: 100%; position: relative; cursor: pointer; transition: all 0.2s; border-right: 1px solid rgba(10, 9, 8, 0.12); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--ink); overflow: hidden; }
+.timeline-segment.teori { background: var(--cyan-soft); }
+.timeline-segment.praktik { background: var(--orange-soft); }
+.timeline-segment.jeda { background: var(--paper-darker); }
+.timeline-segment.evaluasi { background: var(--mustard); }
+.timeline-segment:hover { filter: brightness(0.92); transform: scaleY(1.08); z-index: 2; }
+.timeline-segment:last-child { border-right: none; }
+.rundown-list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 32px; }
+.rundown-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; padding: 7px 0; border-bottom: 1px solid rgba(10, 9, 8, 0.07); align-items: center; font-size: 12px; transition: all 0.2s; }
+.rundown-item:hover { background: rgba(255, 90, 31, 0.05); padding-left: 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="presentation">
+<div class="progress"><div class="progress-fill"></div></div>
+<div class="counter" id="counter">01 / 33</div>
+
+<div class="slides">
+
+<!-- 1. COVER -->
+<section class="slide dark active" data-slide="1">
+  <div class="cover-grid-bg"></div>
+  <div class="token-rain" id="tokenRain"></div>
+  <div class="cover">
+    <div class="cover-top">
+      <div><div>Modul Pelatihan / Sesi 01</div><div style="opacity:0.5">Generative AI & Prompt Engineering (Basic)</div></div>
+      <div style="text-align:right;"><div>Manufaktur Otomotif</div><div style="opacity:0.5">Internal Training</div></div>
+    </div>
+    <div class="cover-main">
+      <div class="cover-eyebrow reveal reveal-1">Sesi 1 — 180 Menit</div>
+      <h1 class="cover-title reveal reveal-2">Foundations of<br><em>Generative</em> <span class="heavy">AI</span><br>& Governance</h1>
+      <p class="cover-sub reveal reveal-3">Dari AI ke LLM ke Gen AI: memahami token, context window, risiko, tata kelola, dan pemetaan use case di lingkungan perakitan kendaraan.</p>
+    </div>
+    <div class="cover-bottom reveal reveal-4">
+      <div class="cover-meta">
+        <div class="cover-meta-item"><div class="cover-meta-label">Durasi</div><div class="cover-meta-value">180<sup>menit</sup></div></div>
+        <div class="cover-meta-item"><div class="cover-meta-label">Materi</div><div class="cover-meta-value">7<sup>modul</sup></div></div>
+        <div class="cover-meta-item"><div class="cover-meta-label">Latihan</div><div class="cover-meta-value">5<sup>sesi</sup></div></div>
+      </div>
+      <div style="background:rgba(255,90,31,0.08); border-left:3px solid var(--orange); padding:14px 20px; max-width:460px;">
+        <div style="font-weight:700; color:var(--orange); margin-right:10px; display:inline;">⚠</div>
+        <span style="font-size:12.5px; line-height:1.5; color:rgba(241,236,225,0.8);"><strong style="color:var(--orange)">Peringatan keamanan data.</strong> Seluruh latihan menggunakan data fiktif. Dilarang mengunggah data rahasia ke tools AI publik.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TOOLS -->
+<section class="slide" data-slide="2">
+  <div class="slide-header"><div class="slide-section">Persiapan Perangkat</div><div class="slide-num">02 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Tools yang Digunakan</div>
+  <h2 class="h-section reveal reveal-2">Empat <em>platform AI</em> untuk sesi ini.</h2>
+  <p style="font-size:14px; line-height:1.5; color:var(--ink-soft); margin-bottom:10px; max-width:700px;" class="reveal reveal-3">Pastikan Anda memiliki akun aktif. Klik kartu untuk membuka situs resmi. <strong>AI Studio Google</strong> akan digunakan khusus untuk memeriksa token.</p>
+  <div class="tools-grid stagger">
+    <a href="https://chat.openai.com" target="_blank" class="tool-card">
+      <div><div class="tool-icon" style="background:var(--chatgpt);">C</div><div class="tool-name">ChatGPT</div><div class="tool-desc">Model GPT oleh OpenAI. Serbaguna, cepat, kuat dalam menyusun draf teks logis.</div></div>
+      <div class="tool-link">Buka →</div>
+    </a>
+    <a href="https://gemini.google.com" target="_blank" class="tool-card">
+      <div><div class="tool-icon" style="background:var(--gemini);">G</div><div class="tool-name">Gemini</div><div class="tool-desc">Model oleh Google. Terintegrasi ekosistem Workspace, kuat dalam pencarian real-time.</div></div>
+      <div class="tool-link">Buka →</div>
+    </a>
+    <a href="https://claude.ai" target="_blank" class="tool-card">
+      <div><div class="tool-icon" style="background:var(--claude);">Cl</div><div class="tool-name">Claude</div><div class="tool-desc">Model oleh Anthropic. Unggul dalam analisis dokumen panjang dan gaya bahasa natural.</div></div>
+      <div class="tool-link">Buka →</div>
+    </a>
+    <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" class="tool-card">
+      <div><div class="tool-icon" style="background:var(--aistudio);">AI</div><div class="tool-name">AI Studio</div><div class="tool-desc">Platform developer Google. Digunakan untuk <strong>cek token</strong> dan parameter model secara transparan.</div></div>
+      <div class="tool-link">Buka →</div>
+    </a>
+  </div>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="slide" data-slide="3">
+  <div class="slide-header"><div class="slide-section">Tujuan Sesi & Indikator Capaian</div><div class="slide-num">03 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Learning Objectives</div>
+  <h2 class="h-section reveal reveal-2">Empat tujuan terukur <em>untuk Sesi 1</em>.</h2>
+  <div class="obj-grid stagger">
+    <div class="obj-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:36px; color:var(--orange); line-height:1; margin-bottom:8px;">01</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Memahami Dasar LLM</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Peserta mampu menjelaskan istilah <em>token</em>, <em>context window</em>, dan sifat probabilistik LLM dengan bahasa sendiri (maks. 3 kalimat).</div></div>
+    <div class="obj-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:36px; color:var(--orange); line-height:1; margin-bottom:8px;">02</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Mengenali Risiko Utama</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Peserta berhasil menemukan, mendokumentasikan, dan memverifikasi minimal 2 halusinasi yang dihasilkan oleh AI pada Latihan 1.</div></div>
+    <div class="obj-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:36px; color:var(--orange); line-height:1; margin-bottom:8px;">03</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Menerapkan Tata Kelola</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Peserta menjawab benar minimal 8 dari 10 skenario klasifikasi data dan menyusun draf kebijakan dasar berisi 6 dari 8 komponen wajib.</div></div>
+    <div class="obj-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:36px; color:var(--orange); line-height:1; margin-bottom:8px;">04</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Memetakan Use Case</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Tersusun 5 use case dari divisi peserta lengkap dengan skor prioritas (Dampak × Kemudahan / Risiko) di Google Sheets.</div></div>
+  </div>
+</section>
+
+<!-- 4. RUNDOWN -->
+<section class="slide" data-slide="4">
+  <div class="slide-header"><div class="slide-section">Rundown Sesi</div><div class="slide-num">04 / 33</div></div>
+  <div class="rundown-wrap">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+      <div><div class="eyebrow">180 Menit · Teori 19% · Praktik 81%</div><h2 class="h-section">Tujuh modul materi, <em>lima latihan</em> praktik.</h2></div>
+      <div class="rundown-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan-soft)"></div>Teori</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange-soft)"></div>Praktik</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--paper-darker)"></div>Jeda</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--mustard)"></div>Evaluasi</div>
+      </div>
+    </div>
+    <div class="timeline reveal reveal-2">
+      <div class="timeline-track">
+        <div class="timeline-segment teori" style="flex:5">5'</div><div class="timeline-segment teori" style="flex:15">15'</div><div class="timeline-segment praktik" style="flex:25">25'</div><div class="timeline-segment praktik" style="flex:25">25'</div><div class="timeline-segment jeda" style="flex:10">10'</div><div class="timeline-segment teori" style="flex:10">10'</div><div class="timeline-segment praktik" style="flex:20">20'</div><div class="timeline-segment praktik" style="flex:25">25'</div><div class="timeline-segment praktik" style="flex:25">25'</div><div class="timeline-segment evaluasi" style="flex:15">15'</div><div class="timeline-segment teori" style="flex:5">5'</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute); padding:0 4px;"><span>0'</span><span>30'</span><span>60'</span><span>90'</span><span>120'</span><span>150'</span><span>180'</span></div>
+    </div>
+    <div class="rundown-list stagger">
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">0–5'</div><div><strong>Pembukaan</strong> dan pengecekan akun</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Ceramah</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">5–20'</div><div><strong>Materi 1–4:</strong> AI → LLM → Gen AI, token, risiko</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Teori</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">20–45'</div><div><strong>Latihan 1:</strong> Uji halusinasi & verifikasi</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Praktik</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">45–70'</div><div><strong>Latihan 2:</strong> Perbandingan 3 tools</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Praktik</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">70–80'</div><div><strong>Jeda</strong> — 10 menit istirahat</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Jeda</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">80–90'</div><div><strong>Materi 5–7:</strong> Etika, policy, use case</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Teori</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">90–110'</div><div><strong>Latihan 3:</strong> Klasifikasi data (10 skenario)</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Praktik</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">110–135'</div><div><strong>Latihan 4:</strong> Draf kebijakan AI 1 halaman</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Praktik</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">135–160'</div><div><strong>Latihan 5:</strong> Pemetaan use case divisi</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Praktik</div></div>
+      <div class="rundown-item"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--ink-mute);">160–175'</div><div><strong>Kuis pemahaman</strong> (10 PG + 2 esai)</div><div style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 7px; border-radius:3px; background:var(--paper-dark);">Evaluasi</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. TRANSITION 1 -->
+<section class="slide dark" data-slide="5">
+  <div class="cover-grid-bg"></div>
+  <div class="transition-wrap">
+    <div class="transition-num">01</div>
+    <div class="transition-label">Bagian Pertama</div>
+    <h2 class="transition-title">Dari <em>AI</em> ke <em>LLM</em> ke <em>Gen AI</em></h2>
+  </div>
+</section>
+
+<!-- 6. APA ITU AI -->
+<section class="slide" data-slide="6">
+  <div class="slide-header"><div class="slide-section">Materi 01 — Definisi AI</div><div class="slide-num">06 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 1 dari 7 · Sumber: IBM (2024), Stanford AI Index 2024</div>
+  <h2 class="h-section reveal reveal-2">Apa itu <em>Artificial Intelligence</em>?</h2>
+  <div class="def-grid stagger">
+    <div class="def-card">
+      <div class="def-icon">AI</div>
+      <div class="def-title">Artificial Intelligence</div>
+      <div class="def-text">Cabang ilmu komputer yang membangun sistem mampu melakukan tugas yang biasanya membutuhkan kecerdasan manusia: <strong>belajar, menalar, memecahkan masalah, memahami bahasa</strong>.</div>
+    </div>
+    <div class="def-card">
+      <div class="def-icon">⚙</div>
+      <div class="def-title">Bagaimana cara kerjanya?</div>
+      <div class="def-text">AI menggunakan algoritma dan data untuk <strong>mengenali pola</strong>. Semakin banyak data berkualitas, semakin baik performa — namun tetap terikat pada aturan yang diprogram atau pola yang dipelajari.</div>
+    </div>
+    <div class="def-card">
+      <div class="def-icon">📅</div>
+      <div class="def-title">Sejak kapan ada?</div>
+      <div class="def-text">Istilah "AI" pertama kali dikemukakan pada <strong>Dartmouth Conference 1956</strong>. Namun baru meledak di 2010-an berkat data besar (Big Data) dan GPU yang lebih cepat.</div>
+    </div>
+    <div class="def-card">
+      <div class="def-icon">🏭</div>
+      <div class="def-title">Di pabrik otomotif</div>
+      <div class="def-text">Sistem prediksi kerusakan mesin, inspeksi visual cacat las, robot lengan perakitan otomatis, dan optimasi rute AGV (Automated Guided Vehicle).</div>
+    </div>
+  </div>
+  <div style="margin-top:20px; padding:12px 18px; background:rgba(0,184,217,0.08); border-radius:4px; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:10px;" class="reveal reveal-3">
+    <strong style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;">SUMBER:</strong>
+    IBM (2024). <em>What is Artificial Intelligence?</em> [Online]. Tersedia di: ibm.com/topics/artificial-intelligence · Stanford HAI (2024). <em>AI Index Report 2024.</em>
+  </div>
+</section>
+
+<!-- 7. EVOLUTION DIAGRAM -->
+<section class="slide" data-slide="7">
+  <div class="slide-header"><div class="slide-section">Materi 01 — Evolusi AI</div><div class="slide-num">07 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Infografik · Sumber: Google Cloud (2024), OpenAI (2024)</div>
+  <h2 class="h-section reveal reveal-2">Dari AI ke <em>Generative AI</em>: lima lompatan.</h2>
+  <div class="evolution-wrap reveal reveal-3">
+    <div class="evolution-diagram stagger">
+      <div class="evo-step">
+        <div class="evo-circle">
+          <div class="evo-acronym">AI</div>
+          <div class="evo-year">1950s</div>
+        </div>
+        <div class="evo-full">Artificial Intelligence</div>
+        <div class="evo-desc">Mesin meniru kecerdasan manusia (aturan if-then)</div>
+        <div class="evo-arrow">→</div>
+      </div>
+      <div class="evo-step">
+        <div class="evo-circle">
+          <div class="evo-acronym">ML</div>
+          <div class="evo-year">1980s</div>
+        </div>
+        <div class="evo-full">Machine Learning</div>
+        <div class="evo-desc">Mesin belajar dari data tanpa diprogram eksplisit</div>
+        <div class="evo-arrow">→</div>
+      </div>
+      <div class="evo-step">
+        <div class="evo-circle">
+          <div class="evo-acronym">DL</div>
+          <div class="evo-year">2010s</div>
+        </div>
+        <div class="evo-full">Deep Learning</div>
+        <div class="evo-desc">Neural network berlapis banyak, butuh GPU & big data</div>
+        <div class="evo-arrow">→</div>
+      </div>
+      <div class="evo-step">
+        <div class="evo-circle">
+          <div class="evo-acronym">LLM</div>
+          <div class="evo-year">2018+</div>
+        </div>
+        <div class="evo-full">Large Language Model</div>
+        <div class="evo-desc">Model bahasa dengan miliaran parameter (GPT, Gemini)</div>
+        <div class="evo-arrow">→</div>
+      </div>
+      <div class="evo-step">
+        <div class="evo-circle">
+          <div class="evo-acronym">Gen AI</div>
+          <div class="evo-year">2022+</div>
+        </div>
+        <div class="evo-full">Generative AI</div>
+        <div class="evo-desc">Menciptakan konten baru: teks, gambar, kode, audio</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; margin-top:10px;" class="stagger">
+      <div style="background:var(--paper-dark); padding:14px 16px; border-radius:6px; border-left:3px solid var(--cyan);">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--cyan); letter-spacing:0.1em; margin-bottom:4px;">AI KONVENSIONAL</div>
+        <div style="font-size:12px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink)">Menganalisis & memprediksi.</strong> Input data → output angka/label. Tidak menciptakan konten baru.</div>
+      </div>
+      <div style="background:var(--paper-dark); padding:14px 16px; border-radius:6px; border-left:3px solid var(--orange);">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:0.1em; margin-bottom:4px;">LLM</div>
+        <div style="font-size:12px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink)">Model bahasa masif.</strong> Dilatih pada triliunan token teks. Memprediksi kata berikutnya berdasarkan pola probabilistik.</div>
+      </div>
+      <div style="background:var(--paper-dark); padding:14px 16px; border-radius:6px; border-left:3px solid var(--red);">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--red); letter-spacing:0.1em; margin-bottom:4px;">GENERATIVE AI</div>
+        <div style="font-size:12px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink)">Menciptakan konten baru.</strong> Menghasilkan teks, gambar, kode, tabel — bukan sekadar mengklasifikasi atau memprediksi.</div>
+      </div>
+    </div>
+    <div style="padding:12px 18px; background:rgba(0,184,217,0.08); border-radius:4px; font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; margin-top:6px;">
+      <strong style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;">SUMBER:</strong>
+      Google Cloud (2024). <em>What is Generative AI?</em> cloud.google.com/learn/generative-ai · OpenAI (2024). <em>Language Models.</em> openai.com/research
+    </div>
+  </div>
+</section>
+
+<!-- 8. AI vs GEN AI -->
+<section class="slide" data-slide="8">
+  <div class="slide-header"><div class="slide-section">Materi 01 — Perbedaan</div><div class="slide-num">08 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 2 dari 7</div>
+  <h2 class="h-section reveal reveal-2">Dua wajah AI: <em>yang menganalisis</em>, dan yang menciptakan.</h2>
+  <div class="compare-split reveal reveal-3">
+    <div class="compare-side left">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:12px;">AI Konvensional</div>
+        <h3 style="font-family:'Fraunces',serif; font-size:clamp(28px,3.2vw,44px); font-weight:400; line-height:1; margin-bottom:16px;">Menganalisis.<br><em style="font-style:italic; font-weight:300; color:var(--cyan);">Memprediksi.</em><br>Mengklasifikasi.</h3>
+        <p style="font-size:13px; line-height:1.5; margin-bottom:20px; opacity:0.85;">Memproses data yang ada untuk mengenali pola, membuat prediksi, atau mengambil keputusan berdasarkan aturan.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="padding:10px 14px; border:1px solid rgba(10,9,8,0.12); background:rgba(255,255,255,0.4); border-radius:3px; font-size:12px;">Kamera AI mendeteksi cacat las bodi</div>
+        <div style="padding:10px 14px; border:1px solid rgba(10,9,8,0.12); background:rgba(255,255,255,0.4); border-radius:3px; font-size:12px;">Sensor IoT memprediksi kerusakan mesin stamping</div>
+        <div style="padding:10px 14px; border:1px solid rgba(10,9,8,0.12); background:rgba(255,255,255,0.4); border-radius:3px; font-size:12px;">Klasifikasi komponen lulus/gagal dari foto</div>
+      </div>
+    </div>
+    <div class="compare-side right">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--orange); margin-bottom:12px;">Generative AI</div>
+        <h3 style="font-family:'Fraunces',serif; font-size:clamp(28px,3.2vw,44px); font-weight:400; line-height:1; margin-bottom:16px;">Menghasilkan.<br><em style="font-style:italic; font-weight:300; color:var(--orange);">Menyusun.</em><br>Menciptakan.</h3>
+        <p style="font-size:13px; line-height:1.5; margin-bottom:20px; opacity:0.85;">Membuat konten baru — teks, gambar, kode, tabel — berdasarkan instruksi yang diberikan pengguna.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="padding:10px 14px; border:1px solid rgba(241,236,225,0.12); background:rgba(241,236,225,0.04); border-radius:3px; font-size:12px;">Menyusun draf work instruction dari catatan mekanik</div>
+        <div style="padding:10px 14px; border:1px solid rgba(241,236,225,0.12); background:rgba(241,236,225,0.04); border-radius:3px; font-size:12px;">Meringkas laporan shift malam jadi poin eksekutif</div>
+        <div style="padding:10px 14px; border:1px solid rgba(241,236,225,0.12); background:rgba(241,236,225,0.04); border-radius:3px; font-size:12px;">Draf email koordinasi pengiriman ke pemasok</div>
+      </div>
+    </div>
+    <div class="compare-divider"></div>
+  </div>
+</section>
+
+<!-- 9. TRANSITION 2 -->
+<section class="slide dark" data-slide="9">
+  <div class="cover-grid-bg"></div>
+  <div class="transition-wrap">
+    <div class="transition-num">02</div>
+    <div class="transition-label">Bagian Kedua</div>
+    <h2 class="transition-title">Cara Kerja <em>LLM</em>: Token & Probabilitas</h2>
+  </div>
+</section>
+
+<!-- 10. APA ITU TOKEN -->
+<section class="slide" data-slide="10">
+  <div class="slide-header"><div class="slide-section">Materi 02 — Token</div><div class="slide-num">10 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 3 dari 7 · Sumber: OpenAI Tokenizer, Google AI Studio</div>
+  <h2 class="h-section reveal reveal-2">Apa itu <em>Token</em> & apa gunanya?</h2>
+  <div class="token-explain">
+    <div class="stagger">
+      <div style="font-family:'Fraunces',serif; font-weight:300; font-style:italic; font-size:72px; color:var(--orange); line-height:1; margin-bottom:8px;">01</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:6px;">Satuan Pemrosesan LLM</div>
+      <h3 style="font-family:'Fraunces',serif; font-size:44px; font-weight:500; letter-spacing:-0.02em; margin-bottom:14px; line-height:1;">Token</h3>
+      <p style="font-size:14px; line-height:1.6; color:var(--ink-soft); margin-bottom:16px;"><strong style="color:var(--ink)">Token</strong> adalah potongan teks (kata, bagian kata, atau karakter) yang diproses LLM. AI tidak membaca kata utuh — ia memotong teks menjadi token, lalu menebak token berikutnya.</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; border-left:3px solid var(--orange);">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:0.1em; margin-bottom:4px;">GUNA 1 · INPUT/OUTPUT</div>
+          <div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">Satuan dasar yang diproses model. Prompt Anda → di-token-kan → diproses → output di-token-kan kembali.</div>
+        </div>
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; border-left:3px solid var(--orange);">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:0.1em; margin-bottom:4px;">GUNA 2 · BIAYA API</div>
+          <div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">Harga API dihitung per 1.000 token. Semakin panjang prompt, semakin mahal biayanya.</div>
+        </div>
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; border-left:3px solid var(--orange);">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:0.1em; margin-bottom:4px;">GUNA 3 · CONTEXT WINDOW</div>
+          <div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">Kapasitas model diukur dalam token. Jika prompt + dokumen melebihi batas, bagian awal terpotong.</div>
+        </div>
+      </div>
+    </div>
+    <div class="token-visual-box stagger">
+      <div style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:4px;">Contoh Tokenisasi</div>
+      <div class="token-sentence">"Standar mutu lini perakitan 2"</div>
+      <div class="token-row">
+        <span class="token-piece-big">Stand</span>
+        <span class="token-piece-big">ar</span>
+        <span class="token-piece-big">mutu</span>
+        <span class="token-piece-big">lini</span>
+        <span class="token-piece-big">perak</span>
+        <span class="token-piece-big">itan</span>
+        <span class="token-piece-big">2</span>
+      </div>
+      <div class="token-count">Total: <strong>7</strong> token dari 6 kata</div>
+      <div style="text-align:center; font-size:11px; font-style:italic; color:var(--ink-mute); margin-top:4px;">"Standar" dipecah jadi "Stand" + "ar" · "perakitan" jadi "perak" + "itan"</div>
+    </div>
+  </div>
+  <div style="padding:10px 16px; background:rgba(0,184,217,0.08); border-radius:4px; font-size:11.5px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; margin-top:16px;">
+    <strong style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;">SUMBER:</strong>
+    OpenAI (2024). <em>Tokenizer.</em> platform.openai.com/tokenizer · Google (2024). <em>AI Studio.</em> aistudio.google.com · Hugging Face (2024). <em>Tokenizers.</em> huggingface.co/docs/tokenizers
+  </div>
+</section>
+
+<!-- 11. CEK TOKEN DENGAN AI STUDIO -->
+<section class="slide" data-slide="11">
+  <div class="slide-header"><div class="slide-section">Materi 02 — Cek Token Live</div><div class="slide-num">11 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Demo Langsung · Google AI Studio</div>
+  <h2 class="h-section reveal reveal-2">Cek token dengan <em>AI Studio Google</em>.</h2>
+  <div class="checker-wrap">
+    <div class="checker-left stagger">
+      <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" style="background:var(--aistudio); color:white; padding:14px 20px; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:space-between; transition:all 0.2s;">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; opacity:0.8;">BUKA TOOL</div>
+          <div style="font-family:'Fraunces',serif; font-size:20px; font-weight:500;">Google AI Studio →</div>
+        </div>
+        <div style="font-size:11px; opacity:0.7;">aistudio.google.com/prompts/new_chat</div>
+      </a>
+      <div class="checker-step">
+        <div class="checker-step-num">01</div>
+        <div class="checker-step-title">Buka AI Studio</div>
+        <div class="checker-step-desc">Login dengan akun Google. Klik "New Chat" atau "Create Prompt". Pilih model (mis. Gemini 1.5 Pro).</div>
+      </div>
+      <div class="checker-step">
+        <div class="checker-step-num">02</div>
+        <div class="checker-step-title">Ketik teks uji</div>
+        <div class="checker-step-desc">Masukkan teks bahasa Indonesia atau Inggris pada kolom input prompt. Misalnya: "Standar mutu lini perakitan 2".</div>
+      </div>
+      <div class="checker-step">
+        <div class="checker-step-num">03</div>
+        <div class="checker-step-title">Lihat jumlah token</div>
+        <div class="checker-step-desc">Panel kanan menampilkan <strong>token count</strong> secara real-time. Anda akan melihat bagaimana kata dipotong.</div>
+      </div>
+      <div class="checker-step">
+        <div class="checker-step-num">04</div>
+        <div class="checker-step-title">Bandingkan bahasa</div>
+        <div class="checker-step-desc">Coba teks Indonesia vs Inggris dengan makna sama. Bahasa Indonesia biasanya butuh <strong>lebih banyak token</strong> karena data pelatihan model lebih sedikit.</div>
+      </div>
+    </div>
+    <div class="checker-right reveal reveal-3">
+      <div class="checker-browser-bar">
+        <div class="checker-dot" style="background:#ff5f57;"></div>
+        <div class="checker-dot" style="background:#febc2e;"></div>
+        <div class="checker-dot" style="background:#28c840;"></div>
+        <div class="checker-url">🔒 aistudio.google.com/prompts/new_chat</div>
+      </div>
+      <div>
+        <div class="checker-input-label">INPUT PROMPT</div>
+        <div class="checker-input">Standar mutu lini perakitan 2</div>
+      </div>
+      <div>
+        <div class="checker-input-label">TOKEN VISUALIZATION</div>
+        <div class="checker-tokens">
+          <span class="checker-token">Stand</span>
+          <span class="checker-token">ar</span>
+          <span class="checker-token">mutu</span>
+          <span class="checker-token">lini</span>
+          <span class="checker-token">perak</span>
+          <span class="checker-token">itan</span>
+          <span class="checker-token">2</span>
+        </div>
+      </div>
+      <div class="checker-result">
+        <div class="checker-result-num">7</div>
+        <div class="checker-result-label"><strong style="color:var(--paper)">token</strong><br>dari 6 kata bahasa Indonesia</div>
+      </div>
+      <div style="padding:10px 14px; background:rgba(139,92,246,0.1); border-radius:4px; font-size:11px; color:rgba(241,236,225,0.7); line-height:1.45;">
+        <strong style="color:var(--aistudio);">💡 Insight:</strong> Bahasa Indonesia sering butuh 1.5–2× lebih banyak token daripada bahasa Inggris untuk makna yang sama. Ini memengaruhi biaya API dan context window.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. CONTEXT WINDOW -->
+<section class="slide" data-slide="12">
+  <div class="slide-header"><div class="slide-section">Materi 02 — Context Window</div><div class="slide-num">12 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 4 dari 7 · Sumber: Anthropic (2024), Google (2024)</div>
+  <h2 class="h-section reveal reveal-2">Memahami <em>Context Window</em>.</h2>
+  <div class="llm-full">
+    <div class="stagger">
+      <div style="font-family:'Fraunces',serif; font-weight:300; font-style:italic; font-size:72px; color:var(--orange); line-height:1; margin-bottom:8px;">02</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:6px;">Kapasitas Meja Kerja</div>
+      <h3 style="font-family:'Fraunces',serif; font-size:48px; font-weight:500; letter-spacing:-0.02em; margin-bottom:14px; line-height:1;">Context Window</h3>
+      <p style="font-size:14px; line-height:1.6; color:var(--ink-soft); margin-bottom:18px;">Kapasitas "meja kerja" model dalam <strong>token</strong>. Hanya informasi di atas meja yang bisa ia pertimbangkan. Jika dokumen terlalu panjang, bagian awal terdorong jatuh dan dilupakan.</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div><strong style="color:var(--ink)">GPT-4 (2023)</strong> · 8K–128K token</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-mute);">≈ 60–960 halaman</div>
+        </div>
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div><strong style="color:var(--ink)">Gemini 1.5 Pro</strong> · 1M–2M token</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-mute);">≈ 7.500–15.000 halaman</div>
+        </div>
+        <div style="background:var(--paper-dark); padding:12px 16px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div><strong style="color:var(--ink)">Claude 3 Opus</strong> · 200K token</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-mute);">≈ 1.500 halaman</div>
+        </div>
+      </div>
+    </div>
+    <div class="llm-visual-large stagger">
+      <div style="width:100%; height:100%; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-mute); text-align:center;">Analogi Meja Kerja</div>
+        <div style="flex:1; background:var(--paper); border:2px dashed var(--ink-mute); border-radius:6px; padding:12px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(4,1fr); gap:4px;">
+          <div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div>
+          <div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div><div style="background:var(--orange); border-radius:2px; opacity:1;"></div>
+          <div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div>
+          <div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div><div style="background:var(--paper-dark); border:1px solid var(--ink-mute); border-radius:2px; opacity:0.4;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:11px;">
+          <div style="color:var(--orange); font-weight:600;">■ Di dalam context window (dipertimbangkan)</div>
+          <div style="color:var(--ink-mute);">■ Terjatuh (dilupakan)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:10px 16px; background:rgba(0,184,217,0.08); border-radius:4px; font-size:11.5px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; margin-top:14px;">
+    <strong style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;">SUMBER:</strong>
+    Anthropic (2024). <em>Claude Model Specifications.</em> docs.anthropic.com · Google (2024). <em>Gemini 1.5 Pro Technical Report.</em> arxiv.org/abs/2403.05530
+  </div>
+</section>
+
+<!-- 13. PROBABILISTIC -->
+<section class="slide" data-slide="13">
+  <div class="slide-header"><div class="slide-section">Materi 02 — Probabilistik</div><div class="slide-num">13 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 5 dari 7 · Sumber: Vaswani et al. (2017), OpenAI (2024)</div>
+  <h2 class="h-section reveal reveal-2">Sifat <em>Probabilistik</em>.</h2>
+  <div class="llm-full">
+    <div class="stagger">
+      <div style="font-family:'Fraunces',serif; font-weight:300; font-style:italic; font-size:72px; color:var(--orange); line-height:1; margin-bottom:8px;">03</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:6px;">Prediksi Token Berikutnya</div>
+      <h3 style="font-family:'Fraunces',serif; font-size:48px; font-weight:500; letter-spacing:-0.02em; margin-bottom:14px; line-height:1;">Probabilistik</h3>
+      <p style="font-size:14px; line-height:1.6; color:var(--ink-soft); margin-bottom:18px;">Model memprediksi <strong>token berikutnya</strong> yang paling mungkin muncul berdasarkan pola data pelatihan. Seperti fitur autocomplete di ponsel, namun jauh lebih canggih. Karena bersifat menebak, jawaban bisa berbeda setiap diulang.</p>
+      <div style="background:var(--ink); color:var(--paper); padding:14px 20px; border-radius:6px; border-left:3px solid var(--orange);">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--orange); margin-bottom:6px;">▶ LIVE DEMO</div>
+        <div style="font-size:13px; font-style:italic; font-family:'Fraunces',serif; font-weight:300; line-height:1.4;">"Jalankan prompt yang sama dua kali — hasilnya akan berbeda. LLM menjawab berdasarkan pola, bukan pemeriksaan fakta."</div>
+      </div>
+    </div>
+    <div class="llm-visual-large stagger">
+      <div style="display:flex; flex-direction:column; gap:14px; width:100%;">
+        <div style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-mute);">Prediksi token setelah: "Berdasarkan standar..."</div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="width:100px; font-family:'Fraunces',serif; font-size:18px;">mutu</div><div style="flex:1; height:12px; background:var(--paper); border-radius:6px; overflow:hidden;"><div style="height:100%; background:var(--orange); width:62%; animation:growBar 1.5s ease-out;"></div></div><div style="width:50px; text-align:right; color:var(--ink-mute); font-family:'JetBrains Mono',monospace;">62%</div></div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="width:100px; font-family:'Fraunces',serif; font-size:18px;">ISO</div><div style="flex:1; height:12px; background:var(--paper); border-radius:6px; overflow:hidden;"><div style="height:100%; background:var(--orange); width:21%; animation:growBar 1.5s 0.2s ease-out backwards;"></div></div><div style="width:50px; text-align:right; color:var(--ink-mute); font-family:'JetBrains Mono',monospace;">21%</div></div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="width:100px; font-family:'Fraunces',serif; font-size:18px;">prosedur</div><div style="flex:1; height:12px; background:var(--paper); border-radius:6px; overflow:hidden;"><div style="height:100%; background:var(--orange); width:11%; animation:growBar 1.5s 0.4s ease-out backwards;"></div></div><div style="width:50px; text-align:right; color:var(--ink-mute); font-family:'JetBrains Mono',monospace;">11%</div></div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="width:100px; font-family:'Fraunces',serif; font-size:18px;">lainnya</div><div style="flex:1; height:12px; background:var(--paper); border-radius:6px; overflow:hidden;"><div style="height:100%; background:var(--orange); width:6%; animation:growBar 1.5s 0.6s ease-out backwards;"></div></div><div style="width:50px; text-align:right; color:var(--ink-mute); font-family:'JetBrains Mono',monospace;">6%</div></div>
+        <style>@keyframes growBar { from { width:0; } }</style>
+      </div>
+    </div>
+  </div>
+  <div style="padding:10px 16px; background:rgba(0,184,217,0.08); border-radius:4px; font-size:11.5px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; margin-top:14px;">
+    <strong style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;">SUMBER:</strong>
+    Vaswani et al. (2017). <em>Attention Is All You Need.</em> arxiv.org/abs/1706.03762 · OpenAI (2024). <em>GPT-4 Technical Report.</em> cdn.openai.com/papers/gpt-4.pdf
+  </div>
+</section>
+
+<!-- 14. TRANSITION 3 -->
+<section class="slide dark" data-slide="14">
+  <div class="cover-grid-bg"></div>
+  <div class="transition-wrap">
+    <div class="transition-num">03</div>
+    <div class="transition-label">Bagian Ketiga</div>
+    <h2 class="transition-title">Kapabilitas, Keterbatasan, <em>& Risiko</em></h2>
+  </div>
+</section>
+
+<!-- 15. KAPABILITAS -->
+<section class="slide" data-slide="15">
+  <div class="slide-header"><div class="slide-section">Materi 03 — Kapabilitas</div><div class="slide-num">15 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 6 dari 7 · Sumber: OpenAI (2024), Google (2024)</div>
+  <h2 class="h-section reveal reveal-2">AI kuat untuk <em>membuat draf awal</em>.</h2>
+  <div class="cap-full-grid stagger">
+    <div class="cap-full-card strong"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--green);">+</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Merangkum & Menyusun Draf</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Mengubah catatan rapat jadi notulen, atau menyusun draf awal email, laporan shift, dan work instruction dengan cepat.</div></div>
+    <div class="cap-full-card strong"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--green);">+</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Menerjemahkan & Mengubah Format</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Menerjemahkan manual teknis antar bahasa dengan konteks, atau mengubah teks narasi menjadi tabel terstruktur.</div></div>
+    <div class="cap-full-card strong"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--green);">+</div><div style="font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:8px;">Brainstorming & Penjelasan Konsep</div><div style="font-size:13px; line-height:1.45; color:var(--ink-soft);">Membantu keluar dari kebuntuhan ide saat analisis masalah, atau menjelaskan konsep teknis rumit dengan bahasa awam.</div></div>
+  </div>
+  <div class="cap-callout reveal reveal-3">
+    <div style="font-family:'Fraunces',serif; font-style:italic; font-size:44px; color:var(--orange); line-height:0.8; font-weight:300;">"</div>
+    <div style="font-family:'Fraunces',serif; font-size:20px; font-weight:400; line-height:1.3;">AI adalah <em style="font-style:italic; color:var(--orange); font-weight:300;">asisten penyusun draf</em>, bukan pengambil keputusan.</div>
+  </div>
+</section>
+
+<!-- 16. KETERBATASAN -->
+<section class="slide" data-slide="16">
+  <div class="slide-header"><div class="slide-section">Materi 03 — Keterbatasan</div><div class="slide-num">16 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Sumber: OpenAI (2024), Anthropic (2024)</div>
+  <h2 class="h-section reveal reveal-2">Lemah untuk <em>verifikasi fakta</em> & konteks internal.</h2>
+  <div class="cap-full-grid stagger" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Tidak Menjamin Kebenaran Fakta</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">AI bisa berhalusinasi (mengarang) angka, standar, atau kutipan yang tampak meyakinkan namun sepenuhnya fiktif.</div></div>
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Terbatas pada Waktu Pelatihan</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">Pengetahuan model terhenti pada saat dilatih. Tidak tahu regulasi terbaru kecuali fitur pencarian diaktifkan.</div></div>
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Tidak Paham Konteks Internal</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">AI tidak tahu kondisi pabrik, kode aset internal, atau budaya perusahaan Anda kecuali diberikan dalam prompt.</div></div>
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Lemah pada Perhitungan Panjang</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">Bekerja berbasis pola bahasa, AI sering keliru pada matematika rumit tanpa bantuan kalkulator/kode eksternal.</div></div>
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Tidak Memiliki Intuisi Lapangan</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">AI tidak pernah "turun ke lantai pabrik". Tidak punya pengalaman fisik mendeteksi getaran mesin atau melihat kilap cat.</div></div>
+    <div class="cap-full-card weak"><div style="font-family:'Fraunces',serif; font-size:32px; margin-bottom:10px; line-height:1; color:var(--red);">×</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;">Tidak Mengakses Data Rahasia</div><div style="font-size:12.5px; line-height:1.45; color:var(--ink-soft);">AI tidak bisa membaca dokumen rahasia perusahaan (kontrak, gambar teknis) kecuali Anda unggah — yang berisiko bocor.</div></div>
+  </div>
+</section>
+
+<!-- 17. RISIKO -->
+<section class="slide dark" data-slide="17">
+  <div class="slide-header"><div class="slide-section">Materi 04 — Risiko Utama</div><div class="slide-num">17 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Slide 7 dari 7 · Sumber: NIST AI RMF (2023), OWASP (2024)</div>
+  <h2 class="h-section reveal reveal-2" style="color:var(--paper)">Lima risiko utama. <em style="color:var(--orange)">Klik kartu untuk membalik.</em></h2>
+  <div class="risiko-grid stagger">
+    <div class="risiko-card"><div class="risiko-card-inner"><div class="risiko-card-front"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:rgba(241,236,225,0.4); margin-bottom:14px;">01</div><div style="font-family:'Fraunces',serif; font-size:38px; font-style:italic; font-weight:300; color:var(--orange); margin-bottom:14px; line-height:1;">⊕</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:10px; line-height:1.05;">Halusinasi</h3><p style="font-size:12px; line-height:1.45; color:rgba(241,236,225,0.7); margin-top:auto;">Jawaban meyakinkan namun keliru atau fiktif.</p></div><div class="risiko-card-back"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; opacity:0.7;">Contoh Otomotif</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.4; color:var(--ink);">"AI mengutip standar mutu ISO dengan nomor klausul dan tabel toleransi yang sebenarnya tidak ada."</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:54px; font-weight:300; margin-top:auto; align-self:flex-end; opacity:0.4; line-height:1;">⊕</div></div></div></div>
+    <div class="risiko-card"><div class="risiko-card-inner"><div class="risiko-card-front"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:rgba(241,236,225,0.4); margin-bottom:14px;">02</div><div style="font-family:'Fraunces',serif; font-size:38px; font-style:italic; font-weight:300; color:var(--orange); margin-bottom:14px; line-height:1;">◐</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:10px; line-height:1.05;">Bias</h3><p style="font-size:12px; line-height:1.45; color:rgba(241,236,225,0.7); margin-top:auto;">Output condong pada asumsi tertentu.</p></div><div class="risiko-card-back"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; opacity:0.7;">Contoh Otomotif</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.4; color:var(--ink);">"Rekomendasi pemasok yang selalu menguntungkan satu pihak berdasarkan data pelatihan yang bias."</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:54px; font-weight:300; margin-top:auto; align-self:flex-end; opacity:0.4; line-height:1;">◐</div></div></div></div>
+    <div class="risiko-card"><div class="risiko-card-inner"><div class="risiko-card-front"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:rgba(241,236,225,0.4); margin-bottom:14px;">03</div><div style="font-family:'Fraunces',serif; font-size:38px; font-style:italic; font-weight:300; color:var(--orange); margin-bottom:14px; line-height:1;">⬓</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:10px; line-height:1.05;">Kebocoran Data</h3><p style="font-size:12px; line-height:1.45; color:rgba(241,236,225,0.7); margin-top:auto;">Data sensitif diunggah ke layanan eksternal.</p></div><div class="risiko-card-back"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; opacity:0.7;">Contoh Otomotif</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.4; color:var(--ink);">"Staf mengunggah kontrak harga pemasok ke chatbot AI publik untuk dibuatkan ringkasan."</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:54px; font-weight:300; margin-top:auto; align-self:flex-end; opacity:0.4; line-height:1;">⬓</div></div></div></div>
+    <div class="risiko-card"><div class="risiko-card-inner"><div class="risiko-card-front"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:rgba(241,236,225,0.4); margin-bottom:14px;">04</div><div style="font-family:'Fraunces',serif; font-size:38px; font-style:italic; font-weight:300; color:var(--orange); margin-bottom:14px; line-height:1;">©</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:10px; line-height:1.05;">Hak Cipta</h3><p style="font-size:12px; line-height:1.45; color:rgba(241,236,225,0.7); margin-top:auto;">Output menyerupai materi berhak cipta.</p></div><div class="risiko-card-back"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; opacity:0.7;">Contoh Otomotif</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.4; color:var(--ink);">"Materi pemasaran yang dihasilkan ternyata menyalin konten pihak lain tanpa atribusi."</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:54px; font-weight:300; margin-top:auto; align-self:flex-end; opacity:0.4; line-height:1;">©</div></div></div></div>
+    <div class="risiko-card"><div class="risiko-card-inner"><div class="risiko-card-front"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:rgba(241,236,225,0.4); margin-bottom:14px;">05</div><div style="font-family:'Fraunces',serif; font-size:38px; font-style:italic; font-weight:300; color:var(--orange); margin-bottom:14px; line-height:1;">↻</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:10px; line-height:1.05;">Ketergantungan</h3><p style="font-size:12px; line-height:1.45; color:rgba(241,236,225,0.7); margin-top:auto;">Menurunnya kewaspadaan dan keahlian.</p></div><div class="risiko-card-back"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink); margin-bottom:10px; opacity:0.7;">Contoh Otomotif</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:15px; line-height:1.4; color:var(--ink);">"Menerima analisis akar masalah dari AI tanpa pemeriksaan langsung di lapangan."</div><div style="font-family:'Fraunces',serif; font-style:italic; font-size:54px; font-weight:300; margin-top:auto; align-self:flex-end; opacity:0.4; line-height:1;">↻</div></div></div></div>
+  </div>
+  <div style="text-align:center; margin-top:26px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:rgba(241,236,225,0.5);">Klik kartu untuk membalik →</div>
+</section>
+
+<!-- 18. TRANSITION 4 -->
+<section class="slide dark" data-slide="18">
+  <div class="cover-grid-bg"></div>
+  <div class="transition-wrap">
+    <div class="transition-num">04</div>
+    <div class="transition-label">Bagian Keempat</div>
+    <h2 class="transition-title">Tata Kelola, Kebijakan, <em>& Aplikasi</em></h2>
+  </div>
+</section>
+
+<!-- 19. ETIKA -->
+<section class="slide" data-slide="19">
+  <div class="slide-header"><div class="slide-section">Materi 05 — Etika & Tata Kelola</div><div class="slide-num">19 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Sumber: NIST AI RMF (2023), OECD AI Principles (2024)</div>
+  <h2 class="h-section reveal reveal-2">Empat prinsip <em>penggunaan AI</em> di perusahaan.</h2>
+  <div class="principles-row stagger">
+    <div class="principle"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:40px; color:var(--orange); line-height:1; margin-bottom:12px;">i</div><div style="font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin-bottom:8px;">Human-in-the-loop</div><div style="font-size:13px; line-height:1.4; opacity:0.75;">Manusia tetap penanggung jawab atas keputusan final. AI hanya menyarankan.</div></div>
+    <div class="principle"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:40px; color:var(--orange); line-height:1; margin-bottom:12px;">ii</div><div style="font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin-bottom:8px;">Transparansi</div><div style="font-size:13px; line-height:1.4; opacity:0.75;">Penggunaan AI dinyatakan secara terbuka pada dokumen resmi.</div></div>
+    <div class="principle"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:40px; color:var(--orange); line-height:1; margin-bottom:12px;">iii</div><div style="font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin-bottom:8px;">Akuntabilitas</div><div style="font-size:13px; line-height:1.4; opacity:0.75;">Tanggung jawab atas kesalahan output tetap berada pada karyawan.</div></div>
+    <div class="principle"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:40px; color:var(--orange); line-height:1; margin-bottom:12px;">iv</div><div style="font-family:'Fraunces',serif; font-size:20px; font-weight:600; margin-bottom:8px;">Privasi</div><div style="font-size:13px; line-height:1.4; opacity:0.75;">Perlindungan data sensitif internal wajib dijaga dari layanan eksternal.</div></div>
+  </div>
+  <div class="cap-callout reveal reveal-3" style="margin-top: 30px;">
+    <div style="font-family:'Fraunces',serif; font-style:italic; font-size:44px; color:var(--orange); line-height:0.8; font-weight:300;">!</div>
+    <div style="font-family:'Fraunces',serif; font-size:20px; font-weight:400; line-height:1.3;">Jika laporan yang dibantu AI berisi kesalahan, <em style="font-style:italic; color:var(--orange); font-weight:300;">Anda yang bertanggung jawab</em>, bukan mesin.</div>
+  </div>
+</section>
+
+<!-- 20. KLASIFIKASI DATA -->
+<section class="slide" data-slide="20">
+  <div class="slide-header"><div class="slide-section">Materi 05 — Klasifikasi Data</div><div class="slide-num">20 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Aturan Boleh / Tidak Boleh</div>
+  <h2 class="h-section reveal reveal-2">Tiga tingkat <em>klasifikasi data</em>.</h2>
+  <div class="traffic-light stagger">
+    <div class="tl-card" style="background:rgba(42,157,63,0.1); border:1px solid var(--green);">
+      <div style="display:flex; align-items:center; gap:12px;"><div class="tl-light" style="background:var(--green); color:var(--green);"></div><div style="font-family:'Fraunces',serif; font-size:26px; font-weight:500;">Publik</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:3px; background:var(--green); color:white;">✓ Boleh</div></div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink-soft);">Boleh digunakan pada AI publik tanpa syarat.</div>
+      <div style="font-size:12px; font-style:italic; color:var(--ink-mute); padding-top:10px; border-top:1px solid rgba(10,9,8,0.08);">Siaran pers, SOP umum, data fiktif latihan.</div>
+    </div>
+    <div class="tl-card" style="background:rgba(212,160,23,0.1); border:1px solid var(--mustard);">
+      <div style="display:flex; align-items:center; gap:12px;"><div class="tl-light" style="background:var(--mustard); color:var(--mustard);"></div><div style="font-family:'Fraunces',serif; font-size:26px; font-weight:500;">Internal</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:3px; background:var(--mustard); color:var(--ink);">⚠ Syarat</div></div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink-soft);">Hanya tools yang disetujui, data wajib dianonimkan terlebih dahulu.</div>
+      <div style="font-size:12px; font-style:italic; color:var(--ink-mute); padding-top:10px; border-top:1px solid rgba(10,9,8,0.08);">Data downtime, kode aset, nama vendor, anggaran.</div>
+    </div>
+    <div class="tl-card" style="background:rgba(230,57,70,0.1); border:1px solid var(--red);">
+      <div style="display:flex; align-items:center; gap:12px;"><div class="tl-light" style="background:var(--red); color:var(--red);"></div><div style="font-family:'Fraunces',serif; font-size:26px; font-weight:500;">Rahasia</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:3px; background:var(--red); color:white;">✕ Dilarang</div></div>
+      <div style="font-size:14px; line-height:1.5; color:var(--ink-soft);">Dilarang diunggah ke layanan AI apa pun.</div>
+      <div style="font-size:12px; font-style:italic; color:var(--ink-mute); padding-top:10px; border-top:1px solid rgba(10,9,8,0.08);">Gambar teknis, kontrak harga, data personalia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 21. POLICY 1-4 -->
+<section class="slide" data-slide="21">
+  <div class="slide-header"><div class="slide-section">Materi 06 — Baseline Policy (1/2)</div><div class="slide-num">21 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Kebijakan Dasar Perusahaan</div>
+  <h2 class="h-section reveal reveal-2">Empat aturan dasar <em>pertama</em>.</h2>
+  <div class="policy-grid stagger" style="grid-template-columns: 1fr;">
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">01</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);">Gunakan hanya <strong style="color:var(--ink); font-weight:600;">tools yang disetujui</strong> perusahaan.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">02</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink); font-weight:600;">Jangan mengunggah data Rahasia</strong> ke layanan AI apa pun.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">03</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink); font-weight:600;">Anonimkan data Internal</strong> sebelum digunakan.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">04</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink); font-weight:600;">Verifikasi</strong> seluruh fakta, angka, dan kutipan sebelum digunakan.</div></div>
+  </div>
+</section>
+
+<!-- 22. POLICY 5-8 -->
+<section class="slide" data-slide="22">
+  <div class="slide-header"><div class="slide-section">Materi 06 — Baseline Policy (2/2)</div><div class="slide-num">22 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Kebijakan Dasar Perusahaan</div>
+  <h2 class="h-section reveal reveal-2">Empat aturan dasar <em>kedua</em>.</h2>
+  <div class="policy-grid stagger" style="grid-template-columns: 1fr;">
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">05</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);">Keputusan <strong style="color:var(--ink); font-weight:600;">keselamatan dan mutu</strong> tidak boleh didelegasikan kepada AI.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">06</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);">Cantumkan keterangan bila <strong style="color:var(--ink); font-weight:600;">dokumen resmi dibantu AI</strong>.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">07</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);"><strong style="color:var(--ink); font-weight:600;">Laporkan insiden</strong> kebocoran atau kesalahan kepada atasan/unit terkait.</div></div>
+    <div class="policy-item"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:32px; color:var(--orange); line-height:1;">08</div><div style="font-size:15px; line-height:1.45; color:var(--ink-soft);">Ikuti <strong style="color:var(--ink); font-weight:600;">peninjauan kebijakan</strong> secara berkala.</div></div>
+  </div>
+</section>
+
+<!-- 23. USE CASE 1 -->
+<section class="slide" data-slide="23">
+  <div class="slide-header"><div class="slide-section">Materi 07 — Peta Use Case (1/2)</div><div class="slide-num">23 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Contoh Aplikasi Lintas Fungsi</div>
+  <h2 class="h-section reveal reveal-2">Use case berisiko rendah <em>divisi operasional</em>.</h2>
+  <div class="usecase-grid stagger">
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 01</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Produksi</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Ringkasan laporan shift · Draf work instruction · Fasilitasi diskusi 5-Why</div></div>
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 02</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Quality Assurance</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Klasifikasi temuan · Draf kerangka laporan 8D · Merangkum standar mutu publik</div></div>
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 03</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Supply Chain</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Draf email ke pemasok · Ringkasan status pengiriman · Brainstorming strategi negosiasi umum</div></div>
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 04</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">HR</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Draf deskripsi jabatan · Materi onboarding · Penyusunan kuesioner iklim kerja</div></div>
+  </div>
+</section>
+
+<!-- 24. USE CASE 2 -->
+<section class="slide" data-slide="24">
+  <div class="slide-header"><div class="slide-section">Materi 07 — Peta Use Case (2/2)</div><div class="slide-num">24 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Contoh Aplikasi Lintas Fungsi</div>
+  <h2 class="h-section reveal reveal-2">Use case berisiko rendah <em>divisi support</em>.</h2>
+  <div class="usecase-grid cols-3 stagger">
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 05</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Finance</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Penjelasan varians anggaran (anonim) · Ringkasan laporan keuangan publik · Draf memo kebijakan internal</div></div>
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 06</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Marketing</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Draf konten media sosial · Ringkasan riset pasar publik · Penyusunan kerangka proposal event</div></div>
+    <div class="usecase-card"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Divisi 07</div><div style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; margin-bottom:12px;">Customer Service</div><div style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">Draf balasan keluhan umum · Penyusunan FAQ · Klasifikasi tiket bantuan</div></div>
+  </div>
+  <div class="cap-callout reveal reveal-3" style="margin-top: 24px;">
+    <div style="font-family:'Fraunces',serif; font-style:italic; font-size:44px; color:var(--orange); line-height:0.8; font-weight:300;">★</div>
+    <div style="font-family:'Fraunces',serif; font-size:20px; font-weight:400; line-height:1.3;">Semua use case di atas <em style="font-style:italic; color:var(--orange); font-weight:300;">berisiko rendah</em> karena tidak melibatkan data rahasia atau keputusan mutu final.</div>
+  </div>
+</section>
+
+<!-- 25. PRAKTIK PROMPT SEDERHANA 1 -->
+<section class="slide" data-slide="25">
+  <div class="slide-header"><div class="slide-section">Praktik Prompt Sederhana (1/2)</div><div class="slide-num">25 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Coba Langsung · Klik "Salin Prompt"</div>
+  <h2 class="h-section reveal reveal-2">Tiga prompt <em>siap pakai</em> untuk tugas harian.</h2>
+  <div class="prompt-grid stagger">
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi Produksi</div><div style="font-size:10px; color:var(--ink-mute);">Ringkasan</div></div>
+      <div class="prompt-task">Merangkum Laporan Shift</div>
+      <div class="prompt-box"><div class="prompt-text">Saya adalah supervisor lini perakitan. Berikut adalah catatan harian saya: [tempel catatan]. Tolong rangkum menjadi 3 poin utama (masalah, tindakan, status) untuk laporan ke atasan.</div></div>
+      <button class="prompt-copy-btn" data-prompt="Saya adalah supervisor lini perakitan. Berikut adalah catatan harian saya: [tempel catatan]. Tolong rangkum menjadi 3 poin utama (masalah, tindakan, status) untuk laporan ke atasan.">Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi Quality Assurance</div><div style="font-size:10px; color:var(--ink-mute);">Penjelasan</div></div>
+      <div class="prompt-task">Menjelaskan Konsep 8D</div>
+      <div class="prompt-box"><div class="prompt-text">Jelaskan apa itu metode analisis 8D (Eight Disciplines) dalam manajemen mutu, dan berikan contoh penerapannya jika ditemukan cacat cat 'orange peel' pada bodi mobil.</div></div>
+      <button class="prompt-copy-btn" data-prompt="Jelaskan apa itu metode analisis 8D (Eight Disciplines) dalam manajemen mutu, dan berikan contoh penerapannya jika ditemukan cacat cat 'orange peel' pada bodi mobil.">Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi Supply Chain</div><div style="font-size:10px; color:var(--ink-mute);">Draf Email</div></div>
+      <div class="prompt-task">Menyusun Email Tindak Lanjut</div>
+      <div class="prompt-box"><div class="prompt-text">Buatkan draf email profesional kepada pemasok komponen kaki-kaki. Tolong sampaikan bahwa pengiriman batch tanggal 15 tertunda 3 hari dan mohon jadwal pengiriman baru secepatnya.</div></div>
+      <button class="prompt-copy-btn" data-prompt="Buatkan draf email profesional kepada pemasok komponen kaki-kaki. Tolong sampaikan bahwa pengiriman batch tanggal 15 tertunda 3 hari dan mohon jadwal pengiriman baru secepatnya.">Salin Prompt</button>
+    </div>
+  </div>
+</section>
+
+<!-- 26. PRAKTIK PROMPT SEDERHANA 2 -->
+<section class="slide" data-slide="26">
+  <div class="slide-header"><div class="slide-section">Praktik Prompt Sederhana (2/2)</div><div class="slide-num">26 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Coba Langsung · Klik "Salin Prompt"</div>
+  <h2 class="h-section reveal reveal-2">Tiga prompt <em>siap pakai</em> untuk tugas administratif.</h2>
+  <div class="prompt-grid stagger">
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi HR</div><div style="font-size:10px; color:var(--ink-mute);">Draf Dokumen</div></div>
+      <div class="prompt-task">Menyusun Job Description</div>
+      <div class="prompt-box"><div class="prompt-text">Saya butuh draf deskripsi pekerjaan (Job Description) untuk posisi 'Teknisi Pengecatan (Paint Shop)'. Masukkan tanggung jawab utama, kualifikasi (SLTA/SMK), dan keterampilan teknis yang dibutuhkan.</div></div>
+      <button class="prompt-copy-btn" data-prompt="Saya butuh draf deskripsi pekerjaan (Job Description) untuk posisi 'Teknisi Pengecatan (Paint Shop)'. Masukkan tanggung jawab utama, kualifikasi (SLTA/SMK), dan keterampilan teknis yang dibutuhkan.">Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi Finance</div><div style="font-size:10px; color:var(--ink-mute);">Formatting</div></div>
+      <div class="prompt-task">Mengubah Teks jadi Tabel</div>
+      <div class="prompt-box"><div class="prompt-text">Terjemahkan paragraf laporan keuangan ini dari bahasa Inggris ke Indonesia, lalu buatkan dalam bentuk tabel yang membandingkan pendapatan Q1 dan Q2. [tempel teks laporan]</div></div>
+      <button class="prompt-copy-btn" data-prompt="Terjemahkan paragraf laporan keuangan ini dari bahasa Inggris ke Indonesia, lalu buatkan dalam bentuk tabel yang membandingkan pendapatan Q1 dan Q2. [tempel teks laporan]">Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-header"><div class="prompt-division">Divisi Marketing</div><div style="font-size:10px; color:var(--ink-mute);">Brainstorming</div></div>
+      <div class="prompt-task">Mencari Ide Konten Sosmed</div>
+      <div class="prompt-box"><div class="prompt-text">Berikan 5 ide konten media sosial untuk peluncuran varian warna baru SUV 'Helios Orange'. Target audiens adalah keluarga muda urban. Buatkan caption singkat untuk masing-masing ide.</div></div>
+      <button class="prompt-copy-btn" data-prompt="Berikan 5 ide konten media sosial untuk peluncuran varian warna baru SUV 'Helios Orange'. Target audiens adalah keluarga muda urban. Buatkan caption singkat untuk masing-masing ide.">Salin Prompt</button>
+    </div>
+  </div>
+</section>
+
+<!-- 27. TRANSITION 5 -->
+<section class="slide dark" data-slide="27">
+  <div class="cover-grid-bg"></div>
+  <div class="transition-wrap">
+    <div class="transition-num">05</div>
+    <div class="transition-label">Bagian Kelima</div>
+    <h2 class="transition-title">Latihan Praktik & <em>Studi Kasus</em></h2>
+  </div>
+</section>
+
+<!-- 28. LATIHAN -->
+<section class="slide dark" data-slide="28">
+  <div class="slide-header"><div class="slide-section">Praktik — 5 Latihan</div><div class="slide-num">28 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Latihan Praktik · 120 Menit Total</div>
+  <h2 class="h-section reveal reveal-2" style="color:var(--paper)">Lima latihan, <em style="color:var(--orange)">satu peta jalur</em>.</h2>
+  <div class="latihan-grid stagger">
+    <div class="latihan-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:52px; color:var(--orange); line-height:1; margin-bottom:14px;">01</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(241,236,225,0.5); margin-bottom:12px;">25 menit</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; line-height:1.1; margin-bottom:12px; color:var(--paper);">Uji Halusinasi</h3><p style="font-size:12px; line-height:1.5; color:rgba(241,236,225,0.7); margin-bottom:14px; flex:1;">Membuktikan AI dapat menjawab dengan yakin namun keliru, dan melatih kebiasaan verifikasi fakta.</p><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--cyan); padding-top:12px; border-top:1px solid rgba(241,236,225,0.15);">→ Log verifikasi</div></div>
+    <div class="latihan-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:52px; color:var(--orange); line-height:1; margin-bottom:14px;">02</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(241,236,225,0.5); margin-bottom:12px;">25 menit</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; line-height:1.1; margin-bottom:12px; color:var(--paper);">Perbandingan 3 Tools</h3><p style="font-size:12px; line-height:1.5; color:rgba(241,236,225,0.7); margin-bottom:14px; flex:1;">Memahami kualitas dan gaya output berbeda antar tools — evaluasi tetap diperlukan.</p><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--cyan); padding-top:12px; border-top:1px solid rgba(241,236,225,0.15);">→ Tabel perbandingan</div></div>
+    <div class="latihan-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:52px; color:var(--orange); line-height:1; margin-bottom:14px;">03</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(241,236,225,0.5); margin-bottom:12px;">20 menit</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; line-height:1.1; margin-bottom:12px; color:var(--paper);">Klasifikasi Data</h3><p style="font-size:12px; line-height:1.5; color:rgba(241,236,225,0.7); margin-bottom:14px; flex:1;">Menerapkan aturan klasifikasi (Publik / Internal / Rahasia) pada 10 skenario nyata.</p><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--cyan); padding-top:12px; border-top:1px solid rgba(241,236,225,0.15);">→ Lembar klasifikasi</div></div>
+    <div class="latihan-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:52px; color:var(--orange); line-height:1; margin-bottom:14px;">04</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(241,236,225,0.5); margin-bottom:12px;">25 menit</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; line-height:1.1; margin-bottom:12px; color:var(--paper);">Draf Kebijakan AI</h3><p style="font-size:12px; line-height:1.5; color:rgba(241,236,225,0.7); margin-bottom:14px; flex:1;">Menggunakan AI untuk menyusun dokumen tata kelola, sekaligus melatih peninjauan kritis.</p><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--cyan); padding-top:12px; border-top:1px solid rgba(241,236,225,0.15);">→ Draf 1 halaman</div></div>
+    <div class="latihan-card"><div style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:52px; color:var(--orange); line-height:1; margin-bottom:14px;">05</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(241,236,225,0.5); margin-bottom:12px;">25 menit</div><h3 style="font-family:'Fraunces',serif; font-size:22px; font-weight:500; line-height:1.1; margin-bottom:12px; color:var(--paper);">Pemetaan Use Case</h3><p style="font-size:12px; line-height:1.5; color:rgba(241,236,225,0.7); margin-bottom:14px; flex:1;">Identifikasi dan prioritaskan use case yang layak dan aman untuk divisi masing-masing.</p><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--cyan); padding-top:12px; border-top:1px solid rgba(241,236,225,0.15);">→ 5 use case terprioritaskan</div></div>
+  </div>
+</section>
+
+<!-- 29. CASE 1 -->
+<section class="slide" data-slide="29">
+  <div class="slide-header"><div class="slide-section">Studi Kasus 01 — Supply Chain</div><div class="slide-num">29 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Kasus 1 — Insiden Kontrak Pemasok</div>
+  <h2 class="h-section reveal reveal-2">Klik pertanyaan untuk <em>membuka jawaban</em>.</h2>
+  <div class="case-wrap">
+    <div class="case-story reveal reveal-3">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Skenario</div>
+      <div style="font-family:'Fraunces',serif; font-size:16px; font-weight:300; line-height:1.45; font-style:italic;">"Staf pengadaan mengunggah file PDF kontrak harga volume 2023 beserta riwayat email negosiasi dengan pemasok ke chatbot AI publik, dengan prompt: 'Ringkas poin negosiasi dan berikan strategi agar kami bisa menurunkan harga beli 10%.' Pemasok kemudian melaporkan adanya kebocoran data strategis."</div>
+    </div>
+    <div class="case-questions stagger">
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">01</div><div style="font-size:14px; font-weight:500; flex:1;">Klasifikasi data apa yang dilanggar dan apa risiko hukum/bisnis bagi perusahaan?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);">Data <strong style="color:var(--orange);">Rahasia</strong> (kontrak harga & strategi negosiasi). Risiko: pelanggaran NDA, tuntutan hukum dari pemasok, kehilangan posisi tawar, kerugian finansial perusahaan.</div></div></div>
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">02</div><div style="font-size:14px; font-weight:500; flex:1;">Bagaimana cara yang benar untuk mencapai tujuan staf tersebut menggunakan AI?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);"><strong style="color:var(--orange);">Anonimkan data</strong> terlebih dahulu (hapus nama pemasok, angka spesifik, lokasi). Atau gunakan AI hanya untuk <em>brainstorming</em> argumen negosiasi umum tanpa menyertakan dokumen internal.</div></div></div>
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">03</div><div style="font-size:14px; font-weight:500; flex:1;">Apa langkah pertama yang harus dilakukan setelah insiden ini diketahui?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);"><strong style="color:var(--orange);">Melaporkan insiden</strong> ke atasan dan unit kepatuhan/IT sesuai prosedur, mendokumentasikan jenis data yang terunggah, dan meminta penghapusan data dari layanan pihak ketiga jika memungkinkan.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 30. CASE 2 -->
+<section class="slide" data-slide="30">
+  <div class="slide-header"><div class="slide-section">Studi Kasus 02 — Quality Assurance</div><div class="slide-num">30 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Kasus 2 — Laporan Akar Masalah Cacat Cat</div>
+  <h2 class="h-section reveal reveal-2">Klik pertanyaan untuk <em>membuka jawaban</em>.</h2>
+  <div class="case-wrap">
+    <div class="case-story reveal reveal-3">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Skenario</div>
+      <div style="font-family:'Fraunces',serif; font-size:16px; font-weight:300; line-height:1.45; font-style:italic;">"Staf QA meminta AI menyusun laporan analisis akar masalah untuk cacat orange peel pada bodi cat. AI memberikan jawaban sangat meyakinkan, mengutip standar ISO dan nilai toleransi ketebalan cat spesifik. Staf QA langsung menyalin laporan, menandatangani, dan mengirimkan ke atasan tanpa membaca detailnya."</div>
+    </div>
+    <div class="case-questions stagger">
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">01</div><div style="font-size:14px; font-weight:500; flex:1;">Risiko utama AI apa yang terjadi dalam kasus ini?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);"><strong style="color:var(--orange);">Halusinasi</strong> (kutipan standar/angka toleransi fiktif) dan <strong style="color:var(--orange);">ketergantungan berlebih</strong> — menerima output tanpa verifikasi.</div></div></div>
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">02</div><div style="font-size:14px; font-weight:500; flex:1;">Kontrol apa yang seharusnya dilakukan staf QA sebelum laporan dikirim?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);"><strong style="color:var(--orange);">Verifikasi setiap kutipan standar dan angka</strong> ketebalan terhadap dokumen resmi spec sheet. Melakukan <em>four-eyes principle</em> (review oleh rekan/atasan).</div></div></div>
+      <div class="case-q"><div class="case-q-header"><div style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; color:var(--orange); width:34px;">03</div><div style="font-size:14px; font-weight:500; flex:1;">Bagian pekerjaan QA mana yang tidak boleh didelegasikan kepada AI?</div><div class="case-q-toggle">+</div></div><div class="case-q-body"><div style="padding:0 20px 16px 70px; font-size:13px; line-height:1.55; color:var(--ink-soft);"><strong style="color:var(--orange);">Penetapan nilai toleransi mutu</strong>, investigasi fisik di lapangan, dan <strong style="color:var(--orange);">keputusan final</strong> menerima/menolak batch produksi.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 31. KUIS -->
+<section class="slide" data-slide="31">
+  <div class="slide-header"><div class="slide-section">Kuis Pemahaman — 10 PG + 2 Esai</div><div class="slide-num">31 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Evaluasi · 15 Menit</div>
+  <h2 class="h-section reveal reveal-2">Lima soal sampel PG. <em>Klik untuk menjawab.</em></h2>
+  <div class="quiz-wrap stagger">
+    <div class="quiz-q" data-correct="b">
+      <div style="display:flex; gap:14px; margin-bottom:12px;"><div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--orange); text-transform:uppercase; padding-top:3px;">SOAL 01</div><div style="font-family:'Fraunces',serif; font-size:17px; font-weight:500; line-height:1.25;">Cara kerja LLM dalam menghasilkan jawaban paling tepat digambarkan sebagai...</div></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:60px;">
+        <div class="quiz-option" data-letter="a"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">A</div>Mengambil fakta dari basis data terverifikasi</div>
+        <div class="quiz-option" data-letter="b"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">B</div>Memprediksi token berikutnya berdasarkan pola</div>
+        <div class="quiz-option" data-letter="c"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">C</div>Menjalankan aturan if-then yang diprogram</div>
+        <div class="quiz-option" data-letter="d"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">D</div>Menjelajahi internet secara real-time</div>
+      </div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div style="display:flex; gap:14px; margin-bottom:12px;"><div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--orange); text-transform:uppercase; padding-top:3px;">SOAL 02</div><div style="font-family:'Fraunces',serif; font-size:17px; font-weight:500; line-height:1.25;">Data kontrak harga dengan pemasok komponen utama diklasifikasikan sebagai...</div></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:60px;">
+        <div class="quiz-option" data-letter="a"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">A</div>Publik</div>
+        <div class="quiz-option" data-letter="b"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">B</div>Internal umum</div>
+        <div class="quiz-option" data-letter="c"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">C</div>Rahasia</div>
+        <div class="quiz-option" data-letter="d"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">D</div>Bebas</div>
+      </div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div style="display:flex; gap:14px; margin-bottom:12px;"><div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--orange); text-transform:uppercase; padding-top:3px;">SOAL 03</div><div style="font-family:'Fraunces',serif; font-size:17px; font-weight:500; line-height:1.25;">Prinsip <em>human-in-the-loop</em> dalam tata kelola AI berarti...</div></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:60px;">
+        <div class="quiz-option" data-letter="a"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">A</div>AI bertugas mengevaluasi pekerjaan manusia</div>
+        <div class="quiz-option" data-letter="b"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">B</div>Manusia hanya mengetik prompt, AI memutuskan</div>
+        <div class="quiz-option" data-letter="c"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">C</div>Manusia meninjau, menyetujui, dan bertanggung jawab</div>
+        <div class="quiz-option" data-letter="d"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">D</div>Manusia mematuhi seluruh saran AI tanpa perubahan</div>
+      </div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div style="display:flex; gap:14px; margin-bottom:12px;"><div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--orange); text-transform:uppercase; padding-top:3px;">SOAL 04</div><div style="font-family:'Fraunces',serif; font-size:17px; font-weight:500; line-height:1.25;">Data berikut ini adalah klasifikasi data Rahasia, kecuali...</div></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:60px;">
+        <div class="quiz-option" data-letter="a"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">A</div>Gambar teknis komponen belum dirilis</div>
+        <div class="quiz-option" data-letter="b"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">B</div>Kontrak harga dan volume pemasok</div>
+        <div class="quiz-option" data-letter="c"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">C</div>SOP keselamatan kerja umum yang sudah disebarkan</div>
+        <div class="quiz-option" data-letter="d"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">D</div>Daftar gaji dan data personalia karyawan</div>
+      </div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div style="display:flex; gap:14px; margin-bottom:12px;"><div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--orange); text-transform:uppercase; padding-top:3px;">SOAL 05</div><div style="font-family:'Fraunces',serif; font-size:17px; font-weight:500; line-height:1.25;">Manakah yang merupakan kapabilitas terbaik Generative AI saat ini?</div></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:60px;">
+        <div class="quiz-option" data-letter="a"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">A</div>Menggantikan inspeksi visual kamera CCTV</div>
+        <div class="quiz-option" data-letter="b"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">B</div>Merangkum notulen rapat & menyusun draf email</div>
+        <div class="quiz-option" data-letter="c"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">C</div>Memprediksi kerusakan mesin dari data sensor IoT</div>
+        <div class="quiz-option" data-letter="d"><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:10px; width:20px; height:20px; border:1px solid currentColor; border-radius:50%; display:flex; align-items:center; justify-content:center;">D</div>Mengambil keputusan final menyetujui klaim garansi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 32. SUMBER & REFERENSI -->
+<section class="slide" data-slide="32">
+  <div class="slide-header"><div class="slide-section">Sumber & Referensi</div><div class="slide-num">32 / 33</div></div>
+  <div class="eyebrow reveal reveal-1">Daftar Pustaka</div>
+  <h2 class="h-section reveal reveal-2">Sumber materi & <em>referensi lanjutan</em>.</h2>
+  <div class="source-grid stagger">
+    <div class="source-card">
+      <div class="source-cat">📚 Konsep AI & LLM</div>
+      <div class="source-item"><strong>IBM (2024).</strong> <em>What is Artificial Intelligence?</em> <a href="https://www.ibm.com/topics/artificial-intelligence" target="_blank">ibm.com/topics/artificial-intelligence</a></div>
+      <div class="source-item"><strong>Stanford HAI (2024).</strong> <em>AI Index Report 2024.</em> <a href="https://aiindex.stanford.edu" target="_blank">aiindex.stanford.edu</a></div>
+      <div class="source-item"><strong>Google Cloud (2024).</strong> <em>What is Generative AI?</em> <a href="https://cloud.google.com/learn/generative-ai" target="_blank">cloud.google.com/learn/generative-ai</a></div>
+      <div class="source-item"><strong>Vaswani et al. (2017).</strong> <em>Attention Is All You Need.</em> <a href="https://arxiv.org/abs/1706.03762" target="_blank">arxiv.org/abs/1706.03762</a></div>
+    </div>
+    <div class="source-card">
+      <div class="source-cat">🔧 Tools & Tokenizer</div>
+      <div class="source-item"><strong>OpenAI (2024).</strong> <em>Tokenizer.</em> <a href="https://platform.openai.com/tokenizer" target="_blank">platform.openai.com/tokenizer</a></div>
+      <div class="source-item"><strong>Google (2024).</strong> <em>AI Studio.</em> <a href="https://aistudio.google.com/prompts/new_chat" target="_blank">aistudio.google.com/prompts/new_chat</a></div>
+      <div class="source-item"><strong>Hugging Face (2024).</strong> <em>Tokenizers.</em> <a href="https://huggingface.co/docs/tokenizers" target="_blank">huggingface.co/docs/tokenizers</a></div>
+      <div class="source-item"><strong>OpenAI (2024).</strong> <em>GPT-4 Technical Report.</em> <a href="https://cdn.openai.com/papers/gpt-4.pdf" target="_blank">cdn.openai.com/papers/gpt-4.pdf</a></div>
+    </div>
+    <div class="source-card">
+      <div class="source-cat">⚖️ Tata Kelola & Risiko</div>
+      <div class="source-item"><strong>NIST (2023).</strong> <em>AI Risk Management Framework (AI RMF).</em> <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank">nist.gov/itl/ai-risk-management-framework</a></div>
+      <div class="source-item"><strong>OECD (2024).</strong> <em>AI Principles.</em> <a href="https://oecd.ai/en/ai-principles" target="_blank">oecd.ai/en/ai-principles</a></div>
+      <div class="source-item"><strong>OWASP (2024).</strong> <em>Top 10 for LLM Applications.</em> <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications" target="_blank">owasp.org/.../top-10-for-llm</a></div>
+      <div class="source-item"><strong>Anthropic (2024).</strong> <em>Claude Model Specifications.</em> <a href="https://docs.anthropic.com" target="_blank">docs.anthropic.com</a></div>
+    </div>
+    <div class="source-card">
+      <div class="source-cat">📖 Referensi Model</div>
+      <div class="source-item"><strong>Google (2024).</strong> <em>Gemini 1.5 Pro Technical Report.</em> <a href="https://arxiv.org/abs/2403.05530" target="_blank">arxiv.org/abs/2403.05530</a></div>
+      <div class="source-item"><strong>OpenAI (2024).</strong> <em>ChatGPT.</em> <a href="https://chat.openai.com" target="_blank">chat.openai.com</a></div>
+      <div class="source-item"><strong>Google (2024).</strong> <em>Gemini.</em> <a href="https://gemini.google.com" target="_blank">gemini.google.com</a></div>
+      <div class="source-item"><strong>Anthropic (2024).</strong> <em>Claude.</em> <a href="https://claude.ai" target="_blank">claude.ai</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 33. CLOSING -->
+<section class="slide dark" data-slide="33">
+  <div class="cover-grid-bg"></div>
+  <div class="slide-header" style="border-bottom-color: rgba(241,236,225,0.1); color: rgba(241,236,225,0.5);"><div class="slide-section">Penutup & Tugas</div><div class="slide-num">33 / 33</div></div>
+  <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; position:relative;">
+    <div style="z-index:2; position:relative; margin-top:30px;" class="reveal reveal-1">
+      <div class="eyebrow">Sesi 1 selesai</div>
+      <h2 class="closing-title">Sampai jumpa<br>di <em>Sesi 2.</em></h2>
+      <p style="font-family:'Fraunces',serif; font-style:italic; font-weight:300; font-size:21px; color:rgba(241,236,225,0.7); max-width:700px; line-height:1.4; margin-bottom:44px;">Dari AI ke LLM ke Gen AI: fondasi sudah terpasang. Berikutnya: menyusun prompt yang efektif untuk pekerjaan nyata Anda.</p>
+      <div class="closing-takeaways">
+        <div class="takeaway"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:var(--orange); margin-bottom:8px;">→ Takeaway 01</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:400; line-height:1.3; color:var(--paper);">AI adalah <em style="font-style:italic; color:var(--orange);">asisten draf</em>, bukan pengambil keputusan.</div></div>
+        <div class="takeaway"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:var(--orange); margin-bottom:8px;">→ Takeaway 02</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:400; line-height:1.3; color:var(--paper);">Verifikasi <em style="font-style:italic; color:var(--orange);">setiap fakta</em> sebelum digunakan.</div></div>
+        <div class="takeaway"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; color:var(--orange); margin-bottom:8px;">→ Takeaway 03</div><div style="font-family:'Fraunces',serif; font-size:16px; font-weight:400; line-height:1.3; color:var(--paper);">Data <em style="font-style:italic; color:var(--orange);">Rahasia</em> tidak pernah boleh keluar.</div></div>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; z-index:2; position:relative; gap:40px;" class="reveal reveal-2">
+      <div style="background:rgba(255,90,31,0.08); border-left:3px solid var(--orange); padding:18px 22px; max-width:540px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--orange); margin-bottom:8px;">Tugas Pra-Sesi 2 — ±20 menit</div>
+        <div style="font-size:13px; line-height:1.5; color:rgba(241,236,225,0.85);">Pilih <strong style="color:var(--orange);">1 tugas rutin berbasis teks</strong> di pekerjaan Anda. Jalankan dengan prompt sederhana. Catat satu hal yang kurang memuaskan — akan dipakai sebagai bahan perbaikan prompt di Sesi 2.</div>
+      </div>
+      <div style="text-align:right; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; color:rgba(241,236,225,0.5);">
+        <div>Pra-baca Sesi 2</div>
+        <div style="font-family:'Fraunces',serif; font-style:italic; font-size:30px; color:var(--paper); margin-top:4px; letter-spacing:0.05em;">R-C-O-C-O</div>
+        <div style="opacity:0.5; margin-top:8px; line-height:1.5;">Role · Context · Objective<br>Constraints · Output Format</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prevBtn">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">→</button>
+</div>
+
+<div class="help-hint" id="helpHint"><kbd>←</kbd><kbd>→</kbd> navigasi · <kbd>Space</kbd> lanjut</div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const progressFill = document.querySelector('.progress-fill');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const helpHint = document.getElementById('helpHint');
+let current = 0;
+
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(dot);
+}
+const dots = document.querySelectorAll('.dot');
+
+function goTo(index) {
+  if (index < 0 || index >= total || index === current) return;
+  slides[current].classList.remove('active');
+  current = index;
+  slides[current].classList.add('active');
+  updateUI();
+}
+
+function updateUI() {
+  dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+  progressFill.style.width = `${((current + 1) / total) * 100}%`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === total - 1;
+  const isDark = slides[current].classList.contains('dark');
+  counter.classList.toggle('dark', isDark);
+  helpHint.classList.toggle('dark', isDark);
+  if (current === 16) document.querySelectorAll('.risiko-card').forEach(c => c.classList.remove('flipped'));
+  if (current === 28 || current === 29) document.querySelectorAll('.case-q').forEach(q => q.classList.remove('open'));
+  if (current === 30) document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('correct', 'wrong'));
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End') goTo(total - 1);
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) { if (dx < 0) goTo(current + 1); else goTo(current - 1); }
+});
+
+function createTokenRain() {
+  const container = document.getElementById('tokenRain');
+  if (!container) return;
+  const tokens = ['token', 'context', 'LLM', 'probabilistik', 'prompt', 'output', 'verifikasi', 'draft', 'AI', 'model', 'parameter', 'standar', 'mutu', 'klausul', 'data', 'intern', 'policy', 'governance', 'halusinasi', 'bias', 'stand', 'ar', 'perak', 'itan']
+  for (let i = 0; i < 30; i++) {
+    const token = document.createElement('div');
+    token.className = 'token';
+    token.textContent = tokens[Math.floor(Math.random() * tokens.length)];
+    token.style.left = Math.random() * 100 + '%';
+    token.style.animationDuration = (8 + Math.random() * 8) + 's';
+    token.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(token);
+  }
+}
+createTokenRain();
+
+document.querySelectorAll('.risiko-card').forEach(card => card.addEventListener('click', () => card.classList.toggle('flipped')));
+document.querySelectorAll('.case-q-header').forEach(header => header.addEventListener('click', () => header.closest('.case-q').classList.toggle('open')));
+
+document.querySelectorAll('.quiz-q').forEach(q => {
+  const correct = q.dataset.correct;
+  const options = q.querySelectorAll('.quiz-option');
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      options.forEach(o => o.classList.remove('correct', 'wrong'));
+      options.forEach(o => {
+        if (o.dataset.letter === correct) o.classList.add('correct');
+        else if (o === opt) o.classList.add('wrong');
+      });
+    });
+  });
+});
+
+// Copy to clipboard for Prompt Practices
+document.querySelectorAll('.prompt-copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const promptText = btn.dataset.prompt;
+    navigator.clipboard.writeText(promptText).then(() => {
+      btn.textContent = 'Tersalin!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Salin Prompt';
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(err => {
+      console.error('Gagal menyalin: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = promptText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try { document.execCommand('copy'); btn.textContent = 'Tersalin!'; btn.classList.add('copied'); } catch (e) {}
+      document.body.removeChild(textArea);
+      setTimeout(() => { btn.textContent = 'Salin Prompt'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+});
+
+updateUI();
+</script>
+</body>
+</html>
