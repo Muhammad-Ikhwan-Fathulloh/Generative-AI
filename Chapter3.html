@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 3: Riset Cerdas dengan AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FFFFFF; --text-color: #1A1A1A; --card-bg: #F8F9FA;
+            --accent-color: #2563EB; --border-color: #E0E0E0; --button-text: #FFFFFF;
+            --chatgpt-color: #10A37F; --perplexity-color: #20B8CD; --gemini-color: #4285F4; --claude-color: #D97757; --notebook-color: #8B5CF6;
+            --context-color: #388E3C; --constraints-color: #D32F2F;
+        }
+        [data-theme="dark"] {
+            --bg-color: #121212; --text-color: #E0E0E0; --card-bg: #1E1E1E;
+            --accent-color: #60A5FA; --border-color: #333333; --button-text: #121212;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Atkinson Hyperlegible', sans-serif; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s; overflow: hidden; height: 100vh; }
+        .slide-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        .slide { display: none; flex-direction: column; height: 100%; padding: 40px 60px; position: relative; overflow: hidden; }
+        .slide.active { display: flex; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid var(--border-color); margin-bottom: 30px; z-index: 2; }
+        .slide-header h3 { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; }
+        .slide-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 25px; overflow-y: auto; padding-bottom: 20px; position: relative; z-index: 2; }
+        h1 { font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.2; }
+        h2 { font-family: 'Inter', sans-serif; font-size: 3rem; font-weight: 700; line-height: 1.2; }
+        p, li { font-size: 1.875rem; line-height: 1.4; }
+        .small-text { font-size: 1.25rem; opacity: 0.9; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; z-index: 2; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .warning-box { border-left: 8px solid #D32F2F; background: rgba(211, 47, 47, 0.1); padding: 25px; border-radius: 4px; display:flex; gap: 15px; align-items: flex-start; }
+        .btn { background-color: var(--accent-color); color: var(--button-text); border: none; padding: 16px 32px; font-size: 1.5rem; font-family: 'Atkinson Hyperlegible', sans-serif; font-weight: 700; border-radius: 8px; cursor: pointer; transition: transform 0.2s; min-height: 48px; align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-outline { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); }
+        .navigation { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; background: var(--bg-color); border-top: 1px solid var(--border-color); z-index: 10; }
+        .nav-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 12px 24px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; min-width: 48px; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+        .nav-btn:hover { background: var(--accent-color); color: var(--button-text); }
+        .progress-bar { position: fixed; top: 0; left: 0; height: 8px; background: var(--accent-color); transition: width 0.3s ease; z-index: 100; }
+        .theme-toggle { position: fixed; top: 20px; right: 80px; z-index: 100; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; width: 48px; height: 48px; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+        .notes-toggle { position: fixed; top: 20px; right: 140px; z-index: 100; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50%; width: 48px; height: 48px; cursor: pointer; font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--accent-color); }
+        .notes-panel { position: fixed; bottom: 80px; right: 20px; width: 350px; max-height: 50vh; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(150%); transition: transform 0.3s ease; z-index: 99; overflow-y: auto; }
+        .notes-panel.active { transform: translateY(0); }
+        .notes-panel h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .notes-panel p { font-size: 1rem; line-height: 1.4; }
+        .link-text { color: var(--accent-color); text-decoration: underline; font-weight: bold; font-size: 1.125rem; }
+        
+        /* Tool Colors */
+        .c-chatgpt { color: var(--chatgpt-color); font-weight: bold; }
+        .c-perplexity { color: var(--perplexity-color); font-weight: bold; }
+        .c-gemini { color: var(--gemini-color); font-weight: bold; }
+        .c-claude { color: var(--claude-color); font-weight: bold; }
+        .c-notebook { color: var(--notebook-color); font-weight: bold; }
+        .b-chatgpt { border-left: 8px solid var(--chatgpt-color); }
+        .b-perplexity { border-left: 8px solid var(--perplexity-color); }
+        .b-gemini { border-left: 8px solid var(--gemini-color); }
+        .b-claude { border-left: 8px solid var(--claude-color); }
+        .b-notebook { border-left: 8px solid var(--notebook-color); }
+
+        /* CSS Mockup UI */
+        .mockup-window { border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-color); box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 2; }
+        .mockup-header { background: var(--border-color); padding: 10px; display: flex; gap: 8px; align-items: center; }
+        .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #FF5F56; } .dot-yellow { background: #FFBD2E; } .dot-green { background: #27C93F; }
+        .mockup-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .mockup-search { display: flex; border: 2px solid var(--accent-color); border-radius: 24px; padding: 10px 20px; align-items: center; gap: 10px; }
+        .mockup-input-line { flex: 1; height: 4px; background: var(--border-color); border-radius: 2px; }
+        .mockup-citation { display: flex; align-items: center; gap: 10px; font-size: 1rem; color: var(--text-color); background: var(--card-bg); padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .mockup-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-color); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.8rem; font-weight: bold; flex-shrink: 0; }
+        .mockup-sidebar { display: flex; flex-direction: column; gap: 8px; width: 30%; padding-right: 15px; border-right: 1px solid var(--border-color); }
+        .mockup-src-item { height: 40px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 0.85rem; }
+        .mockup-main { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-left: 15px; }
+        .mockup-chat { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; font-size: 0.85rem; }
+
+        /* SVG Watermark */
+        .watermark { position: absolute; top: 50%; right: -5%; transform: translateY(-50%); width: 400px; height: 400px; opacity: 0.05; pointer-events: none; z-index: 0; display: flex; align-items: center; justify-content: center; }
+        .watermark svg { width: 100%; height: 100%; fill: var(--text-color); }
+        .icon-badge { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-color), var(--notebook-color)); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 0 20px 0; box-shadow: 0 8px 16px rgba(0,0,0,0.15); color: #fff; flex-shrink: 0; }
+        .icon-badge svg { width: 40px; height: 40px; fill: #fff; }
+
+        /* Prompt Code & Copy */
+        .prompt-code { font-family: monospace; background: #e0e0e0; padding: 15px; border-radius: 8px; font-size: 1.2rem; color: #000; border: 1px solid #bdbdbd; white-space: pre-line; }
+        [data-theme="dark"] .prompt-code { background: #333; color: #fff; border-color: #555; }
+        .prompt-card { display: flex; flex-direction: column; gap: 10px; }
+
+        /* Hidden Answer */
+        .hidden-answer { display: none; margin-top: 15px; padding: 20px; background: rgba(255, 255, 255, 0.1); border: 1px dashed var(--border-color); border-radius: 8px; }
+
+        @media (max-width: 768px) { .slide { padding: 20px; } h1 { font-size: 2.5rem; } h2 { font-size: 2rem; } p, li { font-size: 1.5rem; } .grid-2, .grid-3 { grid-template-columns: 1fr; } .navigation { padding: 10px 20px; } .notes-panel { width: 90%; right: 5%; } }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Ganti mode">🌓</button>
+    <button class="notes-toggle" onclick="toggleNotes()" aria-label="Catatan Pembicara">📝</button>
+    
+    <div class="notes-panel" id="notesPanel">
+        <h3> Catatan Pembicara</h3>
+        <p id="noteContent">Klik tombol 'X' untuk menutup. Catatan akan muncul di sini.</p>
+    </div>
+
+    <div class="slide-container">
+        <!-- Slide 1 -->
+        <div class="slide active" data-note="Selamat datang di Sesi 3. Tekankan bahwa meskipun AI mencari sumber, peserta wajib memverifikasi. Semua data latihan tetap fiktif.">
+            <div class="slide-header"><h3>Sesi 3 - Riset Cerdas dengan AI</h3><h3>01 / 33</h3></div>
+            <div class="slide-content">
+                <h1>Riset Cerdas dengan AI: Mencari Sumber & Brainstorming Terstruktur</h1>
+                <div class="warning-box">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D32F2F" stroke-width="2"><path d="M12 2L2 22h20L12 2z"/><line x1="12" y1="9" x2="12" y2="15"/><circle cx="12" cy="17" r="1" fill="#D32F2F"/></svg>
+                    <div>
+                        <p style="font-size: 1.5rem; color: #D32F2F; font-weight: bold;">⚠️ Peringatan Keamanan Data</p>
+                        <p class="small-text">Seluruh latihan memakai data FIKTIF. Hasil pencarian AI tetap wajib diverifikasi ke sumber aslinya sebelum digunakan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" data-note="Fokus hari ini: Teknik prompting untuk riset dan brainstorming, bukan kuis atau tugas.">
+            <div class="slide-header"><h3>Tujuan & Rundown</h3><h3>02 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Tujuan Pembelajaran</h2>
+                <div class="grid-2">
+                    <div class="card"><p style="font-weight: bold;">4 Tujuan Terukur:</p><ul><li>Menguasai 5 Tools Riset AI.</li><li>Memverifikasi sumber AI.</li><li>Memahami Alur Riset Lengkap.</li><li>Menguasai Prompt Brainstorming.</li></ul></div>
+                    <div class="card"><p style="font-weight: bold;">Rundown 180 Menit:</p><p class="small-text">Teori 20% (Memahami Tools)</p><p class="small-text">Praktik 80% (Uji Coba Prompt)</p><p class="small-text" style="margin-top: 15px;">Fokus pada perpustakaan prompt siap pakai.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" data-note="Recap singkat: Token menentukan ingatan AI. Halusinasi adalah tebakan yang meyakinkan. R-C-O-C-O adalah kerangka prompt.">
+            <div class="slide-header"><h3>Pengulangan Sesi 1-2</h3><h3>03 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Recap Sesi Sebelumnya</h2>
+                <div class="card"><p style="font-weight: bold;">3 Poin Inti:</p><ul><li><strong>Context Window:</strong> Batas ingatan AI per percakapan.</li><li><strong>Halusinasi:</strong> AI bisa berbohong dengan percaya diri.</li><li><strong>R-C-O-C-O:</strong> Kerangka menyusun prompt presisi.</li></ul></div>
+                <div class="card b-notebook"><p class="small-text">Hari ini kita pakai R-C-O-C-O untuk menguji tools riset AI dan brainstorming.</p></div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" data-note="Jelaskan perbedaan utama: Chatbot biasa vs Tools Riset. Grounding adalah menambatkan jawaban ke sumber nyata.">
+            <div class="slide-header"><h3>Materi 1 - Tools Riset Khusus</h3><h3>04 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Mengapa Perlu Tools Khusus?</h2>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 8px solid #757575;">
+                        <p style="font-weight: bold;">Chatbot Biasa</p>
+                        <p class="small-text">Menebak dari ingatan data lama (offline). Bisa ketinggalan zaman.</p>
+                    </div>
+                    <div class="card" style="border-left: 8px solid var(--context-color);">
+                        <p style="font-weight: bold;">Tools Riset AI</p>
+                        <p class="small-text">Mencari web real-time & mengutip sumber. <strong>Grounding</strong> (menjawab berdasarkan sumber nyata).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" data-note="ChatGPT bisa mencari web jika diaktifkan. Perplexity = Mesin pencari + AI.">
+            <div class="slide-header"><h3>Materi 2 - ChatGPT & Perplexity</h3><h3>05 / 33</h3></div>
+            <div class="slide-content">
+                <h2><span class="c-chatgpt">ChatGPT</span> & <span class="c-perplexity">Perplexity</span></h2>
+                <div class="grid-2">
+                    <div class="card b-chatgpt">
+                        <p><strong>ChatGPT (Browsing Mode):</strong></p>
+                        <p class="small-text">Aktifkan fitur "Search the web". Bisa mencari informasi terkini, tapi fokus utamanya adalah percakapan.</p>
+                    </div>
+                    <div class="card b-perplexity">
+                        <p><strong>Perplexity AI:</strong></p>
+                        <p class="small-text">Mesin pencari murni + AI. Setiap jawaban langsung diberi nomor sitasi [1], [2].</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6 - Mockup Perplexity -->
+        <div class="slide" data-note="Tunjukkan mockup ini. Jelaskan bahwa peserta bisa klik angka [1] untuk melihat sumbernya.">
+            <div class="slide-header"><h3>Demo Perplexity</h3><h3>06 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Antarmuka Perplexity</h2>
+                <div class="mockup-window">
+                    <div class="mockup-header"><div class="mockup-dot dot-red"></div><div class="mockup-dot dot-yellow"></div><div class="mockup-dot dot-green"></div><div style="font-size:1rem; margin-left:10px;">Perplexity AI</div></div>
+                    <div class="mockup-body">
+                        <div class="mockup-search">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <div class="mockup-input-line"></div>
+                        </div>
+                        <p class="small-text" style="font-size:1rem;">Berdasarkan pencarian, telekerja meningkat [1]. Produktivitas tetap stabil [2]. Tantangan utama adalah isolasi [3].</p>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <div class="mockup-citation"><div class="mockup-icon">1</div> Stanford Univ</div>
+                            <div class="mockup-citation"><div class="mockup-icon">2</div> Harvard Biz</div>
+                            <div class="mockup-citation"><div class="mockup-icon">3</div> Forbes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide" data-note="Gemini unggul karena integrasi langsung dengan Google.">
+            <div class="slide-header"><h3>Materi 3 - Gemini</h3><h3>07 / 33</h3></div>
+            <div class="slide-content">
+                <h2><span class="c-gemini">Gemini</span> untuk Riset</h2>
+                <div class="card b-gemini">
+                    <p><strong>Keunggulan:</strong> Integrasi pencarian Google real-time.</p>
+                    <ul>
+                        <li>Akses informasi paling mutakhir.</li>
+                        <li>Fitur <strong>"Google It"</strong> untuk grounding.</li>
+                        <li>Cocok untuk riset tren pasar & berita.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide" data-note="Claude unggul membaca PDF/Artikel panjang yang diunggah.">
+            <div class="slide-header"><h3>Materi 4 - Claude</h3><h3>08 / 33</h3></div>
+            <div class="slide-content">
+                <h2><span class="c-claude">Claude</span> untuk Riset</h2>
+                <div class="card b-claude">
+                    <p><strong>Keunggulan:</strong> Menganalisis dokumen panjang (PDF, laporan).</p>
+                    <ul>
+                        <li>Membaca ratusan halaman dengan cepat.</li>
+                        <li>Merangkum banyak sumber sekaligus.</li>
+                        <li>Menyusun perbandingan argumen terstruktur.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide" data-note="NotebookLM adalah notebook pribadi. AI hanya membaca file yang kita upload.">
+            <div class="slide-header"><h3>Materi 5 - NotebookLM</h3><h3>09 / 33</h3></div>
+            <div class="slide-content">
+                <h2><span class="c-notebook">NotebookLM</span>: Notebook Pribadi</h2>
+                <div class="card b-notebook">
+                    <p><strong>Konsep:</strong> Notebook pribadi berbasis AI.</p>
+                    <ul>
+                        <li>Unggah sumber sendiri (PDF, link, teks).</li>
+                        <li>AI hanya menjawab dari sumber yang diunggah.</li>
+                        <li>Mengurangi risiko halusinasi (Grounding maksimal).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10 - Mockup NotebookLM -->
+        <div class="slide" data-note="Tunjukkan layout NotebookLM. Kiri: sumber. Kanan: chat.">
+            <div class="slide-header"><h3>Demo NotebookLM</h3><h3>10 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Antarmuka NotebookLM</h2>
+                <div class="mockup-window">
+                    <div class="mockup-header"><div class="mockup-dot dot-red"></div><div class="mockup-dot dot-yellow"></div><div class="mockup-dot dot-green"></div><div style="font-size:1rem; margin-left:10px;">NotebookLM</div></div>
+                    <div class="mockup-body" style="flex-direction: row; padding: 0; height: 200px;">
+                        <div class="mockup-sidebar" style="padding: 15px;">
+                            <div style="font-size: 0.9rem; font-weight: bold; margin-bottom: 5px;">Sumber (3)</div>
+                            <div class="mockup-src-item"><div class="mockup-icon" style="width:16px; height:16px; font-size:0.6rem; margin-right:8px;">📄</div> Laporan Q1.pdf</div>
+                            <div class="mockup-src-item"><div class="mockup-icon" style="width:16px; height:16px; font-size:0.6rem; margin-right:8px;">📄</div> Artikel_Bisnis.txt</div>
+                            <div class="mockup-src-item"><div class="mockup-icon" style="width:16px; height:16px; font-size:0.6rem; margin-right:8px;">🔗</div> Link_Situs.com</div>
+                        </div>
+                        <div class="mockup-main" style="padding: 15px;">
+                            <div class="mockup-chat"><strong>Tanya:</strong> Apa strategi utama Q1?</div>
+                            <div class="mockup-chat"><strong>Jawab AI:</strong> Strategi utama Q1 adalah ekspansi digital <span style="background: var(--notebook-color); color:#fff; padding: 2px 5px; border-radius: 4px; font-size:0.8rem;">[Sumber 1]</span>.</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="small-text">Fitur: Unggah sumber, Buat ringkasan otomatis, Tanya jawab dengan rujukan halaman.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11 -->
+        <div class="slide" data-note="Pakai tabel ini sebagai acuan cepat. Peserta boleh screenshot slide ini.">
+            <div class="slide-header"><h3>Perbandingan 5 Tools</h3><h3>11 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Kapan Pakai Yang Mana?</h2>
+                <div class="card" style="padding: 15px;">
+                    <table style="width:100%; border-collapse: collapse; font-size: 1.25rem;">
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="text-align:left; padding:8px;">Tools</th>
+                            <th style="text-align:left; padding:8px;">Kekuatan Utama</th>
+                            <th style="text-align:left; padding:8px;">Kapan Digunakan</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);"><td style="padding:8px;" class="c-chatgpt">ChatGPT</td><td style="padding:8px;">Serba guna & browsing</td><td style="padding:8px;">Riset umum & analisis</td></tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);"><td style="padding:8px;" class="c-perplexity">Perplexity</td><td style="padding:8px;">Sitasi langsung [1]</td><td style="padding:8px;">Cari & verifikasi web</td></tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);"><td style="padding:8px;" class="c-gemini">Gemini</td><td style="padding:8px;">Real-time Google</td><td style="padding:8px;">Tren & berita terbaru</td></tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);"><td style="padding:8px;" class="c-claude">Claude</td><td style="padding:8px;">Baca dokumen tebal</td><td style="padding:8px;">Riset literatur internal</td></tr>
+                        <tr><td style="padding:8px;" class="c-notebook">NotebookLM</td><td style="padding:8px;">Grounding ketat</td><td style="padding:8px;">Riset dari file sendiri</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12 -->
+        <div class="slide" data-note="Hukum emas: Jangan percaya AI 100%. Selalu klik tautannya.">
+            <div class="slide-header"><h3>Materi 6 - Verifikasi</h3><h3>12 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prinsip Verifikasi Sumber</h2>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 8px solid #D32F2F;">
+                        <p style="font-weight: bold;">🚫 Tanda Meragukan</p>
+                        <ul><li>Tautan mati (Error 404).</li><li>Sumbernya blog anonim.</li><li>AI tidak cantumkan link sama sekali.</li></ul>
+                    </div>
+                    <div class="card" style="border-left: 8px solid var(--context-color);">
+                        <p style="font-weight: bold;">✅ Wajib Dilakukan</p>
+                        <ul><li>Buka tautan asli sumbernya.</li><li>Cek tanggal terbit artikel.</li><li>Bandingsi dengan sumber lain.</li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13 -->
+        <div class="slide" data-note="AI bisa jadi lawan diskusi. Minta AI mengkritik ide kita.">
+            <div class="slide-header"><h3>Materi 7 - Brainstorming</h3><h3>13 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Brainstorming Terstruktur</h2>
+                <div class="grid-3">
+                    <div class="card"><p style="font-weight: bold;">Peta Pikiran</p><p class="small-text">Minta AI mengurai ide utama ke cabang-cabang kecil.</p></div>
+                    <div class="card"><p style="font-weight: bold;">Devil's Advocate</p><p class="small-text">Minta AI menjadi kritikus yang menghancurkan ide Anda.</p></div>
+                    <div class="card"><p style="font-weight: bold;">Sudut Pandang</p><p class="small-text">Minta AI berpikir dari persona berbeda (mis. Klien vs Admin).</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14 -->
+        <div class="slide" data-note="Alur ini wajib diingat. Cari -> Dalami -> Brainstorm -> Draf.">
+            <div class="slide-header"><h3>Materi 8 - Alur Riset</h3><h3>14 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Alur Riset Ujung ke Ujung</h2>
+                <div class="card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="text-align:center;"><div class="mockup-icon" style="margin: 0 auto;">1</div><p class="small-text">Cari Sumber<br>(Perplexity/Gemini)</p></div>
+                    <div style="font-size: 2rem;">→</div>
+                    <div style="text-align:center;"><div class="mockup-icon" style="margin: 0 auto;">2</div><p class="small-text">Dalami Sumber<br>(Claude/NotebookLM)</p></div>
+                    <div style="font-size: 2rem;">→</div>
+                    <div style="text-align:center;"><div class="mockup-icon" style="margin: 0 auto;">3</div><p class="small-text">Brainstorming<br>(ChatGPT/NotebookLM)</p></div>
+                    <div style="font-size: 2rem;">→</div>
+                    <div style="text-align:center;"><div class="mockup-icon" style="margin: 0 auto;">4</div><p class="small-text">Draf Akhir<br>(R-C-O-C-O)</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15 - Prompt Library 1 -->
+        <div class="slide" data-note="Library prompt riset. Peserta bisa langsung pakai.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Riset</h3><h3>15 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Pencarian Awal</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-perplexity">
+                        <p style="font-weight: bold;" class="c-perplexity">Perplexity: Cari Sumber</p>
+                        <p class="prompt-code" id="prompt-1">"Bantu saya mencari 3 sumber kredibel tentang [Topik]. Sertakan tautan & ringkasan singkat."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(1)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-gemini">
+                        <p style="font-weight: bold;" class="c-gemini">Gemini: Riset Tren</p>
+                        <p class="prompt-code" id="prompt-2">"Cari informasi terbaru bulan ini tentang tren [Topik]. Gunakan fitur Google It untuk verifikasi."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(2)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16 - Prompt Library 2 -->
+        <div class="slide" data-note="Prompt verifikasi dan analisis.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Riset</h3><h3>16 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Verifikasi & Analisis</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-chatgpt">
+                        <p style="font-weight: bold;" class="c-chatgpt">ChatGPT: Verifikasi Fakta</p>
+                        <p class="prompt-code" id="prompt-3">"Periksa apakah klaim ini benar berdasarkan pencarian web: [Klaim]. Beri jawaban ya/tidak & kutipan sumber."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(3)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-claude">
+                        <p style="font-weight: bold;" class="c-claude">Claude: Analisis Kontrak</p>
+                        <p class="prompt-code" id="prompt-4">"Analisis PDF ini. Buat tabel berisi 3 kolom: Kewajiban Klien, Kewajiban Vendor, dan Risiko Hukum."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(4)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17 - Prompt Library 3 -->
+        <div class="slide" data-note="Prompt ringkasan dokumen.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Riset</h3><h3>17 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Ringkasan Dokumen</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-claude">
+                        <p style="font-weight: bold;" class="c-claude">Claude: Rangkum Laporan</p>
+                        <p class="prompt-code" id="prompt-5">"Rangkum laporan tahunan ini menjadi 5 poin utama. Fokus pada data keuangan & proyeksi tahun depan."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(5)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-notebook">
+                        <p style="font-weight: bold;" class="c-notebook">NotebookLM: FAQ Sumber</p>
+                        <p class="prompt-code" id="prompt-6">"Berdasarkan dokumen yang diunggah, susun 5 pertanyaan panduan (FAQ) yang paling relevan beserta jawabannya."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(6)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18 - Prompt Library 4 -->
+        <div class="slide" data-note="Prompt brainstorming dasar.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Brainstorming</h3><h3>18 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Brainstorming Dasar</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-chatgpt">
+                        <p style="font-weight: bold;" class="c-chatgpt">ChatGPT: 10 Ide Mentah</p>
+                        <p class="prompt-code" id="prompt-7">"Saya mau mengadakan acara [Jenis Acara] dengan tema [Tema]. Berikan 10 ide mentah yang unik."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(7)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-gemini">
+                        <p style="font-weight: bold;" class="c-gemini">Gemini: Sudut Pandang</p>
+                        <p class="prompt-code" id="prompt-8">"Berikan 3 ide solusi untuk masalah [Masalah] dari 3 sudut pandang: Karyawan, Manajer, dan Klien."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(8)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19 - Prompt Library 5 -->
+        <div class="slide" data-note="Prompt Devil's Advocate.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Brainstorming</h3><h3>19 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Devil's Advocate</h2>
+                <div class="card prompt-card b-claude">
+                    <p style="font-weight: bold;" class="c-claude">Claude: Kritik Ide (Devil's Advocate)</p>
+                    <p class="prompt-code" id="prompt-9">"Bertindaklah sebagai kritikus yang sangat ketat (Devil's Advocate). Hancurkan ide saya tentang [Ide] dan tunjukkan 3 kelemahan fatalnya."</p>
+                    <button class="btn btn-outline" onclick="copyPrompt(9)">Salin Prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20 - Prompt Library 6 -->
+        <div class="slide" data-note="Prompt sintesis dan peta pikiran.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Brainstorming</h3><h3>20 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Sintesis & Mind Map</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-notebook">
+                        <p style="font-weight: bold;" class="c-notebook">NotebookLM: Sintesis Sumber</p>
+                        <p class="prompt-code" id="prompt-10">"Buat sintesis dari semua sumber yang diunggah. Temukan benang merah yang menghubungkan semuanya."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(10)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-chatgpt">
+                        <p style="font-weight: bold;" class="c-chatgpt">ChatGPT: Format Mind Map</p>
+                        <p class="prompt-code" id="prompt-11">"Urutkan ide ini menjadi format peta pikiran (Markdown): [Ide Utama] -> [Sub-Ide] -> [Poin]."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(11)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21 - Prompt Library 7 -->
+        <div class="slide" data-note="Prompt perbandingan.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Brainstorming</h3><h3>21 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Perbandingan Argumen</h2>
+                <div class="card prompt-card b-claude">
+                    <p style="font-weight: bold;" class="c-claude">Claude: Pro & Kontra</p>
+                    <p class="prompt-code" id="prompt-12">"Bandingkan argumen Pro dan Kontra dari topik [Topik]. Susun dalam tabel yang seimbang dengan rujukan teks."</p>
+                    <button class="btn btn-outline" onclick="copyPrompt(12)">Salin Prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22 - Prompt Library 8 -->
+        <div class="slide" data-note="Prompt penyusunan draf akhir.">
+            <div class="slide-header"><h3>Perpustakaan Prompt Draf Akhir</h3><h3>22 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Prompt: Penyusunan Draf</h2>
+                <div class="grid-2">
+                    <div class="card prompt-card b-chatgpt">
+                        <p style="font-weight: bold;" class="c-chatgpt">ChatGPT: Draf R-C-O-C-O</p>
+                        <p class="prompt-code" id="prompt-13">"Sebagai penulis profesional (R), berdasarkan riset ini (C), buat draf laporan (O). Maks 300 kata (C), format formal (O)."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(13)">Salin Prompt</button>
+                    </div>
+                    <div class="card prompt-card b-gemini">
+                        <p style="font-weight: bold;" class="c-gemini">Gemini: Outline Presentasi</p>
+                        <p class="prompt-code" id="prompt-14">"Susun outline presentasi 10 slide berdasarkan ide [Ide]. Sertakan poin pembicaraan di setiap slide."</p>
+                        <button class="btn btn-outline" onclick="copyPrompt(14)">Salin Prompt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23 - Studi Kasus 1 -->
+        <div class="slide" data-note="Kasus 1: Halusinasi sumber.">
+            <div class="slide-header"><h3>Studi Kasus</h3><h3>23 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Kasus 1: Sumber Tak Valid</h2>
+                <div class="card" style="border-left: 8px solid #D32F2F;">
+                    <p class="small-text">"AI memberi jawaban dengan tautan, tapi saat diklik tautannya error 404. Apa solusinya?"</p>
+                    <button class="btn" onclick="document.getElementById('ans1').style.display = 'block'">Buka Jawaban</button>
+                    <div id="ans1" class="hidden-answer"><p class="small-text">Jangan kutip bagian itu. Cari klaim serupa di sumber lain (verifikasi silang). Laporkan jika AI halusinasi.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24 - Studi Kasus 2 -->
+        <div class="slide" data-note="Kasus 2: Bias sumber.">
+            <div class="slide-header"><h3>Studi Kasus</h3><h3>24 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Kasus 2: Bias Sumber</h2>
+                <div class="card" style="border-left: 8px solid var(--constraints-color);">
+                    <p class="small-text">"Anda upload 3 artikel dari penulis yang sama ke NotebookLM. Hasil brainstorming sangat satu sisi."</p>
+                    <button class="btn" onclick="document.getElementById('ans2').style.display = 'block'">Buka Jawaban</button>
+                    <div id="ans2" class="hidden-answer"><p class="small-text">Diversifikasi sumber. Tambahkan artikel dengan sudut pandang lawan (Devil's Advocate) agar AI memberi analisis seimbang.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25 - Daftar Pustaka 1 -->
+        <div class="slide" data-note="Daftar pustaka resmi. Klik link untuk buka.">
+            <div class="slide-header"><h3>Daftar Pustaka</h3><h3>25 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Sumber Resmi Tools</h2>
+                <ul style="font-size: 1.5rem; list-style: none;">
+                    <li style="margin-bottom: 15px;">🤖 <a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank" class="link-text">OpenAI (ChatGPT) Docs</a></li>
+                    <li style="margin-bottom: 15px;">🔍 <a href="https://docs.perplexity.ai/" target="_blank" class="link-text">Perplexity AI Official Docs</a></li>
+                    <li style="margin-bottom: 15px;">✨ <a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" class="link-text">Google Gemini API Docs</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 26 - Daftar Pustaka 2 -->
+        <div class="slide" data-note="Lanjutan daftar pustaka.">
+            <div class="slide-header"><h3>Daftar Pustaka</h3><h3>26 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Sumber Pendukung</h2>
+                <ul style="font-size: 1.5rem; list-style: none;">
+                    <li style="margin-bottom: 15px;">🧠 <a href="https://docs.anthropic.com/claude/docs/prompt-engineering" target="_blank" class="link-text">Anthropic Claude Guide</a></li>
+                    <li style="margin-bottom: 15px;">📓 <a href="https://notebooklm.google.com/" target="_blank" class="link-text">Google NotebookLM</a></li>
+                    <li style="margin-bottom: 15px;">📚 <a href="https://learnprompting.org/" target="_blank" class="link-text">LearnPrompting.org</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 27 - Takeaway -->
+        <div class="slide" data-note="Kunci 3 takeaway.">
+            <div class="slide-header"><h3>Penutup</h3><h3>27 / 33</h3></div>
+            <div class="slide-content">
+                <h2>3 Takeaway Utama</h2>
+                <div class="card"><ul><li>1. Gunakan tools yang tepat: Cari (Perplexity/Gemini), Dalami (Claude/NotebookLM).</li><li>2. Verifikasi sumber adalah keharusan, jangan percaya AI 100%.</li><li>3. Gunakan teknik brainstorming (Devil's Advocate) untuk ide terstruktur.</li></ul></div>
+            </div>
+        </div>
+
+        <!-- Slide 28 - Pratinjau Sesi 4 -->
+        <div class="slide" data-note="Pratinjau Sesi 4.">
+            <div class="slide-header"><h3>Pratinjau Sesi 4</h3><h3>28 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Sesi 4: Integrasi AI</h2>
+                <div class="card b-notebook"><p class="small-text">Pada Sesi 4, kita akan membahas <strong>Integrasi AI dalam Workflow Sehari-hari</strong>: menggabungkan tools AI dengan aplikasi kerja Anda untuk efisiensi maksimal.</p></div>
+            </div>
+        </div>
+
+        <!-- Slide 29 - Evaluasi -->
+        <div class="slide" data-note="Evaluasi sesi.">
+            <div class="slide-header"><h3>Evaluasi Sesi</h3><h3>29 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Feedback & Refleksi</h2>
+                <div class="card"><p class="small-text">Luangkan 1 menit untuk merenungkan: Tools apa yang paling ingin Anda coba besok di tempat kerja?</p></div>
+            </div>
+        </div>
+
+        <!-- Slide 30 - Terima Kasih -->
+        <div class="slide" data-note="Penutup terima kasih.">
+            <div class="slide-header"><h3>Penutup</h3><h3>30 / 33</h3></div>
+            <div class="slide-content">
+                <h1 style="font-size: 3rem;">Terima Kasih!</h1>
+                <p class="small-text">Selamat mencoba riset cerdas dengan AI. Sampai jumpa di Sesi 4!</p>
+            </div>
+        </div>
+
+        <!-- Slide 31 - Q&A -->
+        <div class="slide" data-note="Sesi tanya jawab.">
+            <div class="slide-header"><h3>Tanya Jawab</h3><h3>31 / 33</h3></div>
+            <div class="slide-content">
+                <h2>Sesi Tanya Jawab</h2>
+                <div class="card"><p class="small-text">Apakah ada pertanyaan seputar penggunaan ChatGPT, Perplexity, Gemini, Claude, atau NotebookLM?</p></div>
+            </div>
+        </div>
+
+        <!-- Slide 32 - End -->
+        <div class="slide" data-note="Slide akhir.">
+            <div class="slide-header"><h3>Selesai</h3><h3>32 / 33</h3></div>
+            <div class="slide-content">
+                <h1 style="font-size: 4rem; text-align: center;">Selesai 🚀</h1>
+            </div>
+        </div>
+
+        <!-- Slide 33 - Blank -->
+        <div class="slide" data-note="Slide kosong.">
+            <div class="slide-header"><h3>Selesai</h3><h3>33 / 33</h3></div>
+            <div class="slide-content">
+                 <h1 style="font-size: 4rem; text-align: center;">🚀</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()" aria-label="Sebelumnya">‹</button>
+        <span style="font-size: 1.2rem; font-weight: bold;">Sesi 3: Riset Cerdas</span>
+        <button class="nav-btn" onclick="nextSlide()" aria-label="Berikutnya">›</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length; // 33 slides
+        const progressBar = document.getElementById('progressBar');
+        const noteContent = document.getElementById('noteContent');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            const noteText = slides[currentSlide].getAttribute('data-note');
+            noteContent.textContent = noteText ? noteText : "Tidak ada catatan untuk slide ini.";
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlide(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen();
+        });
+
+        function toggleTheme() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
+        }
+
+        function toggleNotes() {
+            document.getElementById('notesPanel').classList.toggle('active');
+        }
+
+        function copyPrompt(id) {
+            const text = document.getElementById('prompt-' + id).innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('Prompt berhasil disalin!');
+            } catch (err) {
+                alert('Gagal salin otomatis. Silakan salin manual.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        updateSlide();
+    </script>
+</body>
+</html>
