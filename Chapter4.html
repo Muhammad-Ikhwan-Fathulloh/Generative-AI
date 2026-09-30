@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi 4 — Membangun Asisten AI Kustom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0d6efd;
+  --primary-dark: #0a58ca;
+  --primary-light: #6ea8fe;
+  --accent: #fd7e14;
+  --accent-light: #ffb380;
+  --bg: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-alt: #e9ecef;
+  --text: #1a1a2e;
+  --text-muted: #495057;
+  --border: #dee2e6;
+  --success: #198754;
+  --success-light: #d1e7dd;
+  --danger: #dc3545;
+  --danger-light: #f8d7da;
+  --warning: #f39c12;
+  --purple: #6f42c1;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.1);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --font-head: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --primary: #4dabf7;
+  --primary-dark: #3a9ee0;
+  --primary-light: #74c0fc;
+  --accent: #ffa94d;
+  --accent-light: #ffc078;
+  --bg: #0f0f23;
+  --bg-card: #1a1a3e;
+  --bg-alt: #252550;
+  --text: #f8f9fa;
+  --text-muted: #adb5bd;
+  --border: #343a40;
+  --success: #51cf66;
+  --success-light: #1a3d2e;
+  --danger: #ff6b6b;
+  --danger-light: #3d1a1a;
+  --warning: #ffd43b;
+  --purple: #b197fc;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--bg-alt);
+  z-index: 1000;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.4s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+.slides-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 80px 120px;
+}
+.slide.active { display: flex; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-tag {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--primary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.slide-title {
+  font-family: var(--font-head);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 32px;
+  max-width: 1100px;
+  text-align: center;
+}
+
+.slide-subtitle {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-muted);
+  max-width: 900px;
+  text-align: center;
+  margin-bottom: 40px;
+  line-height: 1.4;
+}
+
+.slide-content {
+  max-width: 1100px;
+  width: 100%;
+}
+
+.slide-body {
+  font-size: 32px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.slide-body li {
+  margin-bottom: 20px;
+  list-style: none;
+  padding-left: 36px;
+  position: relative;
+  font-size: 30px;
+  line-height: 1.4;
+}
+.slide-body li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.slide--cover {
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+  text-align: center;
+}
+.slide--cover .slide-title {
+  font-size: 64px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cover-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  font-family: var(--font-head);
+}
+.cover-meta {
+  margin-top: 48px;
+  font-size: 20px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.card-icon { font-size: 48px; margin-bottom: 16px; display: block; }
+.card-title {
+  font-family: var(--font-head);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+.card-text { font-size: 22px; color: var(--text-muted); line-height: 1.5; }
+
+.timeline { display: flex; flex-direction: column; gap: 0; width: 100%; max-width: 1000px; }
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-time {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary);
+  min-width: 140px;
+  white-space: nowrap;
+}
+.timeline-activity { font-size: 26px; color: var(--text); flex: 1; }
+.timeline-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+.tag-teori { background: var(--primary-light); color: white; opacity: 0.85; }
+.tag-praktik { background: var(--accent); color: white; opacity: 0.85; }
+.tag-jeda { background: var(--text-muted); color: white; opacity: 0.7; }
+.tag-evaluasi { background: var(--purple); color: white; opacity: 0.85; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--font-head);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 52px;
+  text-decoration: none;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: scale(1.03); }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:hover { filter: brightness(1.1); transform: scale(1.03); }
+
+.nav-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  z-index: 999;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+.nav-btn {
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-counter {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 90px;
+  text-align: center;
+}
+.nav-toggle {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: 10px;
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-family: var(--font-head);
+}
+.nav-toggle:hover { border-color: var(--primary); color: var(--primary); }
+.nav-toggle.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+.speaker-notes {
+  display: none;
+  background: var(--bg-alt);
+  border-left: 4px solid var(--accent);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin-top: 32px;
+  max-width: 1100px;
+  width: 100%;
+}
+body.show-notes .speaker-notes { display: block; }
+.notes-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+}
+.notes-content { font-size: 20px; line-height: 1.6; color: var(--text-muted); }
+
+.accordion-item {
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.accordion-header {
+  padding: 20px 24px;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: var(--font-head);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+  background: var(--bg-card);
+  transition: background 0.2s;
+}
+.accordion-header:hover { background: var(--bg-alt); }
+.accordion-icon { font-size: 28px; color: var(--primary); transition: transform 0.3s; }
+.accordion-item.open .accordion-icon { transform: rotate(180deg); }
+.accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.accordion-item.open .accordion-body { max-height: 5000px; }
+.accordion-content { padding: 20px 24px; font-size: 22px; line-height: 1.6; color: var(--text); }
+.accordion-content ul { padding-left: 24px; }
+.accordion-content li { margin-bottom: 10px; font-size: 22px; }
+
+.reveal-block {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 16px 0;
+  text-align: center;
+}
+.reveal-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  font-size: 22px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  min-height: 52px;
+  font-family: var(--font-head);
+  transition: all 0.2s;
+}
+.reveal-btn:hover { filter: brightness(1.1); transform: scale(1.03); }
+.reveal-answer {
+  display: none;
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--success-light);
+  border-radius: var(--radius);
+  font-size: 22px;
+  text-align: left;
+  line-height: 1.6;
+}
+.reveal-answer.show { display: block; animation: fadeIn 0.4s; }
+
+.quiz-container { width: 100%; max-width: 1000px; }
+.quiz-question {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.quiz-number {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.quiz-text {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.4;
+  font-family: var(--font-head);
+}
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 16px 24px;
+  margin-bottom: 12px;
+  font-size: 24px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 56px;
+  font-family: var(--font-body);
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-alt); }
+.quiz-option.correct { background: var(--success-light); border-color: var(--success); color: var(--success); font-weight: 600; }
+.quiz-option.incorrect { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+.quiz-option:disabled { cursor: default; }
+.quiz-explanation {
+  display: none;
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  font-size: 22px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.quiz-explanation.show { display: block; animation: fadeIn 0.4s; }
+.quiz-explanation strong { color: var(--primary); }
+
+.prompt-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.prompt-card-title {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+.prompt-code {
+  background: var(--text);
+  color: #e9ecef;
+  padding: 24px;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+}
+[data-theme="dark"] .prompt-code { background: #000; color: #d4d4d4; }
+.copy-btn {
+  margin-top: 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  min-height: 48px;
+  font-family: var(--font-head);
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: var(--primary-dark); }
+
+.config-block {
+  background: var(--text);
+  color: #e9ecef;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 1000px;
+  width: 100%;
+  overflow-x: auto;
+}
+[data-theme="dark"] .config-block { background: #000; color: #d4d4d4; border: 1px solid var(--border); }
+.config-label {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-family: var(--font-head);
+}
+
+.story-part {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-left: 6px solid var(--purple);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  max-width: 1000px;
+  width: 100%;
+}
+.story-part-title {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 16px;
+}
+.story-text { font-size: 24px; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+.story-illustration {
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 20px;
+  font-size: 20px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  border-left: 4px solid var(--purple);
+}
+.story-illustration::before {
+  content: "🎨 Ilustrasi: ";
+  font-weight: 700;
+  font-style: normal;
+  color: var(--purple);
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; width: 100%; max-width: 1100px; }
+.col-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  border-top: 6px solid var(--primary);
+}
+.col-card.accent { border-top-color: var(--accent); }
+.col-card.danger { border-top-color: var(--danger); }
+.col-card.success { border-top-color: var(--success); }
+.col-title {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+.col-list { list-style: none; }
+.col-list li {
+  font-size: 24px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  line-height: 1.4;
+}
+.col-list li:last-child { border-bottom: none; }
+.col-list li::before { content: "✓ "; color: var(--success); font-weight: 700; }
+.col-list.danger-list li::before { content: "✗ "; color: var(--danger); }
+
+.recap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; width: 100%; max-width: 1100px; }
+.recap-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-bottom: 6px solid var(--primary);
+  transition: transform 0.2s;
+}
+.recap-card.current { border-bottom-color: var(--accent); background: linear-gradient(180deg, var(--bg-card) 80%, var(--accent-light) 100%); }
+.recap-card:hover { transform: translateY(-4px); }
+.recap-num { font-family: var(--font-mono); font-size: 18px; color: var(--primary); font-weight: 700; margin-bottom: 8px; }
+.recap-card.current .recap-num { color: var(--accent); }
+.recap-title { font-family: var(--font-head); font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.recap-desc { font-size: 18px; color: var(--text-muted); line-height: 1.4; }
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  min-height: 60px;
+}
+.link-card:hover { border-color: var(--primary); transform: translateX(4px); }
+.link-icon { font-size: 32px; }
+.link-text { flex: 1; }
+.link-title { font-size: 22px; font-weight: 600; color: var(--primary); }
+.link-url { font-size: 18px; color: var(--text-muted); font-family: var(--font-mono); }
+
+.takeaway-box {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+}
+.takeaway-box h3 {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+.takeaway-list { list-style: none; text-align: left; }
+.takeaway-list li {
+  font-size: 26px;
+  padding: 12px 0;
+  padding-left: 40px;
+  position: relative;
+  line-height: 1.4;
+}
+.takeaway-list li::before { content: "★"; position: absolute; left: 0; font-size: 28px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 50px 40px 120px; }
+  .slide-title { font-size: 44px; }
+  .slide-body li { font-size: 26px; }
+  .recap-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .slide { padding: 40px 24px 120px; }
+  .slide-title { font-size: 36px; }
+  .slide-subtitle { font-size: 24px; }
+  .slide-body li { font-size: 22px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .quiz-text { font-size: 22px; }
+  .quiz-option { font-size: 20px; }
+  .nav-toggle span { display: none; }
+  .nav-toggle { padding: 10px; }
+  .config-block, .prompt-code { font-size: 16px; }
+  .timeline-time { font-size: 18px; min-width: 100px; }
+  .timeline-activity { font-size: 22px; }
+}
+@media (max-width: 480px) {
+  .slide-title { font-size: 30px; }
+  .slide--cover .slide-title { font-size: 36px; }
+  .slide-body li { font-size: 20px; }
+  .takeaway-box h3 { font-size: 28px; }
+  .takeaway-list li { font-size: 22px; }
+}
+
+.step-list { counter-reset: step; list-style: none; }
+.step-list li {
+  counter-increment: step;
+  padding-left: 56px;
+  position: relative;
+  margin-bottom: 24px;
+  font-size: 28px;
+  line-height: 1.4;
+}
+.step-list li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--font-head);
+}
+.badge { display: inline-block; padding: 4px 14px; border-radius: 6px; font-size: 18px; font-weight: 600; }
+.badge-info { background: var(--primary-light); color: white; }
+.badge-illus { background: var(--purple); color: white; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 3.5%"></div></div>
+
+<div class="slides-wrapper" id="slidesWrapper">
+
+<!-- SLIDE 1 -->
+<section class="slide slide--cover active" data-slide="1">
+  <span class="cover-badge">Sesi 4 dari 4</span>
+  <h1 class="slide-title">Membangun Asisten AI Kustom</h1>
+  <p class="slide-subtitle">Gemini Gems, Custom GPTs & Personalisasi AI untuk Produktivitas</p>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Selamat datang di Sesi 4, penutup rangkaian pelatihan Generative AI. Pada sesi sebelumnya, kita telah belajar dasar AI, prompt engineering R-C-O-C-O, dan riset cerdas. Hari ini, kita naik satu tingkat: membangun asisten AI yang dipersonalisasi untuk kebutuhan spesifik profesi Anda. Tujuannya bukan menggantikan manusia, melainkan mempercepat dan meningkatkan kualitas kerja. Pastikan semua peserta punya akses ke Gemini atau ChatGPT untuk praktik langsung.</div>
+  </div>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide" data-slide="2">
+  <span class="slide-tag">Tujuan Belajar</span>
+  <h2 class="slide-title">Akan Mampu Anda Lakukan Setelah Sesi Ini</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Jelaskan konsep asisten AI kustom dan jenisnya</li>
+      <li>Buat minimal 1 Gemini Gem atau Custom GPT</li>
+      <li>Terapkan R-C-O-C-O dalam konfigurasi asisten AI</li>
+      <li>Identifikasi risiko privasi & praktik terbaik</li>
+      <li>Evaluasi efektivitas asisten AI kustom</li>
+    </ol>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Kelima tujuan ini disusun dari tingkat kognitif Bloom yang paling dasar (menjelaskan) hingga yang paling tinggi (mengevaluasi). Pastikan peserta memahami bahwa tujuan akhir bukan sekadar "bisa membuat", tetapi "bisa mengevaluasi apakah asisten AI tersebut efektif dan aman digunakan". Setiap tujuan akan diukur melalui kuis di akhir sesi.</div>
+  </div>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide" data-slide="3">
+  <span class="slide-tag">Agenda</span>
+  <h2 class="slide-title">Rundown 120 Menit Sesi 4</h2>
+  <div class="timeline">
+    <div class="timeline-item"><span class="timeline-time">0–10 mnt</span><span class="timeline-activity">Pembuka & pengulangan Sesi 1–3 <span class="timeline-tag tag-teori">Teori</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">10–35 mnt</span><span class="timeline-activity">Konsep inti & demo membuat Gems/GPT <span class="timeline-tag tag-praktik">Praktik</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">35–50 mnt</span><span class="timeline-activity">Studi kasus & diskusi kelompok <span class="timeline-tag tag-praktik">Praktik</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">50–55 mnt</span><span class="timeline-activity">Jeda <span class="timeline-tag tag-jeda">Jeda</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">55–75 mnt</span><span class="timeline-activity">Storybook, prompt library & latihan <span class="timeline-tag tag-praktik">Praktik</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">75–85 mnt</span><span class="timeline-activity">Aktivitas strategi (catur) <span class="timeline-tag tag-praktik">Praktik</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">85–95 mnt</span><span class="timeline-activity">Kuis & pembahasan <span class="timeline-tag tag-evaluasi">Evaluasi</span></span></div>
+    <div class="timeline-item"><span class="timeline-time">95–120 mnt</span><span class="timeline-activity">Kesimpulan, tugas & Q&A <span class="timeline-tag tag-teori">Teori</span></span></div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Rundown ini mengalokasikan hampir separuh waktu untuk praktik (47%), sesuai dengan karakter sesi yang berorientasi pada keterampilan. Jeda 5 menit setelah studi kasus penting untuk menjaga fokus peserta lintas generasi. Q&A di akhir memberi ruang bagi peserta yang mungkin baru memahami konsep setelah praktik.</div>
+  </div>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide" data-slide="4">
+  <span class="slide-tag">Pengulangan</span>
+  <h2 class="slide-title">Perjalanan Kita: Dari Dasar ke Kustomisasi</h2>
+  <div class="recap-grid">
+    <div class="recap-card"><div class="recap-num">SESI 1</div><div class="recap-title">Foundations</div><div class="recap-desc">Dasar AI, token, risiko, tata kelola</div></div>
+    <div class="recap-card"><div class="recap-num">SESI 2</div><div class="recap-title">Prompt Engineering</div><div class="recap-desc">Kerangka R-C-O-C-O untuk prompting</div></div>
+    <div class="recap-card"><div class="recap-num">SESI 3</div><div class="recap-title">Riset Cerdas</div><div class="recap-desc">Perplexity, Gemini, Claude, NotebookLM</div></div>
+    <div class="recap-card current"><div class="recap-num">SESI 4</div><div class="recap-title">Asisten AI Kustom</div><div class="recap-desc">Gems, Custom GPTs, personalisasi AI</div></div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Ringkas setiap sesi dalam 1-2 kalimat sebelum melanjutkan. Sesi 1 menanamkan fondasi pemahaman AI dan kesadaran risiko. Sesi 2 memberikan alat praktis (R-C-O-C-O) untuk berkomunikasi dengan AI. Sesi 3 memperluas kemampuan riset dengan berbagai tools. Sesi 4 adalah puncak: peserta tidak lagi sekadar "memakai" AI, tetapi "mendesain" asisten AI untuk kebutuhan mereka sendiri.</div>
+  </div>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="slide" data-slide="5">
+  <span class="slide-tag">Latar Belakang</span>
+  <h2 class="slide-title">Mengapa AI Generik Tidak Cukup?</h2>
+  <div class="slide-content">
+    <ul class="slide-body">
+      <li>Setiap profesi punya konteks & istilah unik</li>
+      <li>Prompt berulang memakan waktu berharga</li>
+      <li>AI generik tidak ingat preferensi Anda</li>
+      <li>Konsistensi hasil sulit dicapai tanpa kustomisasi</li>
+      <li>Solusi: asisten AI yang dipersonalisasi & reusable</li>
+    </ul>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Mulai dengan pertanyaan retoris: "Berapa kali Anda mengetik prompt yang sama berulang-ulang?" Banyak peserta akan merasakan frustrasi ini. Jelaskan bahwa asisten AI kustom bukan teknologi baru yang menakutkan — ini adalah cara menyimpan instruksi terbaik Anda agar dapat digunakan berulang. Analogi: seperti membuat template email, tetapi template yang bisa "berpikir" dan menyesuaikan respons.</div>
+  </div>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="slide" data-slide="6">
+  <span class="slide-tag">Konsep Inti</span>
+  <h2 class="slide-title">Apa Itu Asisten AI Kustom?</h2>
+  <div class="card-grid">
+    <div class="card"><span class="card-icon">⚙️</span><div class="card-title">Instruksi Tetap</div><div class="card-text">Perilaku AI ditentukan oleh instruksi yang Anda tulis sekali, digunakan berulang.</div></div>
+    <div class="card"><span class="card-icon">📚</span><div class="card-title">Basis Pengetahuan</div><div class="card-text">Unggah dokumen referensi agar AI menjawab berdasarkan konteks Anda.</div></div>
+    <div class="card"><span class="card-icon">🔄</span><div class="card-title">Dapat Dibagikan</div><div class="card-text">Bagikan ke tim untuk konsistensi seluruh anggota, tanpa perlu menjelaskan ulang.</div></div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Asisten AI kustom adalah konfigurasi AI dengan instruksi, kepribadian, dan basis pengetahuan yang tetap. Bedanya dengan chat biasa: Anda tidak perlu mengetik ulang instruksi panjang setiap kali. Tiga komponen kuncinya adalah instruksi sistem, basis pengetahuan, dan kemampuan berbagi. Jelaskan dengan analogi sederhana untuk peserta senior: "Seperti merekrut asisten baru dan memberinya manual kerja — sekali diajari, dia ingat selamanya."</div>
+  </div>
+</section>
+
+<!-- SLIDE 7 -->
+<section class="slide" data-slide="7">
+  <span class="slide-tag">Jenis Platform</span>
+  <h2 class="slide-title">Empat Platform Asisten AI Kustom</h2>
+  <div class="card-grid" style="grid-template-columns: repeat(2, minmax(320px, 1fr));">
+    <div class="card" style="border-top:6px solid var(--primary);">
+      <span class="card-icon">💎</span>
+      <div class="card-title">Gemini Gems</div>
+      <div class="card-text">Kustomisasi Google Gemini dengan instruksi tetap. Gratis untuk pengguna Gemini.</div>
+      <p style="margin-top:12px;"><a href="https://gemini.google.com/gems/view" target="_blank" style="color:var(--primary); font-size:20px; font-weight:600;">→ Buka Gems</a></p>
+    </div>
+    <div class="card" style="border-top:6px solid var(--accent);">
+      <span class="card-icon">🤖</span>
+      <div class="card-title">Custom GPTs</div>
+      <div class="card-text">Kustomisasi ChatGPT dengan knowledge base. Tersedia untuk pengguna Plus/Team.</div>
+    </div>
+    <div class="card" style="border-top:6px solid var(--purple);">
+      <span class="card-icon">🏢</span>
+      <div class="card-title">Copilot Agents</div>
+      <div class="card-text">Asisten AI dalam ekosistem Microsoft 365 untuk otomatisasi alur kerja.</div>
+    </div>
+    <div class="card" style="border-top:6px solid var(--success);">
+      <span class="card-icon">📝</span>
+      <div class="card-title">Claude Projects</div>
+      <div class="card-text">Workspace dengan konteks tetap di Claude, cocok untuk analisis dokumen panjang.</div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Empat platform ini memiliki konsep serupa tetapi ekosistem berbeda. Gemini Gems paling mudah diakses karena tersedia gratis. Custom GPTs lebih kaya fitur tetapi memerlukan langganan berbayar. Copilot Agents terintegrasi dengan Microsoft 365, cocok untuk organisasi yang sudah menggunakan ekosistem Microsoft. Claude Projects unggul untuk analisis dokumen panjang. Link Gemini Gems: https://gemini.google.com/gems/view</div>
+  </div>
+</section>
+
+<!-- SLIDE 8 -->
+<section class="slide" data-slide="8">
+  <span class="slide-tag">Mengapa Penting</span>
+  <h2 class="slide-title">Manfaat Asisten AI Kustom</h2>
+  <div class="two-col">
+    <div class="col-card">
+      <div class="col-title">Untuk Individu</div>
+      <ul class="col-list">
+        <li>Tidak perlu mengetik ulang prompt panjang</li>
+        <li>Hasil konsisten dengan preferensi pribadi</li>
+        <li>Hemat waktu hingga 30–60% per tugas</li>
+        <li>Fokus pada hal strategis, bukan repetitif</li>
+      </ul>
+    </div>
+    <div class="col-card accent">
+      <div class="col-title">Untuk Tim & Organisasi</div>
+      <ul class="col-list">
+        <li>Standar kualitas seragam antar anggota</li>
+        <li>Onboarding baru lebih cepat & terstruktur</li>
+        <li>Basis pengetahuan terpusat & terdokumentasi</li>
+        <li>Skalabilitas tanpa menambah staf</li>
+      </ul>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Manfaat individual paling dirasakan untuk tugas repetitif seperti menyusun email, meringkas dokumen, atau menulis laporan rutin. Manfaat tim muncul saat seluruh anggota menggunakan asisten yang sama — konsistensi meningkat, onboarding lebih cepat, dan pengetahuan tidak hilang saat ada turnover. Catatan: angka penghematan waktu 30-60% bersifat ilustratif berdasarkan pengalaman umum pengguna AI; hasil aktual bervariasi.</div>
+  </div>
+</section>
+
+<!-- SLIDE 9 -->
+<section class="slide" data-slide="9">
+  <span class="slide-tag">Anatomi</span>
+  <h2 class="slide-title">Anatomi Asisten AI yang Efektif</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Nama & deskripsi yang jelas dan spesifik</li>
+      <li>Instruksi sistem terstruktur dengan R-C-O-C-O</li>
+      <li>Basis pengetahuan: dokumen, panduan, contoh</li>
+      <li>Contoh input-output (few-shot examples)</li>
+      <li>Batasan & etika: apa yang tidak boleh dilakukan</li>
+    </ol>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Kelima komponen ini adalah standar minimum untuk asisten AI yang efektif. Nama yang jelas membantu pengguna lain memahami fungsinya. Instruksi sistem adalah "otak" asisten — gunakan kerangka R-C-O-C-O dari Sesi 2. Basis pengetahuan opsional tetapi sangat berguna untuk konteks spesifik. Contoh input-output membantu AI memahami format yang diinginkan. Batasan etika mencegah penyalahgunaan dan menjaga keamanan data.</div>
+  </div>
+</section>
+
+<!-- SLIDE 10 -->
+<section class="slide" data-slide="10">
+  <span class="slide-tag">Tutorial</span>
+  <h2 class="slide-title">Membuat Gemini Gem dalam 5 Langkah</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Buka <strong>gemini.google.com</strong> → klik "New Gem"</li>
+      <li>Beri nama & deskripsi yang jelas</li>
+      <li>Tulis instruksi menggunakan kerangka R-C-O-C-O</li>
+      <li>Uji dengan beberapa pertanyaan sampel</li>
+      <li>Simpan & bagikan ke tim jika diperlukan</li>
+    </ol>
+  </div>
+  <p style="margin-top:24px; text-align:center;">
+    <a href="https://gemini.google.com/gems/view" target="_blank" class="btn btn-primary">💎 Buka Gemini Gems →</a>
+  </p>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Demo langsung disarankan di tahap ini. Buka Gemini di browser, klik "New Gem", dan buat contoh sederhana seperti "Asisten Email Profesional". Tunjukkan bagaimana instruksi R-C-O-C-O diterjemahkan menjadi konfigurasi Gem. Tekankan: instruksi tidak perlu sempurna di percobaan pertama — asisten AI kustom adalah proses iteratif. Setelah disimpan, Gem tersedia di sidebar dan bisa dipakai kapan saja.</div>
+  </div>
+</section>
+
+<!-- SLIDE 11 -->
+<section class="slide" data-slide="11">
+  <span class="slide-tag">Tutorial</span>
+  <h2 class="slide-title">Membuat Custom GPT dalam 5 Langkah</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Buka ChatGPT → <strong>Explore GPTs</strong> → <strong>Create</strong></li>
+      <li>Isi nama, deskripsi, & instruksi sistem</li>
+      <li>Unggah file referensi sebagai knowledge base</li>
+      <li>Atur capabilities: web browsing, code interpreter</li>
+      <li>Publikasikan & bagikan link ke tim</li>
+    </ol>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Custom GPTs memerlukan akun ChatGPT Plus atau Team. Perbedaan utama dengan Gemini Gems: Custom GPTs mendukung unggah file knowledge base (PDF, dokumen, spreadsheet) yang menjadi referensi AI. Ini sangat berguna ketika Anda ingin AI menjawab berdasarkan dokumen internal perusahaan. Namun, ingat: jangan unggah dokumen yang mengandung data rahasia atau pribadi.</div>
+  </div>
+</section>
+
+<!-- SLIDE 12 -->
+<section class="slide" data-slide="12">
+  <span class="slide-tag">Praktik Terbaik</span>
+  <h2 class="slide-title">Lakukan & Hindari Ini</h2>
+  <div class="two-col">
+    <div class="col-card success">
+      <div class="col-title">✅ Lakukan</div>
+      <ul class="col-list">
+        <li>Mulai sederhana, iterasi bertahap</li>
+        <li>Uji dengan input yang beragam</li>
+        <li>Dokumentasikan versi instruksi</li>
+        <li>Validasi hasil dengan penilaian manusia</li>
+      </ul>
+    </div>
+    <div class="col-card danger">
+      <div class="col-title">❌ Hindari</div>
+      <ul class="col-list danger-list">
+        <li>Masukkan data rahasia atau pribadi</li>
+        <li>Terlalu banyak aturan sekaligus</li>
+        <li>Mempercayai hasil tanpa validasi</li>
+        <li>Membagikan tanpa pengaturan akses</li>
+      </ul>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Prinsip utama: "Mulai kecil, kembangkan bertahap." Banyak peserta tergoda menulis instruksi yang sangat panjang di awal. Ini justru membingungkan AI. Mulai dengan 3-5 instruksi inti, uji, lalu tambahkan kompleksitas. Validasi manusia (human-in-the-loop) tetap wajib — AI bisa salah, terutama untuk keputusan penting. Data rahasia tidak boleh dimasukkan karena dapat muncul dalam respons AI atau diakses pengguna lain jika asisten dibagikan.</div>
+  </div>
+</section>
+
+<!-- SLIDE 13 -->
+<section class="slide" data-slide="13">
+  <span class="slide-tag">Penerapan</span>
+  <h2 class="slide-title">Contoh Asisten AI Kustom Lintas Profesi</h2>
+  <div class="card-grid">
+    <div class="card"><span class="card-icon">👥</span><div class="card-title">HR</div><div class="card-text">Screening CV, draft email penawaran kerja, ringkasan feedback interview.</div></div>
+    <div class="card"><span class="card-icon">📣</span><div class="card-title">Marketing</div><div class="card-text">Content brief sesuai brand voice, ideasi kampanye, analisis sentimen.</div></div>
+    <div class="card"><span class="card-icon">🎓</span><div class="card-title">Pendidikan</div><div class="card-text">Rubrik penilaian, materi ajar personalisasi, umpan balik tugas mahasiswa.</div></div>
+    <div class="card"><span class="card-icon">⚖️</span><div class="card-title">Legal</div><div class="card-text">Review kontrak awal, checklist compliance, ringkasan putusan.</div></div>
+    <div class="card"><span class="card-icon">🛒</span><div class="card-title">UMKM</div><div class="card-text">Deskripsi produk, chatbot pelanggan, ide konten media sosial.</div></div>
+    <div class="card"><span class="card-icon">💰</span><div class="card-title">Keuangan</div><div class="card-text">Ringkasan laporan keuangan, kategorisasi pengeluaran, draft memo.</div></div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Tanyakan ke peserta: "Profesi Anda termasuk yang mana? Atau ada yang lain?" Ini membantu peserta mengaitkan materi dengan konteks pekerjaan mereka sendiri. Untuk legal dan keuangan, tekankan bahwa asisten AI kustom hanya untuk tugas awal/draft — validasi oleh profesional bersertifikat tetap wajib.</div>
+  </div>
+</section>
+
+<!-- SLIDE 14 -->
+<section class="slide" data-slide="14">
+  <span class="slide-tag">Studi Kasus 1 <span class="badge badge-illus">Ilustratif</span></span>
+  <h2 class="slide-title">Gem "Recruiter Assistant" untuk Tim HR</h2>
+  <div class="slide-content" style="max-width:1000px;">
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">📋 Latar Belakang <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        Perusahaan teknologi menengah dengan 200 karyawan. Tim HR terdiri dari 3 orang, dipimpin Bu Sari (52). Rata-rata menerima 150–300 CV per lowongan. Review manual memakan 40% waktu kerja tim HR setiap kali ada lowongan dibuka.
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">⚠️ Masalah <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ul>
+          <li>Review manual memakan waktu berlebih</li>
+          <li>Konsistensi screening tidak merata antar anggota tim</li>
+          <li>Kandidat berkualitas kadang terlewat karena kelelahan</li>
+          <li>Tidak ada standar penilaian yang terdokumentasi</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">✅ Solusi <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        Membuat Gemini Gem "Recruiter Assistant" dengan instruksi R-C-O-C-O. Basis pengetahuan: job description template, kompetensi inti perusahaan. Human-in-the-loop: HR tetap melakukan validasi dan keputusan akhir. Gem hanya membantu screening awal dan membuat ringkasan.
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">📊 Hasil & Dampak <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ul>
+          <li>Waktu review awal CV berkurang ~60% (ilustratif)</li>
+          <li>Konsistensi screening meningkat signifikan</li>
+          <li>Kandidat terlewat berkurang</li>
+          <li>Tim HR dapat fokus pada interview & strategi rekrutmen</li>
+        </ul>
+        <p style="margin-top:12px; font-size:18px; color:var(--text-muted); font-style:italic;">Catatan: Angka bersifat ilustratif untuk tujuan pembelajaran.</p>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">💡 Pelajaran Penting <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ol style="padding-left:20px;">
+          <li>Definisikan kriteria penilaian dengan sangat spesifik dalam instruksi</li>
+          <li>Tetap lakukan validasi manusia — AI membantu, bukan menggantikan</li>
+          <li>Iterasi instruksi berdasarkan feedback dari hasil yang tidak akurat</li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">💬 Pertanyaan Diskusi (Klik untuk Buka Jawaban) <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>1.</strong> Apa risiko jika Gem ini digunakan tanpa validasi manusia?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Bias algoritma dapat menyaring kandidat yang sebenarnya berkualitas. Risiko diskriminasi tidak disengaja (gender, usia, etnis) jika kriteria tidak hati-hati. Keputusan rekrutmen yang berdampak besar pada manusia tidak boleh sepenuhnya diserahkan kepada AI.</div>
+        </div>
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>2.</strong> Bagaimana memastikan Gem tidak bias terhadap gender atau usia?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Hapus parameter sensitif dari instruksi secara eksplisit. Audit hasil secara berkala untuk mendeteksi pola bias. Libatkan tim yang beragam dalam pengujian. Dokumentasikan dan tinjau kriteria penilaian secara berkala.</div>
+        </div>
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>3.</strong> Kapan sebaiknya instruksi Gem ini di-update?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Saat ada perubahan kriteria lowongan, feedback negatif dari pengguna, perubahan kebijakan perusahaan, atau penemuan bias dalam hasil. Jadwalkan review minimal setiap 3 bulan untuk memastikan instruksi tetap relevan.</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Studi kasus ini ditandai sebagai ilustratif — bukan kasus nyata tetapi skenario yang sangat mungkin terjadi. Gunakan untuk diskusi kelompok: bagaimana konteks ini berlaku di organisasi peserta? Tekankan tiga pelajaran utama: spesifikasi kriteria, validasi manusia, dan iterasi. Pertanyaan diskusi dirancang untuk memicu pemikiran kritis tentang risiko etis dan praktis.</div>
+  </div>
+</section>
+
+<!-- SLIDE 15 -->
+<section class="slide" data-slide="15">
+  <span class="slide-tag">Studi Kasus 2 <span class="badge badge-illus">Ilustratif</span></span>
+  <h2 class="slide-title">Custom GPT "Content Brief Writer" untuk Agency Marketing</h2>
+  <div class="slide-content" style="max-width:1000px;">
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">📋 Latar Belakang <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        Agency marketing dengan 10 klien aktif. Tim terdiri dari 5 copywriter dan 2 strategis. Setiap klien memiliki brand voice dan tone yang berbeda. Penyusunan brief konten memakan 2–3 jam per konten.
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">⚠️ Masalah <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ul>
+          <li>Brief konten tidak konsisten antar copywriter</li>
+          <li>Revisi berulang karena tidak sesuai brand voice</li>
+          <li>Brand guidelines tersebar di banyak dokumen</li>
+          <li>Waktu penyusunan brief terlalu lama</li>
+        </ul>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">✅ Solusi <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        Membuat Custom GPT "Content Brief Writer" dengan knowledge base berisi brand guidelines per klien. Instruksi: hasilkan brief dengan format standar, sesuaikan tone per klien. GPT mengakses dokumen brand guidelines yang diunggah sebagai referensi.
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">📊 Hasil & Dampak <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ul>
+          <li>Waktu penyusunan brief turun ~70% (ilustratif)</li>
+          <li>Revisi konten berkurang ~40% (ilustratif)</li>
+          <li>Konsistensi brand voice meningkat</li>
+          <li>Copywriter baru lebih cepat onboarding</li>
+        </ul>
+        <p style="margin-top:12px; font-size:18px; color:var(--text-muted); font-style:italic;">Catatan: Angka bersifat ilustratif untuk tujuan pembelajaran.</p>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">💡 Pelajaran Penting <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <ol style="padding-left:20px;">
+          <li>Dokumentasikan brand voice dengan contoh konkret, bukan abstrak</li>
+          <li>Batasi akses GPT yang berisi data klien — jangan campur klien</li>
+          <li>Update knowledge base secara berkala saat brand guidelines berubah</li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">💬 Pertanyaan Diskusi (Klik untuk Buka Jawaban) <span class="accordion-icon">▼</span></div>
+      <div class="accordion-body"><div class="accordion-content">
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>1.</strong> Apa yang harus dilakukan jika klien meminta hapus datanya dari GPT?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Hapus knowledge base terkait klien tersebut dari GPT. Arsip instruksi yang terkait. Dokumentasikan proses penghapusan untuk kepatuhan. Berikan konfirmasi tertulis kepada klien bahwa data telah dihapus.</div>
+        </div>
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>2.</strong> Bagaimana memastikan copywriter tidak terlalu bergantung pada GPT?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Tetap adakan sesi review kreatif oleh manusia. Latih keterampilan menulis secara teratur. Posisikan GPT sebagai asisten, bukan pengganti. Tetapkan batas: GPT untuk draft awal, manusia untuk finalisasi kreatif.</div>
+        </div>
+        <div class="reveal-block">
+          <p style="font-size:22px; margin-bottom:12px;"><strong>3.</strong> Apa risiko keamanan berbagi GPT dengan klien?</p>
+          <button class="reveal-btn" onclick="revealAnswer(this)">Buka Jawaban</button>
+          <div class="reveal-answer">Klien bisa melihat data klien lain jika tidak dipisahkan dengan benar. Buat GPT terpisah per klien atau gunakan pengaturan akses yang ketat. Jangan pernah mencampur data klien dalam satu knowledge base yang sama.</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Studi kasus ini sangat relevan untuk peserta dari bidang marketing, kreatif, atau agency. Highlight pentingnya pemisahan data antar klien — ini adalah pelajaran keamanan data yang krusial. Tekankan: GPT adalah alat, bukan pengganti kreativitas manusia.</div>
+  </div>
+</section>
+
+<!-- SLIDE 16 -->
+<section class="slide" data-slide="16">
+  <span class="slide-tag">Storybook <span class="badge badge-illus">Naratif</span></span>
+  <h2 class="slide-title">"Si Asisten Baru" — Bagian 1</h2>
+  <div class="story-part">
+    <div class="story-part-title">🌅 Bagian 1: Masalah</div>
+    <p class="story-text">Bu Sari (52), kepala HR di perusahaan teknologi menengah, duduk menatap tumpukan 200 CV di mejanya. Andi (25), staf HR baru, masuk membawa kopi.</p>
+    <p class="story-text">"Bu, ada lowongan baru lagi. 150 CV baru masuk tadi pagi."</p>
+    <p class="story-text">Bu Sari menghela napas panjang. "Kita tidak akan selesai hari ini, Andi."</p>
+    <div class="story-illustration">Bu Sari duduk di meja kayu dengan tumpukan CV setinggi 30 cm di kedua sisi. Wajahnya lelah tapi fokus. Andi berdiri di pintu memegang dua gelas kopi. Latar belakang: kantor modern dengan tanaman hias. Gaya ilustrasi flat design, warna hangat (oranye, krem, biru muda).</div>
+  </div>
+  <div class="story-part">
+    <div class="story-part-title">💡 Bagian 2: Ide</div>
+    <p class="story-text">"Bu Sari, di pelatihan AI kemarin, mereka bahas tentang Gemini Gems. Kalau kita buat asisten AI khusus untuk review CV?"</p>
+    <p class="story-text">Bu Sari terdiam sejenak. "AI? Untuk HR? Bisa dipercaya?"</p>
+    <p class="story-text">"Coba kita buat saja, Bu. Paling tidak untuk screening awal. Kalau tidak cocok, kita hentikan."</p>
+    <div class="story-illustration">Andi menunjukkan layar laptop yang menampilkan halaman Gemini Gems. Bu Sari bersandar di kursinya, tangan di dagu, ekspresi penasaran tapi ragu. Di layar terlihat tombol "New Gem" berwarna biru. Gaya flat design, palet warna biru-hijau.</div>
+  </div>
+  <div class="story-part">
+    <div class="story-part-title">🔧 Bagian 3: Percobaan Pertama</div>
+    <p class="story-text">Mereka membuat Gem "Recruiter Assistant". Instruksi pertama terlalu sederhana: "Evaluasi CV untuk posisi software engineer."</p>
+    <p class="story-text">Hasilnya? AI menilai semua CV "cukup baik". Tidak ada pembedaan. Tidak membantu sama sekali.</p>
+    <p class="story-text">"Ini terlalu umum, Andi. AI-nya tidak tahu kriteria kita."</p>
+    <div class="story-illustration">Layar laptop menampilkan hasil AI yang seragam — semua CV mendapat skor "7/10 cukup baik". Bu Sari menggelengkan kepala, Andi menggaris bawahi teks instruksi yang terlalu pendek. Ilustrasi close-up layar dengan font monospace, latar belakang kantor.</div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Cerita ini mengadaptasi Studi Kasus 1 menjadi narasi yang relatable, terutama untuk peserta senior yang mungkin ragu dengan AI. Karakter Bu Sari mewakili generasi yang berpengalaman tetapi skeptis terhadap teknologi baru. Andi mewakili generasi muda yang antusias. Dinamika antara mereka menggambarkan kolaborasi lintas generasi yang sangat penting di workplace modern.</div>
+  </div>
+</section>
+
+<!-- SLIDE 17 -->
+<section class="slide" data-slide="17">
+  <span class="slide-tag">Storybook <span class="badge badge-illus">Naratif</span></span>
+  <h2 class="slide-title">"Si Asisten Baru" — Bagian 2</h2>
+  <div class="story-part">
+    <div class="story-part-title">📝 Bagian 4: Iterasi dengan R-C-O-C-O</div>
+    <p class="story-text">Andi mengingat kerangka R-C-O-C-O dari pelatihan Sesi 2. Mereka menulis ulang instruksi:</p>
+    <p class="story-text">Role: Recruiter HR berpengalaman. Context: Perusahaan tech 200 karyawan. Objective: Evaluasi CV berdasarkan kompetensi teknis dan soft skills. Constraints: Jangan diskriminatif, maksimal 5 kandidat. Output: Tabel skor dengan justifikasi.</p>
+    <p class="story-text">Hasilnya jauh lebih baik! AI kini memberikan skor yang berbeda untuk setiap CV, dengan alasan yang jelas.</p>
+    <div class="story-illustration">Andi dan Bu Sari duduk berdampingan di depan laptop. Andi mengetik instruksi panjang di kolom Gem. Di layar, teks R-C-O-C-O terlihat terstruktur dengan warna berbeda untuk setiap komponen. Bu Sari menunjuk layar, mengangguk setuju. Gaya flat design, palet biru-oranye-ungu.</div>
+  </div>
+  <div class="story-part">
+    <div class="story-part-title">🎉 Bagian 5: Hasil</div>
+    <p class="story-text">Setelah satu minggu uji coba, waktu review awal CV berkurang drastis. Bu Sari tetap memvalidasi setiap hasil AI — tetap human-in-the-loop.</p>
+    <p class="story-text">"Andi, AI ini tidak menggantikan kita. Tapi dia membuat kita jauh lebih cepat. Kandidat berkualitas tidak terlewat lagi."</p>
+    <div class="story-illustration">Dashboard sederhana menampilkan grafik penurunan waktu review: dari batang tinggi (sebelum) ke batang rendah (sesudah). Bu Sari tersenyum lebar, memberikan jempol ke arah layar. Andi mencatat di buku. Latar: kantor cerah dengan sinar matahari pagi. Gaya flat design, warna cerah.</div>
+  </div>
+  <div class="story-part">
+    <div class="story-part-title">📚 Bagian 6: Pelajaran</div>
+    <ul style="font-size:22px; padding-left:24px; line-height:1.7; color:var(--text);">
+      <li>Mulai sederhana, iterasi bertahap — tidak perlu sempurna di awal</li>
+      <li>Instruksi yang jelas dan terstruktur = hasil yang lebih baik</li>
+      <li>Human-in-the-loop tetap wajib — AI membantu, bukan menggantikan</li>
+      <li>AI adalah asisten, bukan pengganti keahlian manusia</li>
+    </ul>
+    <div class="story-illustration">Infografis sederhana dengan 4 ikon melingkar: (1) panah naik bertahap = mulai sederhana, (2) dokumen dengan tanda centang = instruksi jelas, (3) ikon manusia+robot bergandengan tangan = human-in-the-loop, (4) robot kecil di samping manusia besar = AI sebagai asisten. Warna konsisten: biru, oranye, ungu, hijau.</div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Bagian 4 adalah klimaks cerita — di sinilah R-C-O-C-O dari Sesi 2 terbukti nilainya. Bagian 5 menunjukkan hasil yang positif tetapi tetap realistis — AI tidak sempurna, masih perlu validasi. Bagian 6 merangkum pelajaran yang bisa diaplikasikan oleh peserta di pekerjaan mereka sendiri.</div>
+  </div>
+</section>
+
+<!-- SLIDE 18 -->
+<section class="slide" data-slide="18">
+  <span class="slide-tag">CODING PARTNER <span class="badge badge-info">Konfigurasi</span></span>
+  <h2 class="slide-title">Contoh Konfigurasi Gem dengan R-C-O-C-O</h2>
+  <span class="config-label">Gem: Recruiter Assistant</span>
+  <div class="config-block">[ROLE]
+Anda adalah Recruiter HR senior di perusahaan teknologi
+dengan 200 karyawan dan 5 tahun pengalaman rekrutmen.
+
+[CONTEXT]
+Perusahaan menerima 150-300 CV per lowongan.
+Tim HR: 3 orang. Job description tersedia per posisi.
+Budaya kerja: kolaboratif, detail-oriented, growth mindset.
+
+[OBJECTIVE]
+Evaluasi CV kandidat berdasarkan 4 kriteria:
+1. Kompetensi teknis (bobot 40%)
+2. Pengalaman relevan (bobot 30%)
+3. Soft skills & budaya kerja (bobot 20%)
+4. Pendidikan & sertifikasi (bobot 10%)
+
+[CONSTRAINTS]
+- JANGAN pertimbangkan: gender, usia, etnis, agama
+- Berikan skor 1-10 per kriteria dengan justifikasi
+- Rekomendasikan maksimal 5 kandidat teratas
+- Jika CV tidak lengkap, beri catatan bukan menolak
+- Tetap profesional dan objektif
+
+[OUTPUT FORMAT]
+Tabel dengan kolom:
+| Nama | Skor Teknis | Skor Pengalaman |
+| Skor Soft Skills | Skor Pendidikan | Total |
+| Rekomendasi: Interview/Ditolak/Cadangan | Catatan |
+
+Diakhiri dengan ringkasan 3 kalimat tentang
+kandidat teratas dan alasan rekomendasi.</div>
+  <p style="margin-top:20px; font-size:20px; color:var(--text-muted); max-width:1000px; line-height:1.5;">
+    💡 Setiap baris dalam blok konfigurasi di atas mengikuti pola R-C-O-C-O dari Sesi 2. Instruksi yang terstruktur menghasilkan respons yang konsisten dan dapat diprediksi.
+  </p>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Blok konfigurasi ini menunjukkan bagaimana kerangka R-C-O-C-O diterjemahkan menjadi instruksi praktis untuk Gem/GPT. Perhatikan bagian [CONSTRAINTS] — ini sangat penting untuk mencegah bias dan perilaku yang tidak diinginkan. Tekankan bahwa semakin spesifik instruksi, semakin baik hasilnya. Aturan praktis: 200-400 kata untuk instruksi sistem adalah sweet spot.</div>
+  </div>
+</section>
+
+<!-- SLIDE 19 -->
+<section class="slide" data-slide="19">
+  <span class="slide-tag">Career Guide</span>
+  <h2 class="slide-title">Relevansi Karier: Asisten AI Kustom</h2>
+  <div class="card-grid">
+    <div class="card">
+      <span class="card-icon">💼</span>
+      <div class="card-title">Profesi Terkait</div>
+      <ul style="font-size:20px; padding-left:20px; line-height:1.8;">
+        <li>AI Productivity Specialist</li>
+        <li>Knowledge Manager</li>
+        <li>Digital Transformation Lead</li>
+        <li>AI Trainer / Prompt Engineer</li>
+        <li>Operations Automation Consultant</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="card-icon">🛠️</span>
+      <div class="card-title">Keterampilan Dibutuhkan</div>
+      <ul style="font-size:20px; padding-left:20px; line-height:1.8;">
+        <li>Prompt engineering (R-C-O-C-O)</li>
+        <li>Workflow design & dokumentasi</li>
+        <li>Data literacy dasar</li>
+        <li>Change management</li>
+        <li>Evaluasi kualitas output AI</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="card-icon">📈</span>
+      <div class="card-title">Langkah Belajar Lanjutan</div>
+      <ul style="font-size:20px; padding-left:20px; line-height:1.8;">
+        <li>Google AI Essentials (gratis)</li>
+        <li>OpenAI API fundamentals</li>
+        <li>Praktik: buat 5 Gems/GPTs berbeda</li>
+        <li>Pelajari AI agents & automation</li>
+        <li>Bergabung komunitas AI lokal</li>
+      </ul>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Kemampuan membangun asisten AI kustom menjadi keterampilan yang semakin dicari di pasar kerja. Banyak perusahaan mulai mencari "AI Productivity Specialist" — peran yang menjembatani antara teknologi AI dan produktivitas tim. Untuk peserta yang ingin mendalami, Google AI Essentials adalah titik awal yang baik (gratis).</div>
+  </div>
+</section>
+
+<!-- SLIDE 20 -->
+<section class="slide" data-slide="20">
+  <span class="slide-tag">Chess Strategist</span>
+  <h2 class="slide-title">Berpikir 3 Langkah ke Depan</h2>
+  <div class="two-col">
+    <div class="col-card">
+      <div class="col-title">♟️ Analogi Catur</div>
+      <p style="font-size:24px; line-height:1.6; color:var(--text);">Dalam catur, setiap langkah harus dipikirkan 3 langkah ke depan. Membangun asisten AI kustom juga butuh pemikiran ke depan yang sama:</p>
+      <ul style="font-size:22px; padding-left:20px; line-height:1.8; margin-top:16px; color:var(--text);">
+        <li><strong>Langkah 1:</strong> Apa yang asisten akan lakukan sekarang?</li>
+        <li><strong>Langkah 2:</strong> Bagaimana pengguna akan berinteraksi dengannya?</li>
+        <li><strong>Langkah 3:</strong> Apa dampaknya jika instruksi salah?</li>
+      </ul>
+    </div>
+    <div class="col-card accent">
+      <div class="col-title">🎯 Aktivitas (5 menit)</div>
+      <ol style="font-size:22px; padding-left:20px; line-height:1.8; color:var(--text);">
+        <li>Pikirkan 1 asisten AI yang ingin Anda buat</li>
+        <li>Tulis 3 skenario "worst case" jika asisten salah berfungsi</li>
+        <li>Diskusikan: bagaimana mencegahnya?</li>
+        <li>Catat 1 mitigasi untuk setiap skenario</li>
+      </ol>
+      <p style="margin-top:16px; font-size:20px; color:var(--text-muted); font-style:italic;">
+        Seperti pemain catur yang mempersiapkan pembukaan, Anda harus mempersiapkan instruksi sebelum "permainan" dimulai.
+      </p>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Aktivitas ini melatih berpikir kritis dan antisipasi risiko. Analogi catur dipilih karena lintas generasi dapat memahaminya. Seperti dalam catur, dalam membangun asisten AI, Anda harus memikirkan bukan hanya langkah pertama (apa yang AI akan lakukan), tetapi juga konsekuensi dari setiap instruksi. Beri peserta 5 menit untuk aktivitas ini.</div>
+  </div>
+</section>
+
+<!-- SLIDE 21 -->
+<section class="slide" data-slide="21">
+  <span class="slide-tag">Perpustakaan Prompt</span>
+  <h2 class="slide-title">Template Instruksi siap Pakai (1/2)</h2>
+  <div style="max-width:1000px; width:100%;">
+    <div class="prompt-card">
+      <div class="prompt-card-title">💎 Template: Recruiter Assistant</div>
+      <pre class="prompt-code">[ROLE] Anda adalah Recruiter HR senior di perusahaan teknologi.
+
+[CONTEXT] Perusahaan memiliki 200 karyawan. Tim HR menerima 150-300 CV per lowongan.
+
+[OBJECTIVE] Evaluasi CV kandidat berdasarkan kompetensi teknis, pengalaman, dan kesesuaian budaya kerja.
+
+[CONSTRAINTS]
+- Jangan pertimbangkan gender, usia, atau etnis
+- Berikan skor objektif 1-10
+- Maksimal rekomendasikan 5 kandidat teratas
+
+[OUTPUT FORMAT] Tabel: Nama | Skor Teknis | Skor Pengalaman | Skor Soft Skills | Total | Rekomendasi | Catatan</pre>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card-title">📝 Template: Content Brief Writer</div>
+      <pre class="prompt-code">[ROLE] Anda adalah Content Strategist berpengalaman di agency marketing.
+
+[CONTEXT] Agency melayani 10 klien aktif dengan brand voice berbeda. Setiap klien memiliki guidelines tersendiri.
+
+[OBJECTIVE] Hasilkan content brief yang konsisten dengan brand voice klien.
+
+[CONSTRAINTS]
+- Ikuti brand guidelines klien yang diunggah
+- Format brief: judul, angle, tone, target audience, CTA
+- Maksimal 300 kata per brief
+
+[OUTPUT FORMAT] Template: Konsep | Angle | Tone | Audience | CTA | Keywords</pre>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card-title">🗒️ Template: Meeting Notes Summarizer</div>
+      <pre class="prompt-code">[ROLE] Anda adalah asisten administratif profesional.
+
+[CONTEXT] Rapat tim mingguan dengan 5-10 peserta, durasi 30-60 menit.
+
+[OBJECTIVE] Ringkas notulen rapat menjadi action items yang jelas.
+
+[CONSTRAINTS]
+- Identifikasi pembicara untuk setiap poin
+- Pisahkan diskusi vs keputusan
+- Highlight action items dengan deadline
+
+[OUTPUT FORMAT]
+1. Ringkasan (maks 3 kalimat)
+2. Keputusan Penting (bullet points)
+3. Action Items (tabel: Tugas | PIC | Deadline)
+4. Pembahasan Selanjutnya</pre>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Salin Prompt</button>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Tiga template ini siap pakai untuk berbagai profesi. Dorong peserta untuk langsung mencoba menyalin dan menempelkan ke Gemini Gems atau Custom GPT. Tombol "Salin Prompt" menggunakan clipboard API browser — tidak ada data yang dikirim ke server.</div>
+  </div>
+</section>
+
+<!-- SLIDE 22 -->
+<section class="slide" data-slide="22">
+  <span class="slide-tag">Perpustakaan Prompt</span>
+  <h2 class="slide-title">Template Instruksi siap Pakai (2/2)</h2>
+  <div style="max-width:1000px; width:100%;">
+    <div class="prompt-card">
+      <div class="prompt-card-title">✍️ Template: Writing Coach</div>
+      <pre class="prompt-code">[ROLE] Anda adalah editor profesional dengan pengalaman 15 tahun.
+
+[CONTEXT] Pengguna ingin meningkatkan keterampilan menulis dalam Bahasa Indonesia.
+
+[OBJECTIVE] Berikan feedback konstruktif pada teks yang diberikan.
+
+[CONSTRAINTS]
+- Jangan menulis ulang seluruh teks
+- Fokus pada 3 area: struktur, kejelasan, tata bahasa
+- Berikan contoh perbaikan untuk setiap saran
+
+[OUTPUT FORMAT]
+1. Penilaian umum (skor 1-10)
+2. Tiga kekuatan teks
+3. Tiga area perbaikan dengan contoh
+4. Saran pengembangan lebih lanjut</pre>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Salin Prompt</button>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card-title">🎧 Template: Customer Support Helper</div>
+      <pre class="prompt-code">[ROLE] Anda adalah spesialis layanan pelanggan yang ramah dan efisien.
+
+[CONTEXT] Perusahaan e-commerce dengan produk fashion. Pelanggan menghubungi via chat dan email.
+
+[OBJECTIVE] Bantu menyusun respons cepat dan tepat untuk pertanyaan pelanggan.
+
+[CONSTRAINTS]
+- Gunakan tone ramah dan profesional
+- Maksimal 150 kata per respons
+- Selalu tawarkan solusi, bukan hanya minta maaf
+- Jika tidak yakin, arahkan ke agent manusia
+
+[OUTPUT FORMAT] Template: Salam | Empati | Solusi | Langkah Selanjutnya | Penutup</pre>
+      <button class="copy-btn" onclick="copyPrompt(this)">📋 Salin Prompt</button>
+    </div>
+  </div>
+  <p style="margin-top:24px; text-align:center; font-size:22px; color:var(--text-muted);">
+    💡 Semua template mengikuti pola R-C-O-C-O dari Sesi 2. Modifikasi sesuai kebutuhan profesi Anda.
+  </p>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Writing Coach cocok untuk siapa saja yang ingin meningkatkan kualitas tulisan. Customer Support Helper relevan untuk UMKM atau tim customer service. Tekankan bahwa template ini adalah titik awal, bukan akhir. Setiap profesi akan memiliki nuansa yang berbeda.</div>
+  </div>
+</section>
+
+<!-- SLIDE 23 -->
+<section class="slide" data-slide="23">
+  <span class="slide-tag">Latihan Praktik</span>
+  <h2 class="slide-title">Latihan: Buat Asisten AI Anda (15 menit)</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Pilih satu tugas berulang dari pekerjaan harian Anda</li>
+      <li>Tulis instruksi menggunakan kerangka R-C-O-C-O</li>
+      <li>Buat Gem atau Custom GPT dengan instruksi tersebut</li>
+      <li>Uji dengan 3 input yang berbeda</li>
+      <li>Catat apa yang berhasil dan apa yang perlu diperbaiki</li>
+    </ol>
+  </div>
+  <div class="two-col" style="margin-top:32px; max-width:1000px;">
+    <div class="col-card">
+      <div class="col-title">✅ Kriteria Keberhasilan</div>
+      <ul class="col-list" style="font-size:22px;">
+        <li>Instruksi mengikuti format R-C-O-C-O</li>
+        <li>Asisten memberikan respons yang relevan</li>
+        <li>Tidak ada data sensitif dalam instruksi</li>
+      </ul>
+    </div>
+    <div class="col-card accent">
+      <div class="col-title">📌 Catatan</div>
+      <p style="font-size:22px; line-height:1.6; color:var(--text);">
+        Jika tidak punya akses ke Custom GPT, gunakan Gemini Gems (gratis) atau simulasikan dengan mengetik instruksi R-C-O-C-O di awal percakapan ChatGPT/Gemini biasa.
+      </p>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Latihan ini adalah inti dari sesi — peserta harus keluar dari sesi ini dengan minimal satu asisten AI yang sudah mereka buat. Beri waktu 15 menit. Jika peserta bingung memilih tugas, berikan contoh: email penolakan, ringkasan rapat, deskripsi produk, rubrik penilaian. Berkelilinglah untuk membantu peserta yang kesulitan.</div>
+  </div>
+</section>
+
+<!-- SLIDE 24 -->
+<section class="slide" data-slide="24">
+  <span class="slide-tag">Diskusi Kelompok</span>
+  <h2 class="slide-title">Diskusi: Bagaimana di Tempat Kerja Anda?</h2>
+  <div class="slide-content">
+    <p style="font-size:28px; margin-bottom:32px; color:var(--text); text-align:center;">
+      Bentuk kelompok 4–5 orang. Diskusikan pertanyaan berikut (10 menit):
+    </p>
+    <div class="card-grid" style="grid-template-columns: 1fr;">
+      <div class="card" style="border-left:6px solid var(--primary);">
+        <div class="card-title">Pertanyaan 1</div>
+        <p class="card-text" style="font-size:24px;">Profesi atau departemen apa di organisasi Anda yang paling diuntungkan dari asisten AI kustom? Mengapa?</p>
+      </div>
+      <div class="card" style="border-left:6px solid var(--accent);">
+        <div class="card-title">Pertanyaan 2</div>
+        <p class="card-text" style="font-size:24px;">Apa tantangan terbesar dalam menerapkan asisten AI kustom di tim Anda? (contoh: resistensi, keahlian, anggaran, keamanan)</p>
+      </div>
+      <div class="card" style="border-left:6px solid var(--purple);">
+        <div class="card-title">Pertanyaan 3</div>
+        <p class="card-text" style="font-size:24px;">Bagikan satu ide asisten AI kustom yang ingin Anda buat setelah sesi ini. Apa kebutuhan utamanya?</p>
+      </div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Diskusi kelompok membantu peserta mengkontekstualisasikan materi dengan realitas pekerjaan mereka. Bagi peserta menjadi kelompok berdasarkan profesi atau departemen jika memungkinkan. Berikan 10 menit: 7 menit diskusi + 3 menit sharing. Pilih 2-3 kelompok untuk mempresentasikan ide asisten AI mereka.</div>
+  </div>
+</section>
+
+<!-- SLIDE 25 -->
+<section class="slide" data-slide="25">
+  <span class="slide-tag">Evaluasi</span>
+  <h2 class="slide-title">Kuis: Uji Pemahaman Anda</h2>
+  <div class="quiz-container">
+    <div class="quiz-question" data-correct="1">
+      <div class="quiz-number">Soal 1 dari 5</div>
+      <p class="quiz-text">Apa yang dimaksud dengan "Gem" dalam Google Gemini?</p>
+      <button class="quiz-option" data-index="0">A. Model AI baru dari Google</button>
+      <button class="quiz-option" data-index="1">B. Kustomisasi Gemini dengan instruksi tetap</button>
+      <button class="quiz-option" data-index="2">C. Plugin pihak ketiga untuk Gemini</button>
+      <button class="quiz-option" data-index="3">D. Fitur pencarian canggih</button>
+      <div class="quiz-explanation"><strong>Jawaban: B.</strong> Gem adalah fitur kustomisasi Gemini di mana pengguna dapat menetapkan instruksi tetap yang mengarahkan perilaku AI untuk percakapan tertentu. Instruksi ini disimpan dan digunakan kembali tanpa perlu mengetik ulang.</div>
+    </div>
+    <div class="quiz-question" data-correct="2">
+      <div class="quiz-number">Soal 2 dari 5</div>
+      <p class="quiz-text">Mana yang BUKAN praktik terbaik dalam membuat asisten AI kustom?</p>
+      <button class="quiz-option" data-index="0">A. Mulai dengan instruksi sederhana</button>
+      <button class="quiz-option" data-index="1">B. Uji dengan input yang beragam</button>
+      <button class="quiz-option" data-index="2">C. Masukkan semua data rahasia perusahaan</button>
+      <button class="quiz-option" data-index="3">D. Iterasi berdasarkan feedback</button>
+      <div class="quiz-explanation"><strong>Jawaban: C.</strong> Data rahasia perusahaan tidak boleh dimasukkan ke dalam asisten AI kustom karena dapat bocor melalui respons AI atau diakses oleh pengguna lain jika asisten dibagikan. Gunakan hanya informasi non-sensitif.</div>
+    </div>
+    <div class="quiz-question" data-correct="1">
+      <div class="quiz-number">Soal 3 dari 5</div>
+      <p class="quiz-text">Dalam membuat Gem, kerangka apa yang direkomendasikan dari Sesi 2?</p>
+      <button class="quiz-option" data-index="0">A. SWOT Analysis</button>
+      <button class="quiz-option" data-index="1">B. R-C-O-C-O</button>
+      <button class="quiz-option" data-index="2">C. SMART Goals</button>
+      <button class="quiz-option" data-index="3">D. Design Thinking</button>
+      <div class="quiz-explanation"><strong>Jawaban: B.</strong> R-C-O-C-O (Role, Context, Objective, Constraints, Output Format) membantu menyusun instruksi yang jelas dan terstruktur untuk asisten AI kustom. Dipelajari di Sesi 2.</div>
+    </div>
+    <div class="quiz-question" data-correct="1">
+      <div class="quiz-number">Soal 4 dari 5</div>
+      <p class="quiz-text">Apa prinsip "human-in-the-loop" dalam penggunaan asisten AI?</p>
+      <button class="quiz-option" data-index="0">A. AI menggantikan semua tugas manusia</button>
+      <button class="quiz-option" data-index="1">B. Manusia tetap memvalidasi dan memutuskan</button>
+      <button class="quiz-option" data-index="2">C. Hanya manusia yang boleh menggunakan AI</button>
+      <button class="quiz-option" data-index="3">D. AI berjalan tanpa pengawasan</button>
+      <div class="quiz-explanation"><strong>Jawaban: B.</strong> Human-in-the-loop berarti AI membantu mempercepat proses, tetapi manusia tetap melakukan validasi dan pengambilan keputusan akhir. AI adalah asisten, bukan pengambil keputusan otonom.</div>
+    </div>
+    <div class="quiz-question" data-correct="2">
+      <div class="quiz-number">Soal 5 dari 5</div>
+      <p class="quiz-text">Apa risiko utama berbagi Custom GPT dengan tim?</p>
+      <button class="quiz-option" data-index="0">A. Biaya langganan meningkat</button>
+      <button class="quiz-option" data-index="1">B. Antarmuka menjadi rumit</button>
+      <button class="quiz-option" data-index="2">C. Kebocoran data sensitif dalam instruksi</button>
+      <button class="quiz-option" data-index="3">D. AI menjadi terlalu pintar</button>
+      <div class="quiz-explanation"><strong>Jawaban: C.</strong> Instruksi yang ditulis dalam Custom GPT mungkin berisi informasi sensitif yang dapat dilihat oleh pengguna lain jika GPT dibagikan. Selalu periksa dan bersihkan instruksi dari data sensitif sebelum membagikan.</div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Kuis ini berisi 5 soal pilihan ganda. Beri waktu 10 menit untuk kuis ini. Peserta mengklik jawaban dan langsung melihat pembahasan. Tekankan bahwa tujuan kuis adalah pembelajaran, bukan penilaian.</div>
+  </div>
+</section>
+
+<!-- SLIDE 26 -->
+<section class="slide" data-slide="26">
+  <span class="slide-tag">Kesimpulan</span>
+  <h2 class="slide-title">Takeaway: Empat Hal yang Bawa Pulang</h2>
+  <div class="takeaway-box">
+    <h3>🌟 Empat Pelajaran Inti</h3>
+    <ul class="takeaway-list">
+      <li>Asisten AI kustom = AI yang Anda konfigurasi untuk kebutuhan spesifik, bukan AI generik</li>
+      <li>Kerangka R-C-O-C-O dari Sesi 2 langsung berlaku untuk instruksi sistem Gem/GPT</li>
+      <li>Human-in-the-loop tetap wajib — AI membantu, tidak menggantikan keputusan manusia</li>
+      <li>Mulai sederhana, uji, iterasi — kesempurnaan datang dari praktik berulang</li>
+    </ul>
+  </div>
+  <p style="margin-top:32px; font-size:26px; text-align:center; color:var(--text-muted); max-width:900px;">
+    "AI tidak akan menggantikan manusia. Tetapi manusia yang menggunakan AI akan menggantikan manusia yang tidak."
+  </p>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Empat takeaway ini merangkum seluruh sesi. Ulangi setiap poin dengan penekanan. Kututan di akhir adalah pengingat penting — bukan tentang takut digantikan AI, tetapi tentang bersedia belajar menggunakan alat baru. Tanyakan kepada peserta: "Satu hal yang akan Anda lakukan minggu ini setelah sesi ini?"</div>
+  </div>
+</section>
+
+<!-- SLIDE 27 -->
+<section class="slide" data-slide="27">
+  <span class="slide-tag">Tugas Pra-Sesi Berikutnya</span>
+  <h2 class="slide-title">Tugas: Sebelum Sesi Berikutnya</h2>
+  <div class="slide-content">
+    <ol class="step-list">
+      <li>Buat 1 Gemini Gem atau Custom GPT untuk tugas harian Anda</li>
+      <li>Dokumentasikan instruksi R-C-O-C-O yang Anda gunakan</li>
+      <li>Uji dengan minimal 5 input berbeda, catat hasilnya</li>
+      <li>Tulis 3 hal yang berhasil & 3 hal yang perlu diperbaiki</li>
+      <li>Bawa contoh hasil ke sesi berikutnya untuk diskusi</li>
+    </ol>
+  </div>
+  <div class="two-col" style="margin-top:32px; max-width:1000px;">
+    <div class="col-card">
+      <div class="col-title">📚 Bahan Bacaan</div>
+      <ul class="col-list" style="font-size:22px;">
+        <li>Google AI Essentials (gratis)</li>
+        <li>OpenAI GPT Best Practices</li>
+        <li>Artikel: AI agents vs custom assistants</li>
+      </ul>
+    </div>
+    <div class="col-card accent">
+      <div class="col-title">⏰ Estimasi Waktu</div>
+      <p style="font-size:24px; line-height:1.6; color:var(--text);">
+        Total: 60–90 menit<br>
+        • Membuat asisten: 20 menit<br>
+        • Pengujian: 20 menit<br>
+        • Dokumentasi: 20 menit<br>
+        • Bacaan: 30 menit
+      </p>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Tugas ini melanjutkan latihan yang sudah dimulai di sesi. Peserta diharapkan membawa hasil dan pengalaman mereka ke sesi berikutnya untuk diskusi peer-to-peer. Estimasi waktu realistis untuk memastikan peserta tidak terbebani. Dorong peserta untuk membagikan hasil di grup komunikasi peserta.</div>
+  </div>
+</section>
+
+<!-- SLIDE 28 -->
+<section class="slide" data-slide="28">
+  <span class="slide-tag">Referensi</span>
+  <h2 class="slide-title">Sumber & Tautan Terkait</h2>
+  <div style="max-width:900px; width:100%;">
+    <a href="https://gemini.google.com/gems/view" target="_blank" class="link-card">
+      <span class="link-icon">💎</span>
+      <div class="link-text">
+        <div class="link-title">Gemini Gems — Google</div>
+        <div class="link-url">gemini.google.com/gems/view</div>
+      </div>
+    </a>
+    <a href="http://opal.google/" target="_blank" class="link-card">
+      <span class="link-icon">🔮</span>
+      <div class="link-text">
+        <div class="link-title">Google Opal</div>
+        <div class="link-url">opal.google</div>
+      </div>
+    </a>
+    <div class="link-card" style="cursor:default;">
+      <span class="link-icon">🤖</span>
+      <div class="link-text">
+        <div class="link-title">Custom GPTs — OpenAI</div>
+        <div class="link-url">openai.com/chatgpt</div>
+      </div>
+    </div>
+    <div class="link-card" style="cursor:default;">
+      <span class="link-icon">📚</span>
+      <div class="link-text">
+        <div class="link-title">Materi Sesi 1–3 Pelatihan Generative AI</div>
+        <div class="link-url">Foundations · Prompt Engineering · Riset Cerdas</div>
+      </div>
+    </div>
+    <div class="link-card" style="cursor:default;">
+      <span class="link-icon">♿</span>
+      <div class="link-text">
+        <div class="link-title">WCAG 2.1 Accessibility Guidelines</div>
+        <div class="link-url">w3.org/WAI/WCAG21/quickref</div>
+      </div>
+    </div>
+    <div class="link-card" style="cursor:default;">
+      <span class="link-icon">📖</span>
+      <div class="link-text">
+        <div class="link-title">Google AI Essentials Course</div>
+        <div class="link-url">grow.google/ai-essentials</div>
+      </div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <div class="notes-label">Catatan Pembicara</div>
+    <div class="notes-content">Referensi utama untuk sesi ini adalah Gemini Gems (https://gemini.google.com/gems/view) dan Google Opal (http://opal.google/). Materi Sesi 1-3 adalah prasyarat yang sebaiknya direview kembali. WCAG 2.1 dirujuk karena desain slide ini mengikuti standar aksesibilitas. Tinggalkan kontak fasilitator untuk pertanyaan lanjutan.</div>
+  </div>
+</section>
+
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()" title="Slide sebelumnya">←</button>
+  <span class="nav-counter" id="slideCounter">01 / 28</span>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()" title="Slide berikutnya">→</button>
+  <button class="nav-toggle" id="notesBtn" onclick="toggleNotes()" title="Tampilkan catatan pembicara">📝 <span>Catatan</span></button>
+  <button class="nav-toggle" id="themeBtn" onclick="toggleTheme()" title="Ubah tema">🌓 <span>Tema</span></button>
+  <button class="nav-toggle" id="fsBtn" onclick="toggleFullscreen()" title="Layar penuh">⛶ <span>Layar</span></button>
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 28;
+
+function goToSlide(n) {
+  if (n < 1 || n > totalSlides) return;
+  const current = document.querySelector('.slide.active');
+  if (current) current.classList.remove('active');
+  
+  const target = document.querySelector(`.slide[data-slide="${n}"]`);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    currentSlide = n;
+    updateUI();
+  }
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  if (currentSlide > 1) goToSlide(currentSlide - 1);
+}
+
+function updateUI() {
+  document.getElementById('slideCounter').textContent =
+    String(currentSlide).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('progressFill').style.width = (currentSlide / totalSlides * 100) + '%';
+  document.getElementById('prevBtn').disabled = currentSlide === 1;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+    e.preventDefault();
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    prevSlide();
+  } else if (e.key === ' ') {
+    e.preventDefault();
+    if (document.activeElement && document.activeElement.tagName === 'BUTTON') {
+       document.activeElement.blur();
+    }
+    nextSlide();
+  } else if (e.key === 'n' || e.key === 'N') {
+    toggleNotes();
+  } else if (e.key === 't' || e.key === 'T') {
+    toggleTheme();
+  } else if (e.key === 'f' || e.key === 'F') {
+    toggleFullscreen();
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    goToSlide(1);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    goToSlide(totalSlides);
+  }
+});
+
+function toggleNotes() {
+  document.body.classList.toggle('show-notes');
+  document.getElementById('notesBtn').classList.toggle('active');
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  if (current === 'dark') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  document.getElementById('themeBtn').classList.toggle('active');
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => console.log(err));
+    document.getElementById('fsBtn').classList.add('active');
+  } else {
+    document.exitFullscreen();
+    document.getElementById('fsBtn').classList.remove('active');
+  }
+}
+
+function toggleAccordion(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+
+function revealAnswer(btn) {
+  const answer = btn.nextElementSibling;
+  answer.classList.add('show');
+  btn.style.display = 'none';
+}
+
+document.querySelectorAll('.quiz-question').forEach(q => {
+  const correctIndex = parseInt(q.dataset.correct);
+  q.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const selectedIndex = parseInt(this.dataset.index);
+      q.querySelectorAll('.quiz-option').forEach(o => o.disabled = true);
+      if (selectedIndex === correctIndex) {
+        this.classList.add('correct');
+      } else {
+        this.classList.add('incorrect');
+        q.querySelector(`[data-index="${correctIndex}"]`).classList.add('correct');
+      }
+      q.querySelector('.quiz-explanation').classList.add('show');
+    });
+  });
+});
+
+function copyPrompt(btn) {
+  const code = btn.previousElementSibling.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = '✅ Tersalin!';
+      setTimeout(() => { btn.textContent = '📋 Salin Prompt'; }, 2000);
+    }).catch(() => {
+      fallbackCopy(code, btn);
+    });
+  } else {
+    fallbackCopy(code, btn);
+  }
+}
+
+function fallbackCopy(text, btn) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    btn.textContent = '✅ Tersalin!';
+    setTimeout(() => { btn.textContent = '📋 Salin Prompt'; }, 2000);
+  } catch(err) {
+    btn.textContent = '❌ Gagal';
+    setTimeout(() => { btn.textContent = '📋 Salin Prompt'; }, 2000);
+  }
+  document.body.removeChild(textarea);
+}
+
+updateUI();
+</script>
+</body>
+</html>
